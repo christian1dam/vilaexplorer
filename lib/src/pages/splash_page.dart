@@ -33,15 +33,16 @@ class _SplashPageState extends State<SplashPage> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Opacity(
-              opacity: 0.5, // Controla la transparencia de la imagen
+              opacity: 0.5,
               child: Image.asset(
-                'assets/images/fondoVilaBN.png', // Asegúrate de tener la ruta correcta
-                fit: BoxFit.contain,
-                height: MediaQuery.of(context).size.height * 0.3, // Ocupa el 30% de la pantalla
+                'assets/images/fondoVilaBN.png',
+                fit: BoxFit.cover, // Cambia a BoxFit.cover
+                height: MediaQuery.of(context).size.height * 0.4, // Ajusta la altura si es necesario
                 width: double.infinity,
               ),
             ),
           ),
+
           // Contenido principal en el centro de la pantalla
           Center(
             child: Column(

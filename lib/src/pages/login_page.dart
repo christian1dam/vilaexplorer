@@ -15,20 +15,16 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   void initState() {
     super.initState();
 
-    // Controlador para la rotación de la imagen
     _rotationController = AnimationController(
-      duration: const Duration(seconds: 2), // Duración de la rotación
+      duration: const Duration(seconds: 2),
       vsync: this,
     );
 
-    // Definir la animación de rotación con curva de desaceleración
     _rotationAnimation = CurvedAnimation(
       parent: _rotationController,
-      curve: Curves.easeInOut, // Probar otra curva más suave
+      curve: Curves.easeInOut,
     );
 
-
-    // Inicia la animación de rotación al entrar a la página
     _rotationController.forward();
   }
 
@@ -41,43 +37,44 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[850], // Fondo gris oscuro
+      backgroundColor: Colors.grey[850],
+      resizeToAvoidBottomInset: false, // Ajuste realizado aquí
       body: Stack(
         children: [
-          // Imagen de fondo posicionada en la parte baja (imagen en blanco y negro)
           Align(
             alignment: Alignment.bottomCenter,
             child: Opacity(
-              opacity: 0.5, // Transparencia de la imagen
+              opacity: 0.5,
               child: Image.asset(
-                'assets/images/fondoVilaBN.png', // Ajusta la ruta según tu imagen
-                fit: BoxFit.contain,
-                height: MediaQuery.of(context).size.height * 0.3, // Ocupa el 30% de la pantalla
+                'assets/images/fondoVilaBN.png',
+                fit: BoxFit.cover,
+                height: MediaQuery.of(context).size.height * 0.4,
                 width: double.infinity,
               ),
             ),
           ),
-          // Contenido principal
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Hero con rotación desacelerada durante la transición
+                // Espacio superior del 30% de la pantalla
+                SizedBox(height: MediaQuery.of(context).size.height * 0.18),
+
+                // Hero con rotación
                 Hero(
-                  tag: 'logoHero', // El tag debe coincidir con el de SplashPage
+                  tag: 'logoHero',
                   child: RotationTransition(
                     turns: Tween(begin: 0.0, end: 1.0).animate(_rotationAnimation),
                     child: CircleAvatar(
                       radius: 80,
                       backgroundColor: Colors.transparent,
-                      backgroundImage: AssetImage('assets/images/VilaExplorer.png'), // Imagen de logo
+                      backgroundImage: AssetImage('assets/images/VilaExplorer.png'),
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
 
-                // Título y subtítulo
+                // Título
                 RichText(
                   text: TextSpan(
                     children: [
@@ -113,28 +110,28 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                 ),
                 const SizedBox(height: 20),
 
-                // Campo de correo
+                // Campos de texto
                 _buildTextField('Correo', false),
                 const SizedBox(height: 20),
-
-                // Campo de contraseña
                 _buildTextField('Contraseña', true),
-                const SizedBox(height: 10),
 
-                // Enlace para recuperar la contraseña
+                // Enlace de contraseña
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {
-                      // Aquí agregas tu lógica para recuperar la contraseña
-                    },
+                    onPressed: () {},
                     child: const Text(
                       '¿Has olvidado tu contraseña?',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+
+                // Espacio desde el fondo del 10%
+                const SizedBox(height: 30),
+
+                // Espacio superior del 30% de la pantalla
+                SizedBox(height: MediaQuery.of(context).size.height * 0.15),
 
                 // Botones de registro y entrar
                 Row(
@@ -142,25 +139,21 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black26, // Color del botón de registro
+                        backgroundColor: Color.fromARGB(255, 58, 58, 58),
                         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                       ),
-                      onPressed: () {
-                        // Navegar a la página de registro
-                      },
+                      onPressed: () {},
                       child: const Text(
                         'REGISTRO',
                         style: TextStyle(color: Colors.white),
-                        ),
+                      ),
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 155, 58, 51), // Color del botón de entrar
+                        backgroundColor: const Color.fromARGB(255, 155, 58, 51),
                         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                       ),
-                      onPressed: () {
-                        // Iniciar sesión
-                      },
+                      onPressed: () {},
                       child: const Text(
                         'ENTRAR',
                         style: TextStyle(color: Colors.white),
@@ -171,13 +164,20 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
                 const SizedBox(height: 30),
 
-                // Icono pequeño en la parte inferior derecha
+                // Icono de idioma con fondo blanco
                 Align(
                   alignment: Alignment.bottomRight,
-                  child: Image.asset(
-                    'assets/images/language.png',
-                    height: 50,
-                    width: 50,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15), // Esquinas redondeadas
+                    ),
+                    padding: const EdgeInsets.all(8.0), // Espacio interno
+                    child: Image.asset(
+                      'assets/images/language.png',
+                      height: 30,
+                      width: 30,
+                    ),
                   ),
                 ),
               ],
@@ -188,7 +188,6 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
-  // Widget helper para los campos de texto
   Widget _buildTextField(String label, bool isPassword) {
     return TextField(
       obscureText: isPassword,
