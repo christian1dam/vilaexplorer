@@ -1,7 +1,42 @@
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
+  late AnimationController _rotationController;
+  late Animation<double> _rotationAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Controlador para la rotación de la imagen
+    _rotationController = AnimationController(
+      duration: const Duration(seconds: 2), // Duración de la rotación
+      vsync: this,
+    );
+
+    // Definir la animación de rotación con curva de desaceleración
+    _rotationAnimation = CurvedAnimation(
+      parent: _rotationController,
+      curve: Curves.easeInOut, // Probar otra curva más suave
+    );
+
+
+    // Inicia la animación de rotación al entrar a la página
+    _rotationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _rotationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +63,17 @@ class LoginPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Imagen circular en el centro (logo)
-                CircleAvatar(
-                  radius: 80,
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: AssetImage('assets/images/VilaExplorer.png'), // Imagen de logo
+                // Hero con rotación desacelerada durante la transición
+                Hero(
+                  tag: 'logoHero', // El tag debe coincidir con el de SplashPage
+                  child: RotationTransition(
+                    turns: Tween(begin: 0.0, end: 1.0).animate(_rotationAnimation),
+                    child: CircleAvatar(
+                      radius: 80,
+                      backgroundColor: Colors.transparent,
+                      backgroundImage: AssetImage('assets/images/VilaExplorer.png'), // Imagen de logo
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 20),
 
@@ -46,16 +87,16 @@ class LoginPage extends StatelessWidget {
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          fontFamily: 'Poppins', // Asegúrate de haber añadido la fuente Poppins en tu proyecto
+                          fontFamily: 'Poppins',
                         ),
                       ),
                       TextSpan(
                         text: 'Explorer',
                         style: TextStyle(
                           fontSize: 24,
-                          fontWeight: FontWeight.w200, // Poppins ExtraLight es w200
+                          fontWeight: FontWeight.w200,
                           color: Colors.white,
-                          fontFamily: 'Poppins', // Asegúrate de haber añadido la fuente Poppins en tu proyecto
+                          fontFamily: 'Poppins',
                         ),
                       ),
                     ],
@@ -101,23 +142,29 @@ class LoginPage extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black, // Color del botón de registro
+                        backgroundColor: Colors.black26, // Color del botón de registro
                         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                       ),
                       onPressed: () {
                         // Navegar a la página de registro
                       },
-                      child: const Text('REGISTRO'),
+                      child: const Text(
+                        'REGISTRO',
+                        style: TextStyle(color: Colors.white),
+                        ),
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red, // Color del botón de entrar
+                        backgroundColor: const Color.fromARGB(255, 155, 58, 51), // Color del botón de entrar
                         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                       ),
                       onPressed: () {
                         // Iniciar sesión
                       },
-                      child: const Text('ENTRAR'),
+                      child: const Text(
+                        'ENTRAR',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),
@@ -128,7 +175,7 @@ class LoginPage extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Image.asset(
-                    'assets/images/language.png', // Ajusta la ruta según tu imagen
+                    'assets/images/language.png',
                     height: 50,
                     width: 50,
                   ),

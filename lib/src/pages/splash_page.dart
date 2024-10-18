@@ -15,7 +15,10 @@ class _SplashPageState extends State<SplashPage> {
     Future.delayed(Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
+        PageRouteBuilder(
+          transitionDuration: Duration(seconds: 2), // Duración de la transición
+          pageBuilder: (_, __, ___) => const LoginPage(),
+        ),
       );
     });
   }
@@ -44,13 +47,16 @@ class _SplashPageState extends State<SplashPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Imagen circular en el centro
-                CircleAvatar(
-                  radius: 100, // Tamaño de la imagen circular
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: AssetImage('assets/images/VilaExplorer.png'), // La imagen circular del logo
+                // Hero animación de translado (sin rotación aquí)
+                Hero(
+                  tag: 'logoHero', // El tag debe coincidir en ambas páginas
+                  child: CircleAvatar(
+                    radius: 100, // Tamaño de la imagen circular
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: AssetImage('assets/images/VilaExplorer.png'), // La imagen circular del logo
+                  ),
                 ),
-                const SizedBox(height: 20), // Espacio entre la imagen circular y cualquier texto adicional
+                const SizedBox(height: 20),
               ],
             ),
           ),
