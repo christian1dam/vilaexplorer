@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vilaexplorer/pages/tradicionesPage/tradiciones_page.dart';
 import 'app_bar_custom.dart';
 import 'map_view.dart';
 
@@ -12,6 +13,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool showContainer = false;
+  bool showTradicionesPage = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,27 +28,48 @@ class _MyHomePageState extends State<MyHomePage> {
             child: AppBarCustom(onMenuPressed: _toggleContainer),
           ),
           if (showContainer)
-            const Positioned(
+            Positioned(
               bottom: 0,
               left: 0,
               right: 0,
-              child: MenuPrincipal(),
+              child: MenuPrincipal(
+                  onShowTradicionesPressed: _toggleTradicionesPage),
             ),
+          if (showTradicionesPage)
+            const Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: TradicionesPage()),
         ],
       ),
     );
   }
 
+  void _toggleTradicionesPage() {
+    setState(() {
+      _toggleContainer();
+      showTradicionesPage = true;
+    });
+  }
+
   void _toggleContainer() {
     setState(() {
       showContainer = !showContainer;
+      if(showTradicionesPage) showTradicionesPage = false;
     });
   }
 }
 
 class MenuPrincipal extends StatelessWidget {
+  final Function()? onShowTradicionesPressed;
+  final Function()? onShowGastronomiaPressed;
+
   const MenuPrincipal({
     super.key,
+    this.onShowTradicionesPressed,
+    this.onShowGastronomiaPressed,
   });
 
   @override
@@ -59,19 +82,21 @@ class MenuPrincipal extends StatelessWidget {
             Expanded(
               child: Align(
                 alignment: Alignment.topCenter,
-                child: _crearBoton("Gastronomia", "lib/icon/gastronomia.png", 0.7),
+                child:
+                    _crearBoton("Gastronomia", "lib/icon/gastronomia.png", 0.7),
               ),
-            ), 
+            ),
             Expanded(
-              child: Align(
-                alignment: Alignment.topRight,
-                child: _crearBoton("tradiciones", "lib/icon/tradiciones_icon.png", 1),
-              ))
+                child: Align(
+              alignment: Alignment.topRight,
+              child: _crearBoton(
+                  "tradiciones", "lib/icon/tradiciones_icon.png", 1),
+            ))
           ],
         ));
   }
 
-  SizedBox _crearBoton(String texto, String imagePath, double tamanoTexto) { 
+  SizedBox _crearBoton(String texto, String imagePath, double tamanoTexto) {
     return SizedBox(
       width: 130,
       height: 120,
@@ -89,9 +114,7 @@ class MenuPrincipal extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(imagePath,
-                  height: 25, width: 25
-                  ),
+              Image.asset(imagePath, height: 25, width: 25),
               Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: Align(
@@ -103,7 +126,13 @@ class MenuPrincipal extends StatelessWidget {
               ),
             ],
           ),
-          onPressed: () {},
+          onPressed: () {
+            if (texto == "tradiciones" && onShowTradicionesPressed != null) {
+              onShowTradicionesPressed!();
+            } else if (texto == "gastronomia" && onShowGastronomiaPressed != null) {
+              onShowGastronomiaPressed!();
+            }
+          },
         ),
       ),
     );
