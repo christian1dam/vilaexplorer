@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'app_bar_custom.dart';
 import 'map_view.dart';
@@ -58,15 +60,20 @@ class MenuPrincipal extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: Align(
-                alignment: Alignment.topRight,
-                child: _crearBoton(),
+                alignment: Alignment.topCenter,
+                child: _crearBoton("Gastronomia", "lib/icon/gastronomia.png", 0.7),
               ),
-            )
+            ), 
+            Expanded(
+              child: Align(
+                alignment: Alignment.topRight,
+                child: _crearBoton("tradiciones", "lib/icon/tradiciones_icon.png", 1),
+              ))
           ],
         ));
   }
 
-  SizedBox _crearBoton() {
+  SizedBox _crearBoton(String texto, String imagePath, double tamanoTexto) { 
     return SizedBox(
       width: 130,
       height: 120,
@@ -84,16 +91,16 @@ class MenuPrincipal extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('lib/icon/tradiciones_icon.png',
+              Image.asset(imagePath,
                   height: 25, width: 25
                   ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 20),
+              Padding(
+                padding: const EdgeInsets.only(top: 15),
                 child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Text(
-                      "Tradiciones",
-                      textScaler: TextScaler.linear(0.97),
+                      texto,
+                      textScaler: TextScaler.linear(tamanoTexto),
                     )),
               ),
             ],
