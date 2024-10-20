@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'app_bar_custom.dart';
 import 'map_view.dart';
