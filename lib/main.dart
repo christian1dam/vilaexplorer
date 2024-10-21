@@ -16,6 +16,7 @@ class LaVilaExplorerApp extends StatelessWidget {
       routes: getApplicationRoutes(),
       onGenerateRoute: (RouteSettings settings){
         print("Ruta llamada: ${settings.name}");
+        return null; // or provide a valid Route<dynamic> if needed
       },
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/pages/tradicionesPage/tradiciones_page.dart';
+import 'package:vilaexplorer/pages/gastronomia/gastronomia_main.dart';
 import 'app_bar_custom.dart';
 import 'map_view.dart';
 
@@ -14,6 +15,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool showContainer = false;
   bool showTradicionesPage = false;
+  bool showGastronomiaPage = false; //added para manejar la pantalla de gastronomia
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,9 @@ class _MyHomePageState extends State<MyHomePage> {
               left: 0,
               right: 0,
               child: MenuPrincipal(
-                  onShowTradicionesPressed: _toggleTradicionesPage),
+                  onShowTradicionesPressed: _toggleTradicionesPage,
+                  onShowGastronomiaPressed: _toggleGastronomiaPage), //added para manejar la pantalla de gastronomia
+      
             ),
           if (showTradicionesPage)
             const Positioned(
@@ -41,7 +45,16 @@ class _MyHomePageState extends State<MyHomePage> {
               left: 0,
               right: 0,
               bottom: 0,
-              child: TradicionesPage()),
+              child: TradicionesPage()
+              ),
+               if (showGastronomiaPage) // added para mostrar la pantalla de Gastronomia
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: GastronomiaMain(), // Mostramos la pantalla de Gastronomia
+            ),
         ],
       ),
     );
@@ -54,10 +67,18 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+    void _toggleGastronomiaPage() { // added para manejar la pantalla de Gastronomía
+    setState(() {
+      _toggleContainer();
+      showGastronomiaPage = true;
+    });
+  }
+
   void _toggleContainer() {
     setState(() {
       showContainer = !showContainer;
       if(showTradicionesPage) showTradicionesPage = false;
+      if (showGastronomiaPage) showGastronomiaPage = false; // added para ocultar Gastronomía si el contenedor se cierra
     });
   }
 }
@@ -129,8 +150,8 @@ class MenuPrincipal extends StatelessWidget {
           onPressed: () {
             if (texto == "tradiciones" && onShowTradicionesPressed != null) {
               onShowTradicionesPressed!();
-            } else if (texto == "gastronomia" && onShowGastronomiaPressed != null) {
-              onShowGastronomiaPressed!();
+            }  else if (texto == "Gastronomia" && onShowGastronomiaPressed != null) { // Añadido para manejar la navegación a Gastronomía
+              onShowGastronomiaPressed!(); // Navegamos a la pantalla de Gastronomía
             }
           },
         ),
