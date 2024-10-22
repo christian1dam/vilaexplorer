@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vilaexplorer/pages/homePage/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -128,7 +129,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                 ),
 
                 // Espacio desde el fondo del 10%
-                const SizedBox(height: 30),
+                //const SizedBox(height: 30),
 
                 // Espacio superior del 30% de la pantalla
                 SizedBox(height: MediaQuery.of(context).size.height * 0.15),
@@ -153,7 +154,22 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                         backgroundColor: const Color.fromARGB(255, 155, 58, 51),
                         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        // Navegamos a MyHomePage con animación de desvanecimiento
+                        Navigator.of(context).pushReplacement(
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              // Usamos FadeTransition para crear un efecto de desvanecimiento
+                              return FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              );
+                            },
+                            transitionDuration: const Duration(seconds: 2), // Duración de la animación
+                          ),
+                        );
+                      },
                       child: const Text(
                         'ENTRAR',
                         style: TextStyle(color: Colors.white),
