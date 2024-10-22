@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[850],
+      backgroundColor: Color.fromARGB(255, 28, 28, 28),
       resizeToAvoidBottomInset: false, // Ajuste realizado aquí
       body: Stack(
         children: [
@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                 ),
 
                 // Espacio desde el fondo del 10%
-                const SizedBox(height: 30),
+                //const SizedBox(height: 30),
 
                 // Espacio superior del 30% de la pantalla
                 SizedBox(height: MediaQuery.of(context).size.height * 0.15),
@@ -150,7 +150,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 155, 58, 51),
+                        backgroundColor: const Color.fromARGB(255, 136, 55, 55),
                         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                       ),
                       onPressed: () {},
@@ -189,18 +189,31 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   }
 
   Widget _buildTextField(String label, bool isPassword) {
-    return TextField(
+  return Container(
+    decoration: BoxDecoration(
+      boxShadow: [
+        BoxShadow(
+          color: Colors.white.withOpacity(0.5), // Sombra blanca
+          blurRadius: 10, // Desenfoque
+          offset: Offset(0, 4), // Desplazamiento horizontal y vertical de la sombra
+        ),
+      ],
+      borderRadius: BorderRadius.circular(30), // El mismo radio que el TextField
+    ),
+    child: TextField(
       obscureText: isPassword,
       decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(color: Colors.white),
         filled: true,
-        fillColor: Colors.black26,
+        fillColor: Color.fromARGB(255, 65, 65, 65), // Fondo semitransparente
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
         ),
       ),
       style: const TextStyle(color: Colors.white),
-    );
-  }
+    ),
+  );
+}
+
 }

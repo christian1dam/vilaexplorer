@@ -26,7 +26,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[850], // Fondo gris oscuro
+      backgroundColor: Color.fromARGB(255, 28, 28, 28), // Fondo gris oscuro
       body: Stack(
         children: [
           // Imagen de fondo en la parte inferior
