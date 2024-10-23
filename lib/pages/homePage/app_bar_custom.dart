@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vilaexplorer/pages/homePage/menu_principal.dart';
 
 class AppBarCustom extends StatelessWidget {
   final Function() onMenuPressed;
@@ -10,9 +11,7 @@ class AppBarCustom extends StatelessWidget {
       backgroundColor: Colors.black87.withOpacity(0),
       foregroundColor: Colors.white,
       title: Container(
-        decoration: BoxDecoration(
-            color: Colors.black45.withOpacity(0.7),
-            borderRadius: BorderRadius.circular(5)),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
         child: Row(
           children: _contentAppBar(),
         ),
@@ -24,25 +23,54 @@ class AppBarCustom extends StatelessWidget {
     return <Widget>[
       Padding(
           padding: const EdgeInsets.only(left: 5, right: 10),
-          child: IconButton(
-            icon: const Icon(
-              Icons.menu,
-              size: 35,
+          child: Container(
+            padding: EdgeInsets.all(1),
+            decoration: const BoxDecoration(
+                color: Color.fromRGBO(36, 36, 36, 1),
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            child: IconButton(
+              icon: const Icon(
+                Icons.menu,
+                size: 35,
+              ),
+              onPressed: onMenuPressed,
             ),
-            onPressed: onMenuPressed,
           )),
-      const Padding(
-        padding: EdgeInsets.only(right: 140),
-        child: Text("Villajoyosa"),
+      Padding(
+        padding: const EdgeInsets.only(right: 80),
+        child: Container(
+            padding: EdgeInsets.all(5),
+            decoration: const BoxDecoration(
+              color: Color.fromRGBO(36, 36, 36, 1),
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: MySvgWidget(path: 'lib/icon/location.svg'),
+                  ),
+                  Text("Villajoyosa"),
+                ],
+              ),
+            )),
       ),
-      const Padding(
-        padding: EdgeInsets.only(right: 7),
-        child: Icon(Icons.cloud),
-      ),
-      const Padding(
-        padding: EdgeInsets.only(right: 5),
-        child: Text("+2"),
-      )
+      Container(
+        padding: EdgeInsets.all(7),
+          decoration: const BoxDecoration(
+              color: Color.fromRGBO(36, 36, 36, 1),
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+          child: const Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: 5),
+                child: MySvgWidget(path: "lib/icon/sol_icon.svg", height: 20),
+              ),
+              Text("+2"),
+            ],
+          )),
     ];
   }
 }
