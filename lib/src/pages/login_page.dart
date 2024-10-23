@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/pages/homePage/home_page.dart';
+import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -11,6 +12,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
   late AnimationController _rotationController;
   late Animation<double> _rotationAnimation;
+  late Animation<double> _buttonAnimation; // Nueva animación para los botones
 
   @override
   void initState() {
@@ -26,6 +28,14 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       curve: Curves.easeInOut,
     );
 
+    // Inicializa la animación de los botones
+    _buttonAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _rotationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
     _rotationController.forward();
   }
 
@@ -39,7 +49,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[850],
-      resizeToAvoidBottomInset: false, // Ajuste realizado aquí
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Align(
@@ -58,14 +68,11 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               children: [
-                // Espacio superior del 30% de la pantalla
                 SizedBox(height: MediaQuery.of(context).size.height * 0.18),
-
-                // Hero con rotación
                 Hero(
                   tag: 'logoHero',
                   child: RotationTransition(
-                    turns: Tween(begin: 0.0, end: 1.0).animate(_rotationAnimation),
+                    turns: Tween(begin: 1.0, end: 0.0).animate(_rotationAnimation),
                     child: CircleAvatar(
                       radius: 80,
                       backgroundColor: Colors.transparent,
@@ -74,8 +81,6 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                // Título
                 RichText(
                   text: TextSpan(
                     children: [
@@ -110,13 +115,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                // Campos de texto
                 _buildTextField('Correo', false),
                 const SizedBox(height: 20),
                 _buildTextField('Contraseña', true),
-
-                // Enlace de contraseña
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -127,73 +128,89 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                     ),
                   ),
                 ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.20),
+                // Usar SlideTransition aquí
+                SlideTransition(
+                  position: Tween<Offset>(
+                    begin: Offset(0.0, 0.5), // Desplazar hacia arriba
+                    end: Offset.zero,
+                  ).animate(_buttonAnimation),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 58, 58, 58),
+                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => RegisterPage(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(1.0, 0.0);
+                                const end = Offset.zero;
+                                const curve = Curves.easeInOut;
 
-                // Espacio desde el fondo del 10%
-                //const SizedBox(height: 30),
+                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-                // Espacio superior del 30% de la pantalla
-                SizedBox(height: MediaQuery.of(context).size.height * 0.15),
-
-                // Botones de registro y entrar
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 58, 58, 58),
-                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                              transitionDuration: const Duration(milliseconds: 500),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'REGISTRO',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
-                      onPressed: () {},
-                      child: const Text(
-                        'REGISTRO',
-                        style: TextStyle(color: Colors.white),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          'assets/images/language.png',
+                          height: 30,
+                          width: 30,
+                        ),
                       ),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 155, 58, 51),
-                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                      ),
-                      onPressed: () {
-                        // Navegamos a MyHomePage con animación de desvanecimiento
-                        Navigator.of(context).pushReplacement(
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              // Usamos FadeTransition para crear un efecto de desvanecimiento
-                              return FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              );
-                            },
-                            transitionDuration: const Duration(seconds: 2), // Duración de la animación
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        'ENTRAR',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 155, 58, 51),
+                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(0.0, 1.0);
+                                const end = Offset.zero;
+                                const curve = Curves.easeInOut;
 
-                const SizedBox(height: 30),
+                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-                // Icono de idioma con fondo blanco
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15), // Esquinas redondeadas
-                    ),
-                    padding: const EdgeInsets.all(8.0), // Espacio interno
-                    child: Image.asset(
-                      'assets/images/language.png',
-                      height: 30,
-                      width: 30,
-                    ),
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                              transitionDuration: const Duration(seconds: 2),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'ACCEDER',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
