@@ -6,17 +6,17 @@
   <tr>
     <td align="center" style="border: none;">
       <a href="https://github.com/Cobra0467">
-        <img src="https://github.com/Cobra0467.png" width="100px" style="border-radius: 50%;" alt="Iván Ibáñez"/>
+        <img src="https://github.com/Cobra0467.png" width="100px" style="border-radius: 50%; box-shadow: none;" alt="Iván Ibáñez"/>
       </a>
     </td>
     <td align="center" style="border: none;">
       <a href="https://github.com/christian1dam">
-        <img src="https://github.com/christian1dam.png" width="100px" style="border-radius: 50%;" alt="Christian Mamani"/>
+        <img src="https://github.com/christian1dam.png" width="100px" style="border-radius: 50%; box-shadow: none;" alt="Christian Mamani"/>
       </a>
     </td>
     <td align="center" style="border: none;">
       <a href="https://github.com/aangelcruzmx">
-        <img src="https://github.com/aangelcruzmx.png" width="100px" style="border-radius: 50%;" alt="Alberto Ángel Cruz"/>
+        <img src="https://github.com/aangelcruzmx.png" width="100px" style="border-radius: 50%; box-shadow: none;" alt="Alberto Ángel Cruz"/>
       </a>
     </td>
   </tr>
