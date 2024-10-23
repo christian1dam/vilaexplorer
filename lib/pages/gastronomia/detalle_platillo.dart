@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:vilaexplorer/pages/homepage/map_view.dart'; // Asegúrate de importar tu clase MapView correctamente
+import 'package:vilaexplorer/pages/homepage/map_view.dart'; // MapView correctamente
 
-// Definimos constantes para los estilos de los botones y textos
+// Constantes para los estilos de los botones y textos
 const kButtonBackgroundColorSelected = Colors.black87;
 const kButtonBackgroundColorUnselected = Colors.grey;
 const kButtonTextStyle = TextStyle(
@@ -27,6 +27,11 @@ const kTituloTextStyle = TextStyle(
 );
 
 class DetallePlatillo extends StatefulWidget {
+  final String platillo;  // Agregamos este parámetro para recibir el platillo
+
+  // Constructor con el parámetro 'platillo'
+  const DetallePlatillo({Key? key, required this.platillo}) : super(key: key);
+
   @override
   _DetallePlatilloState createState() => _DetallePlatilloState();
 }
@@ -36,17 +41,15 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
 
   @override
   Widget build(BuildContext context) {
-    final String platillo = ModalRoute.of(context)!.settings.arguments as String;
-
-    return Stack(  // Usamos Stack para superponer la pantalla sobre el mapa
+    return Stack(
       children: [
-        MapView(),  // Mostramos el mapa en el fondo sin const
+        const MapView(),  // Mapa en el fondo
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-            height: MediaQuery.of(context).size.height * 0.75,  // Ajustamos la altura al 75%
+            height: MediaQuery.of(context).size.height * 0.75,
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.7),  // Semi-transparente para dejar ver el mapa
+              color: Colors.black.withOpacity(0.7),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
@@ -54,7 +57,7 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
             ),
             child: Column(
               children: [
-                // Encabezado con título centrado y flecha de regreso
+                // Encabezado con título centrado y botón de regreso
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Stack(
@@ -69,7 +72,7 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
                       Align(
                         alignment: Alignment.center,
                         child: Text(
-                          platillo,
+                          widget.platillo,  // Usamos el platillo que se pasó
                           style: kTituloTextStyle,
                         ),
                       ),
@@ -80,7 +83,7 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),  // Aplicamos radio de borde de 15
+                    borderRadius: BorderRadius.circular(15),
                     child: Image.asset(
                       'assets/images_gastronomia/paella-valenciana.jpg',
                       height: 200,
@@ -89,11 +92,11 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
                     ),
                   ),
                 ),
-                _buildButtonRow(),
+                _buildButtonRow(),  // Llamada al método que aún no estaba definido
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: SingleChildScrollView(  // Añadimos scroll en caso de contenido largo
+                    child: SingleChildScrollView(
                       child: showIngredientes ? _buildIngredientes() : _buildReceta(),
                     ),
                   ),
@@ -106,6 +109,7 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
     );
   }
 
+  // Definimos el método _buildButtonRow que genera la fila de botones
   Widget _buildButtonRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -125,6 +129,7 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
     );
   }
 
+  // Definimos el método _buildToggleButton que crea un botón de alternancia
   Widget _buildToggleButton(String text, bool isSelected, VoidCallback onPressed) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
@@ -139,6 +144,7 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
     );
   }
 
+  // Método que genera la sección de ingredientes
   Widget _buildIngredientes() {
     return Text(
       '1 taza de arroz\n2 muslos de pollo\n100g de judías verdes\nPimiento rojo\n...',
@@ -146,6 +152,7 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
     );
   }
 
+  // Método que genera la sección de la receta
   Widget _buildReceta() {
     return Text(
       'En una paellera, sofríe el pollo con las verduras. Luego añade el arroz y cubre con caldo de pollo...',

@@ -14,12 +14,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false, // Oculta la banda de "debug"
       title: 'Vila Explorer',
+      home: SplashPage(),
       //initialRoute: '/',
       //routes: getApplicationRoutes(),  // Si se descomentan estas dos líneas la App dice que home == null y no inicia
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SplashPage(),
+      //home: SplashPage(),
     );
   }
 }
