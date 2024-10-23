@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vilaexplorer/pages/homePage/home_page.dart';
 import 'register_page.dart';
 
@@ -174,11 +175,11 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                           borderRadius: BorderRadius.circular(15),
                         ),
                         padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(
-                          'assets/images/language.png',
+                        child: SvgPicture.asset(
+                          'lib/icon/language.svg',
                           height: 30,
                           width: 30,
-                        ),
+                        )
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -221,6 +222,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
+
+
   Widget _buildTextField(String label, bool isPassword) {
     return TextField(
       obscureText: isPassword,
@@ -236,4 +239,25 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       style: const TextStyle(color: Colors.white),
     );
   }
+  
+}
+
+
+  class MySvgWidget extends StatelessWidget {
+  final String path;
+  final double? height;
+  final double? width;
+  final Alignment? alignment;
+
+  const MySvgWidget({
+    super.key,
+    required this.path,
+    this.height,
+    this.width,
+    this.alignment,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(path, height: height, width:width);}
 }
