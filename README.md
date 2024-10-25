@@ -1,4 +1,4 @@
-# 🗺️ | Welcome to Vila Explorer
+# 🗺️ | Welcome to Vila Explorer Flutter
 <img src="https://github.com/christian1dam/vilaexplorer/blob/feature/signIn/assets/images/VilaExplorer.png" alt="VilaExplorer" width="300"/>
 
 ## 🙎 | Contributors
