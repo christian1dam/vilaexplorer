@@ -1,0 +1,62 @@
+[
+    {
+        "nombre": "Moros y Cristianos",
+        "fecha": "Del 24 al 31 de julio",
+        "imagen": "lib/icon/tradiciones/moros_y_cristianos.jpg",
+        "descripcion": "Según cuenta la tradición, el 29 de Julio de 1538, los habitantes de La Vila Joiosa, ven peligrar sus hogares, sus huertas, sus vidas... al entrever en alta mar cuarenta galeras sarracenas que quieren conquistar la costa vilera."
+    },
+    {
+        "nombre": "San Miguel",
+        "fecha": "Finales de septiembre",
+        "imagen": "lib/icon/tradiciones/san_miguel.jpg",
+        "descripcion": "Las Fiestas de San Miguel se celebran en la Ermita, una pedanía de La Vila, el fin de semana más cercano al 29 de Septiembre. Son las fiestas más antiguas de La Vila Joiosa y la comarca puesto que se remontan al siglo XVI, cuando en diciembre de 1533, el Rey Carlos V concedió al municipio el permiso para celebrar mercado y feria anual a perpetuidad desde San Miguel a Todos los Santos."
+    },
+    {
+        "nombre": "Lágrimas Santa Marta",
+        "fecha": "Agosto",
+        "imagen": "lib/icon/tradiciones/lagrimas.jpg",
+        "descripcion": "Según cuenta un acta notarial, que puedes leer en la Capilla de Santa Marta en la Iglesia de la Asunción (una de las tres Iglesia-Fortaleza del Gótico Levantino que se conservan), el 8 de Mayo de 1653 la imagen de la Patrona Santa Marta lloró de alegría a las 11 de la mañana..."
+    },
+    {
+        "nombre": "Carta Pobla",
+        "fecha": "Primer fin de semana de mayo",
+        "imagen": "lib/icon/tradiciones/carta_pobla.jpg",
+        "descripcion": "El 8 de Mayo La Vila Joiosa se viste de gala para celebrar su fundación como pueblo. En el año 1300 el Almirante del Rey Jaume II, En Bernat d’En Sarrià, otorgaba a La Vila Joiosa su “Carta de Poblament”. Aunque hay investigadores que han descubierto que la fecha real fue el 8 de Marzo."
+    },
+    {
+        "nombre": "Virgen del Carmen",
+        "fecha": "16 de Julio",
+        "imagen": "lib/icon/tradiciones/virgen_del_carmen.jpg",
+        "descripcion": "Hay banderitas de papel de proa a popa en las embarcaciones pesqueras y de recreo. Las sirenas y cláxones tienen un timbre diferente. A bordo niños y niñas, mujeres y hombres mayores, jóvenes… con cara risueña y ambiente festivo."
+    },
+    {
+        "nombre": "Semana Santa",
+        "fecha": "Marzo - Abril",
+        "imagen": "lib/icon/tradiciones/semana_santa.jpg",
+        "descripcion": "La Semana Santa de La Vila Joiosa, a pesar de no ser sus fiestas mayores o patronales, tiene una larga tradición en el municipio. Además de las celebraciones litúrgicas, los traslados y procesiones de las diferentes imágenes acompañadas de sus respectivas cofradías marcan el carácter solemne de la Semana Santa vilera."
+    },
+    {
+        "nombre": "San Juan",
+        "fecha": "24 de junio",
+        "imagen": "lib/icon/tradiciones/san_juan.jpg",
+        "descripcion": "La vespra de Sant Joan, el 23 de juny, és la nit més curta i màgica de l'any. A la Vila Joiosa és un dia de tradicions, especialment per als més menuts de la casa, que té com a escenaris la platja i la mar."
+    },
+    {
+        "nombre": "Fiestas de barrio",
+        "fecha": "sobre el 17 de Enero",
+        "imagen": "lib/icon/tradiciones/fiesta_barrio.jpg",
+        "descripcion": "El calendario festero de La Vila Joiosa se completa con fiestas de barrio que en algunas ocasiones, por su tradición o arraigo en el municipio, o por la fecha y lugar de celebración, se convierten en citas ineludibles para todos los vileros y vileras, y también para turistas."
+    },
+    {
+        "nombre": "Virgen de Tiscar",
+        "fecha": "Segundo fin de semana de Junio",
+        "imagen": "lib/icon/tradiciones/virgen_tiscar.jpg",
+        "descripcion": "La Romería en Honor a la Virgen de Tiscar se celebra el segundo fin de semana de junio e inunda La Vila Joiosa del color, el sabor y el arte andaluz."
+    },
+    {
+        "nombre": "Navidad",
+        "fecha": "Diciembre",
+        "imagen": "lib/icon/tradiciones/navidad.jpg",
+        "descripcion": "Cuando llega diciembre La Vila Joiosa se viste de Navidad. Luces y villancicos adornan las calles en las que se respira un ambiente especial, y los colores de la Navidad tiñen cada rincón de la ciudad."
+    }
+]
