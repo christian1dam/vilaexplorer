@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/pages/homePage/menu_principal.dart';
+import 'package:vilaexplorer/pages/tradicionesPage/detalleFiestaTradicion.dart';
 import 'package:vilaexplorer/pages/tradicionesPage/tradiciones.dart';
 import 'app_bar_custom.dart';
 import 'map_view.dart';
-import 'package:vilaexplorer/pages/tradicionesPage/DetalleFiestaTradicion.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
-          if (showDetalleFiestaTradicion && selectedFiesta != null)
+          if (showDetalleFiestaTradicion)
             Positioned(
               top: 0,
               left: 0,
@@ -58,13 +58,18 @@ class _MyHomePageState extends State<MyHomePage> {
               bottom: 0,
               child: DetalleFiestaTradicion(
                 fiestaName: selectedFiesta!,
+                onClose: () {
+                  setState(() {
+                    showDetalleFiestaTradicion = false;
+                    showTradicionesPage = true; // Volver a mostrar TradicionesPage
+                  });
+                },
               ),
             ),
         ],
       ),
     );
   }
-
 
   void _toggleDetalleFiestaTradicion(String fiestaName) {
     setState(() {
@@ -81,7 +86,6 @@ class _MyHomePageState extends State<MyHomePage> {
       showDetalleFiestaTradicion = false;
     });
   }
-
 
   void _toggleMenuPrincipal() {
     setState(() {

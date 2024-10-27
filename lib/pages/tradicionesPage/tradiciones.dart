@@ -59,7 +59,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
                   height: size.height * 0.75,
                   width: size.width,
                   decoration: const BoxDecoration(
-                    color: Color.fromRGBO(15, 15, 15, 1),
+                    color: Color.fromRGBO(15, 15, 15, 0.9),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
