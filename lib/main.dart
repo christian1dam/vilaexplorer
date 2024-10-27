@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pruebas_vila_explorer/src/pages/splash_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const LaVilaExplorerApp());
 }
 
 class MyApp extends StatelessWidget {
