@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pruebas_vila_explorer/src/pages/passwordRecover_page.dart';
+
+// import 'package:vilaexplorer/pages/homePage/home_page.dart';
+// import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -10,6 +15,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
   late AnimationController _rotationController;
   late Animation<double> _rotationAnimation;
+  late Animation<double> _buttonAnimation; // Nueva animación para los botones
 
   @override
   void initState() {
@@ -25,6 +31,14 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       curve: Curves.easeInOut,
     );
 
+    // Inicializa la animación de los botones
+    _buttonAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _rotationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
     _rotationController.forward();
   }
 
@@ -37,8 +51,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[850],
-      resizeToAvoidBottomInset: false, // Ajuste realizado aquí
+      backgroundColor: const Color.fromARGB(255, 28, 28, 28),
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Align(
@@ -57,14 +71,12 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               children: [
-                // Espacio superior del 30% de la pantalla
                 SizedBox(height: MediaQuery.of(context).size.height * 0.18),
-
-                // Hero con rotación
+                // LoginPage
                 Hero(
                   tag: 'logoHero',
                   child: RotationTransition(
-                    turns: Tween(begin: 0.0, end: 1.0).animate(_rotationAnimation),
+                    turns: Tween(begin: 1.0, end: 0.0).animate(_rotationAnimation),
                     child: CircleAvatar(
                       radius: 80,
                       backgroundColor: Colors.transparent,
@@ -72,9 +84,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
 
-                // Título
+                const SizedBox(height: 20),
                 RichText(
                   text: TextSpan(
                     children: [
@@ -109,17 +120,22 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                // Campos de texto
                 _buildTextField('Correo', false),
                 const SizedBox(height: 20),
                 _buildTextField('Contraseña', true),
-
-                // Enlace de contraseña
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (BuildContext context) {
+                          return const PasswordRecoverPage(); // Llamar a la nueva página
+                        },
+                      );
+                    },
                     child: const Text(
                       '¿Has olvidado tu contraseña?',
                       style: TextStyle(color: Colors.white),
@@ -127,57 +143,89 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   ),
                 ),
 
-                // Espacio desde el fondo del 10%
-                const SizedBox(height: 30),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.20),
+                // Usar SlideTransition aquí
+                SlideTransition(
+                  position: Tween<Offset>(
+                    begin: Offset(0.0, 0.5), // Desplazar hacia arriba
+                    end: Offset.zero,
+                  ).animate(_buttonAnimation),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 58, 58, 58),
+                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => RegisterPage(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(1.0, 0.0);
+                                const end = Offset.zero;
+                                const curve = Curves.easeInOut;
 
-                // Espacio superior del 30% de la pantalla
-                SizedBox(height: MediaQuery.of(context).size.height * 0.15),
+                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-                // Botones de registro y entrar
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 58, 58, 58),
-                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                              transitionDuration: const Duration(milliseconds: 500),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'REGISTRO',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
-                      onPressed: () {},
-                      child: const Text(
-                        'REGISTRO',
-                        style: TextStyle(color: Colors.white),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        padding: const EdgeInsets.all(8.0),
+                        child: SvgPicture.asset(
+                          'lib/icon/language.svg',
+                          height: 30,
+                          width: 30,
+                        )
                       ),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 155, 58, 51),
-                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                      ),
-                      onPressed: () {},
-                      child: const Text(
-                        'ENTRAR',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 155, 58, 51),
+                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(0.0, 1.0);
+                                const end = Offset.zero;
+                                const curve = Curves.easeInOut;
 
-                const SizedBox(height: 30),
+                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-                // Icono de idioma con fondo blanco
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15), // Esquinas redondeadas
-                    ),
-                    padding: const EdgeInsets.all(8.0), // Espacio interno
-                    child: Image.asset(
-                      'assets/images/language.png',
-                      height: 30,
-                      width: 30,
-                    ),
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                              transitionDuration: const Duration(seconds: 2),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'ACCEDER',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -187,6 +235,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       ),
     );
   }
+
+
 
   Widget _buildTextField(String label, bool isPassword) {
     return TextField(
@@ -203,4 +253,25 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       style: const TextStyle(color: Colors.white),
     );
   }
+  
+}
+
+
+  class MySvgWidget extends StatelessWidget {
+  final String path;
+  final double? height;
+  final double? width;
+  final Alignment? alignment;
+
+  const MySvgWidget({
+    super.key,
+    required this.path,
+    this.height,
+    this.width,
+    this.alignment,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(path, height: height, width:width);}
 }
