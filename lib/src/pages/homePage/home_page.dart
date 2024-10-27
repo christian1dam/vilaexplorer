@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vilaexplorer/pages/tradicionesPage/tradiciones_page.dart';
+import 'package:vilaexplorer/lib/pages/tradicionesPage/tradiciones_page.dart';
 import 'app_bar_custom.dart';
 import 'map_view.dart';
 
