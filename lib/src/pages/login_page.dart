@@ -159,24 +159,24 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                         ),
                         onPressed: () {
-                          // Navigator.of(context).push(
-                          //   PageRouteBuilder(
-                          //     pageBuilder: (context, animation, secondaryAnimation) => RegisterPage(),
-                          //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          //       const begin = Offset(1.0, 0.0);
-                          //       const end = Offset.zero;
-                          //       const curve = Curves.easeInOut;
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => RegisterPage(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(1.0, 0.0);
+                                const end = Offset.zero;
+                                const curve = Curves.easeInOut;
 
-                          //       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-                          //       return SlideTransition(
-                          //         position: animation.drive(tween),
-                          //         child: child,
-                          //       );
-                          //     },
-                          //     transitionDuration: const Duration(milliseconds: 500),
-                          //   ),
-                          // );
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                              transitionDuration: const Duration(milliseconds: 500),
+                            ),
+                          );
                         },
                         child: const Text(
                           'REGISTRO',
@@ -201,24 +201,24 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                         ),
                         onPressed: () {
-                          // Navigator.of(context).pushReplacement(
-                          //   PageRouteBuilder(
-                          //     pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
-                          //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          //       const begin = Offset(0.0, 1.0);
-                          //       const end = Offset.zero;
-                          //       const curve = Curves.easeInOut;
+                          Navigator.of(context).pushReplacement(
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(0.0, 1.0);
+                                const end = Offset.zero;
+                                const curve = Curves.easeInOut;
 
-                          //       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-                          //       return SlideTransition(
-                          //         position: animation.drive(tween),
-                          //         child: child,
-                          //       );
-                          //     },
-                          //     transitionDuration: const Duration(seconds: 2),
-                          //   ),
-                          // );
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                              transitionDuration: const Duration(seconds: 2),
+                            ),
+                          );
                         },
                         child: const Text(
                           'ACCEDER',
