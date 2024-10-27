@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:vilaexplorer/pages/homePage/menu_principal.dart';
-import 'package:vilaexplorer/pages/tradicionesPage/detalleFiestaTradicion.dart';
-import 'package:vilaexplorer/pages/tradicionesPage/tradiciones.dart';
+import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
+import 'package:vilaexplorer/src/pages/tradicionesPage/detalleFiestaTradicion.dart';
+import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
 import 'app_bar_custom.dart';
 import 'map_view.dart';
 

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:vilaexplorer/pages/tradicionesPage/tarjetaFiestaTradicion.dart';
+import 'package:vilaexplorer/src/pages/tradicionesPage/tarjetaFiestaTradicion.dart';
 
 class TradicionesPage extends StatefulWidget {
   final Function(String) onFiestaSelected;
