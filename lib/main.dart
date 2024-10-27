@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pruebas_vila_explorer/src/pages/splash_page.dart';
+import 'src/pages/splash_page.dart';
 
 void main() {
   runApp(const MyApp());

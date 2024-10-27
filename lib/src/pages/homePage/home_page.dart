@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vilaexplorer/lib/pages/tradicionesPage/tradiciones_page.dart';
 import 'app_bar_custom.dart';
 import 'map_view.dart';
 
@@ -35,13 +34,13 @@ class _MyHomePageState extends State<MyHomePage> {
               child: MenuPrincipal(
                   onShowTradicionesPressed: _toggleTradicionesPage),
             ),
-          if (showTradicionesPage)
-            const Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: TradicionesPage()),
+          // if (showTradicionesPage)
+          //   const Positioned(
+          //     top: 0,
+          //     left: 0, 
+          //     right: 0,
+          //     bottom: 0,
+          //     child: TradicionesPage()),
         ],
       ),
     );

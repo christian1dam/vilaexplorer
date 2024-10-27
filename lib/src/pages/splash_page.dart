@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pruebas_vila_explorer/src/pages/login_page.dart';
+
+import 'login_page.dart'; // Adjust the path to where LoginPage is defined
 
 class SplashPage extends StatefulWidget {
   @override
@@ -26,7 +27,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 28, 28, 28), // Fondo gris oscuro
+      backgroundColor: Colors.grey[850], // Fondo gris oscuro
       body: Stack(
         children: [
           // Imagen de fondo en la parte inferior
