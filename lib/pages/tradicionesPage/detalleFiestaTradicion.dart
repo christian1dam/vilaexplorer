@@ -72,14 +72,31 @@ class _DetalleFiestaTradicionState extends State<DetalleFiestaTradicion> {
                   ),
                 ),
                 Positioned(
-                  top: 10,
-                  left: 16,
-                  child: Text(
-                    "Fiesta de ${fiestaDetalles['nombre']}",
-                    style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  top: 0,
+                  left: 0,
+                  child: Container(
+                    width: 500,
+                    padding: EdgeInsets.all(15),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15)),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color.fromRGBO(0, 0, 0, 0.7),
+                          Color.fromRGBO(0, 0, 0, 0.0),
+                        ],
+                      ),
+                    ),
+                    child: Text(
+                      "Fiesta de ${fiestaDetalles['nombre']}",
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

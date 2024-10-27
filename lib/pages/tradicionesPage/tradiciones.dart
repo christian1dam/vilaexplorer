@@ -4,12 +4,13 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:vilaexplorer/pages/tradicionesPage/tarjetaFiestaTradicion.dart';
 
 class TradicionesPage extends StatefulWidget {
-  final Function(String)
-      onFiestaSelected; // Callback para notificar el nombre de la fiesta seleccionada.
+  final Function(String) onFiestaSelected;
+  final VoidCallback onClose; // Añadido para gestionar el cierre
 
   const TradicionesPage({
     super.key,
     required this.onFiestaSelected,
+    required this.onClose,
   });
 
   @override
@@ -38,8 +39,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
   void _toggleContainer(String nombreFiesta) {
     setState(() {
       selectedFiesta = nombreFiesta;
-      widget.onFiestaSelected(
-          nombreFiesta); // Llama al callback para notificar el nombre de la fiesta seleccionada.
+      widget.onFiestaSelected(nombreFiesta);
     });
   }
 
@@ -88,16 +88,9 @@ class _TradicionesPageState extends State<TradicionesPage> {
                                 ),
                               ),
                             ),
-                            Container(
-                              decoration: const BoxDecoration(
-                                  color: Color.fromRGBO(30, 30, 30, 1),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
-                              margin: const EdgeInsets.only(right: 15, top: 10),
-                              width: 35,
-                              height: 35,
-                              child:
-                                  const Icon(Icons.close, color: Colors.white),
+                            IconButton(
+                              icon: const Icon(Icons.close, color: Colors.white),
+                              onPressed: widget.onClose, // Usa el callback para cerrar
                             ),
                           ],
                         ),
@@ -139,23 +132,6 @@ class _TradicionesPageState extends State<TradicionesPage> {
                   ),
                 ),
               ),
-              if (selectedFiesta != null)
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    color: Colors.black.withOpacity(0.7),
-                    height: size.height * 0.4,
-                    child: Center(
-                      child: Text(
-                        "Detalles de $selectedFiesta",
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                    ),
-                  ),
-                ),
             ],
           );
   }

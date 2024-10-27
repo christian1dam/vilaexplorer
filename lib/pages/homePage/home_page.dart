@@ -16,7 +16,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool showMenuPrincipal = false;
   bool showTradicionesPage = false;
   bool showDetalleFiestaTradicion = false;
-  String? selectedFiesta; // Para almacenar la fiesta seleccionada
+  String? selectedFiesta;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onFiestaSelected: (fiestaName) {
                   _toggleDetalleFiestaTradicion(fiestaName);
                 },
+                onClose: _toggleTradicionesPage, // Callback para cerrar TradicionesPage
               ),
             ),
           if (showDetalleFiestaTradicion)
@@ -81,9 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _toggleTradicionesPage() {
     setState(() {
-      _toggleMenuPrincipal();
       showTradicionesPage = !showTradicionesPage;
-      showDetalleFiestaTradicion = false;
+      showMenuPrincipal = !showTradicionesPage; // Alterna el menú principal
     });
   }
 
