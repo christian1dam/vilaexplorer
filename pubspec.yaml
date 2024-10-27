@@ -1,4 +1,4 @@
-name: pruebas_vila_explorer
+name: vilaexplorer
 description: "A new Flutter project."
 publish_to: "none"
 
@@ -28,7 +28,7 @@ flutter:
     - lib/icon/
     - lib/icon/tradiciones/
     - assets/
-    # - assets/images_gastronomia/
+    - assets/images_gastronomia/
 
   fonts:
     - family: Poppins

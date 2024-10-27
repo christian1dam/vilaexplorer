@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import 'homePage/home_page.dart';
-import 'passwordRecover_page.dart';
-import 'register_page.dart';
+import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
+import 'package:vilaexplorer/src/pages/passwordRecover_page.dart';
+import 'package:vilaexplorer/src/pages/register_page.dart';
 
 
 class LoginPage extends StatefulWidget {
