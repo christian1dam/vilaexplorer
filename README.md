@@ -1,17 +1,16 @@
-# 🗺️ | Welcome to Vila Explorer Flutter
-<img src="https://github.com/christian1dam/vilaexplorer/blob/feature/signIn/assets/images/VilaExplorer.png" alt="VilaExplorer" width="300"/>
+# vilaexplorer
 
-## 🙎 | Contributors
+A new Flutter project.
 
-<p align="left">
-  <a href="https://github.com/Cobra0467" style="margin-left: 20px;">
-    <img src="https://github.com/Cobra0467.png" width="100" height="100" style="border-radius: 50%; vertical-align: middle;" alt="Iván Ibáñez"/>
-  </a>
-  <a href="https://github.com/christian1dam" style="margin-left: 20px;">
-    <img src="https://github.com/christian1dam.png" width="100" height="100" style="border-radius: 50%; vertical-align: middle;" alt="Christian Mamani"/>
-  </a>
-  <a href="https://github.com/aangelcruzmx" style="margin-left: 20px;">
-    <img src="https://github.com/aangelcruzmx.png" width="100" height="100" style="border-radius: 50%; vertical-align: middle;" alt="Alberto Ángel Cruz"/>
-  </a>
-</p>
+## Getting Started
 
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

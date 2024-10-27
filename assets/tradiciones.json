@@ -1,0 +1,52 @@
+[
+    {
+        "nombre": "Moros y Cristianos",
+        "fecha": "Del 24 al 31 de julio",
+        "imagen": "lib/icon/tradiciones/moros_y_cristianos.jpg"
+    },
+    {
+        "nombre": "San Miguel",
+        "fecha": "Finales de septiembre",
+        "imagen": "lib/icon/tradiciones/san_miguel.jpg"
+    },
+    {
+        "nombre": "Lágrimas Santa Marta",
+        "fecha": "Agosto",
+        "imagen": "lib/icon/tradiciones/lagrimas.jpg"
+    },
+    {
+        "nombre": "Carta Pobla",
+        "fecha": "Primer fin de semana de mayo",
+        "imagen": "lib/icon/tradiciones/carta_pobla.jpg"
+    },
+    {
+        "nombre": "Virgen del Carmen",
+        "fecha": "16 de Julio",
+        "imagen": "lib/icon/tradiciones/virgen_del_carmen.jpg"
+    },
+    {
+        "nombre": "Semana Santa",
+        "fecha": "Marzo - Abril",
+        "imagen": "lib/icon/tradiciones/semana_santa.jpg"
+    },
+    {
+        "nombre": "San Juan",
+        "fecha": "24 de junio",
+        "imagen": "lib/icon/tradiciones/san_juan.jpg"
+    },
+    {
+        "nombre": "Fiestas de barrio",
+        "fecha": "sobre el 17 de Enero",
+        "imagen": "lib/icon/tradiciones/fiesta_barrio.jpg"
+    },
+    {
+        "nombre": "Virgen de Tiscar",
+        "fecha": "Segundo fin de semana de Junio",
+        "imagen": "lib/icon/tradiciones/virgen_tiscar.jpg"
+    },
+    {
+        "nombre": "Navidad",
+        "fecha": "Diciembre",
+        "imagen": "lib/icon/tradiciones/navidad.jpg"
+    }
+]
