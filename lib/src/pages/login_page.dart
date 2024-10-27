@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pruebas_vila_explorer/src/pages/passwordRecover_page.dart';
+import 'package:pruebas_vila_explorer/src/pages/register_page.dart';
 
 // import 'package:vilaexplorer/pages/homePage/home_page.dart';
 // import 'register_page.dart';
