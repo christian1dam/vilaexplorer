@@ -18,6 +18,7 @@ class MenuPrincipal extends StatelessWidget {
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+            // color: Color.fromRGBO(32, 29, 29, 0.9)),
             color: Color.fromRGBO(32, 29, 29, 0.9)),
         height: MediaQuery.of(context).size.height / 2,
         child: Column(

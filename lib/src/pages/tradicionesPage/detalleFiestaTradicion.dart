@@ -50,7 +50,7 @@ class _DetalleFiestaTradicionState extends State<DetalleFiestaTradicion> {
         height: size.height * 0.6,
         padding: const EdgeInsets.all(16),
         decoration: const BoxDecoration(
-          color: Color.fromRGBO(15, 15, 15, 0.9),
+          color: Color.fromRGBO(32, 29, 29, 0.9),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),

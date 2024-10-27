@@ -26,6 +26,8 @@ flutter:
   assets:
     - assets/images/
     - lib/icon/
+    - lib/icon/tradiciones/
+    - assets/
     # - assets/images_gastronomia/
 
   fonts:

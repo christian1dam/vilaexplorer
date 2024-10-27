@@ -3,7 +3,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapView extends StatelessWidget {
-  const MapView({Key? key}) : super(key: key);
+  final VoidCallback clearScreen;
+
+  const MapView({super.key, required this.clearScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +15,9 @@ class MapView extends StatelessWidget {
             initialZoom: 11,
             interactionOptions:
                 InteractionOptions(flags: ~InteractiveFlag.doubleTapZoom)),
-        children: [openStreetMapTileLayer]);
+        children: [
+          GestureDetector(onTap: clearScreen, child: openStreetMapTileLayer)
+        ]);
   }
 
   TileLayer get openStreetMapTileLayer => TileLayer(

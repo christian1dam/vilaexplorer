@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:vilaexplorer/src/pages/tradicionesPage/tarjetaFiestaTradicion.dart';
+
+import 'tarjetaFiestaTradicion.dart';
 
 class TradicionesPage extends StatefulWidget {
   final Function(String) onFiestaSelected;
@@ -59,7 +60,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
                   height: size.height * 0.75,
                   width: size.width,
                   decoration: const BoxDecoration(
-                    color: Color.fromRGBO(15, 15, 15, 0.9),
+                    color: Color.fromRGBO(32, 29, 29, 0.9),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
@@ -89,8 +90,10 @@ class _TradicionesPageState extends State<TradicionesPage> {
                               ),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.close, color: Colors.white),
-                              onPressed: widget.onClose, // Usa el callback para cerrar
+                              icon:
+                                  const Icon(Icons.close, color: Colors.white),
+                              onPressed:
+                                  widget.onClose, // Usa el callback para cerrar
                             ),
                           ],
                         ),

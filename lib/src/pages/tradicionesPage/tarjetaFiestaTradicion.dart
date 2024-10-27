@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
+import '../login_page.dart';
 
 class FiestaCard extends StatelessWidget {
   final String nombre;
@@ -33,7 +33,8 @@ class FiestaCard extends StatelessWidget {
                   height: 200,
                   width: double.infinity,
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(15)),
                     child: Image.asset(imagen, fit: BoxFit.cover),
                   ),
                 ),
@@ -82,7 +83,8 @@ class FiestaCard extends StatelessWidget {
                           color: Color.fromRGBO(224, 120, 62, 1), fontSize: 16),
                     ),
                     GestureDetector(
-                      child: const MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
+                      child:
+                          const MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
                       onTap: () => {},
                     )
                   ],
