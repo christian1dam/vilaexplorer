@@ -8,6 +8,7 @@ class AppBarCustom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: Colors.black87.withOpacity(0),
       foregroundColor: Colors.white,
       title: Row(

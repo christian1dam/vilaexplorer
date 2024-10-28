@@ -160,14 +160,15 @@ class _MyHomePageState extends State<MyHomePage> {
       showDetalleFiestaTradicion = false;
       showGastronomia = false;
       showGastronomiaCategory = false;
+      showDetallePlatillo = false;
     });
   }
 
   void _toggleDetalleFiestaTradicion(String fiestaName) {
     setState(() {
       selectedFiesta = fiestaName;
-      showGastronomia = false;
-      showGastronomiaCategory = true;
+      showTradicionesPage = false;
+      showDetalleFiestaTradicion = true;
     });
   }
 
@@ -180,9 +181,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _toggleMenuPrincipal() {
     setState(() {
+      showGastronomia = false;
+      showDetallePlatillo = false;
+      showGastronomiaCategory = false;
+      showTradicionesPage = false;
+      showDetalleFiestaTradicion = false;
       showMenuPrincipal = !showMenuPrincipal;
-      if (showTradicionesPage) showTradicionesPage = false;
-      if (showGastronomia) showGastronomia = false;
     });
   }
 }
