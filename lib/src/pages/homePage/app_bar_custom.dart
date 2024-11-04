@@ -61,8 +61,8 @@ class AppBarCustom extends StatelessWidget {
                 Text(
                   "Villajoyosa",
                   style: TextStyle(
+                    fontFamily: 'assets/fonts/Poppins-ExtraLight.ttf',
                     fontSize: 20,
-                    fontWeight: FontWeight.bold, 
                   ),
                 ),
               ],
@@ -70,7 +70,7 @@ class AppBarCustom extends StatelessWidget {
           ),
         ),
       ),
-      Spacer(), // Este Spacer empuja el siguiente Container a la derecha
+      Spacer(), // Para separar el tiempo del menú y ubicación
       Container(
         padding: const EdgeInsets.all(12),
         decoration: const BoxDecoration(
