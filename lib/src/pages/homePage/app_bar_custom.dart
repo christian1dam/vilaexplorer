@@ -45,38 +45,47 @@ class AppBarCustom extends StatelessWidget {
       Padding(
         padding: const EdgeInsets.only(right: 50),
         child: Container(
-            padding: const EdgeInsets.all(5),
-            decoration: const BoxDecoration(
-              color: Color.fromRGBO(36, 36, 36, 1),
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: MySvgWidget(path: 'lib/icon/location.svg'),
-                  ),
-                  Text("Villajoyosa"),
-                ],
-              ),
-            )),
-      ),
-      Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(5),
           decoration: const BoxDecoration(
-              color: Color.fromRGBO(36, 36, 36, 1),
-              borderRadius: BorderRadius.all(Radius.circular(15))),
-          child: const Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: 5),
-                child: MySvgWidget(path: "lib/icon/sol_icon.svg", height: 20),
-              ),
-              Text("+2"),
-            ],
-          )),
+            color: Color.fromRGBO(36, 36, 36, 1),
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
+          child: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: MySvgWidget(path: 'lib/icon/location.svg'),
+                ),
+                Text(
+                  "Villajoyosa",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold, 
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      Spacer(), // Este Spacer empuja el siguiente Container a la derecha
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: const BoxDecoration(
+            color: Color.fromRGBO(36, 36, 36, 1),
+            borderRadius: BorderRadius.all(Radius.circular(15))),
+        child: const Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(right: 5),
+              child: MySvgWidget(path: "lib/icon/sol_icon.svg", height: 20),
+            ),
+            Text("+2"),
+          ],
+        ),
+      ),
     ];
   }
 }
