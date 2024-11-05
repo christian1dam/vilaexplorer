@@ -149,16 +149,10 @@ class MenuPrincipal extends StatelessWidget {
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: historiasMap.keys.map((imageUrl) {
-                            return _buildHistoriaItem(
-                              context,
-                              imageUrl,
-                              historiasMap[imageUrl]!, // Mapa de la historia correspondiente
-                              historiasMap // Pasa también el mapa de historias completo
-                            );
+                            return _buildHistoriaItem(context, imageUrl, historiasMap[imageUrl]!);
                           }).toList(),
                         ),
                       ),
-
                     ],
                   ),
                 ),
@@ -216,36 +210,32 @@ class MenuPrincipal extends StatelessWidget {
   }
 
   // Método para crear los ítems de historia
-Widget _buildHistoriaItem(BuildContext context, String imageUrl, Map<String, String> historia, Map<String, Map<String, String>> historiasMap) {
-  return GestureDetector(
-    onTap: () {
-      // Aquí convertimos las historias a una lista y conseguimos el índice de la historia seleccionada
-      List<Map<String, String>> historiasList = historiasMap.values.toList();
-      int initialIndex = historiasMap.keys.toList().indexOf(imageUrl);
-      
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => HistoriaScreen(
-            historias: historiasList, // Pasamos todas las historias
-            initialIndex: initialIndex, // Pasamos el índice de la historia
+  Widget _buildHistoriaItem(BuildContext context, String imageUrl, Map<String, String> historia) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => HistoriaScreen(
+              imageUrl: historia["imageUrl"]!,
+              title: historia["title"]!,
+              subtitle: historia["subtitle"]!,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 5),
+        width: 80,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: Image.asset(
+            imageUrl,
+            fit: BoxFit.cover,
           ),
         ),
-      );
-    },
-    child: Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5),
-      width: 80,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: Image.asset(
-          imageUrl,
-          fit: BoxFit.cover,
-        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 }
 
 // Widget de SVG personalizado
