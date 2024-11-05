@@ -149,10 +149,11 @@ class MenuPrincipal extends StatelessWidget {
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: historiasMap.keys.map((imageUrl) {
-                            return _buildHistoriaItem(context, imageUrl, historiasMap[imageUrl]!);
+                            return _buildHistoriaItem(context, imageUrl, historiasMap[imageUrl]!, historiasMap); // Pasamos historiasMap
                           }).toList(),
                         ),
                       ),
+
                     ],
                   ),
                 ),
@@ -210,15 +211,20 @@ class MenuPrincipal extends StatelessWidget {
   }
 
   // Método para crear los ítems de historia
-  Widget _buildHistoriaItem(BuildContext context, String imageUrl, Map<String, String> historia) {
+  // Método para crear los ítems de historia
+  // Método para crear los ítems de historia
+  Widget _buildHistoriaItem(BuildContext context, String imageUrl, Map<String, String> historia, Map<String, Map<String, String>> historiasMap) {
     return GestureDetector(
       onTap: () {
+        // Aquí convertimos las historias a una lista y conseguimos el índice de la historia seleccionada
+        List<Map<String, String>> historiasList = historiasMap.values.toList();
+        int initialIndex = historiasMap.keys.toList().indexOf(imageUrl);
+        
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => HistoriaScreen(
-              imageUrl: historia["imageUrl"]!,
-              title: historia["title"]!,
-              subtitle: historia["subtitle"]!,
+              historias: historiasList, // Pasamos todas las historias
+              initialIndex: initialIndex, // Pasamos el índice de la historia
             ),
           ),
         );
@@ -236,6 +242,8 @@ class MenuPrincipal extends StatelessWidget {
       ),
     );
   }
+
+
 }
 
 // Widget de SVG personalizado
