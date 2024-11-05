@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:vilaexplorer/src/pages/homePage/history_page.dart';
 
 class MenuPrincipal extends StatelessWidget {
   final Function()? onShowTradicionesPressed;
@@ -139,39 +140,38 @@ class MenuPrincipal extends StatelessWidget {
                   color: Color.fromRGBO(39, 39, 39, 1)),
               padding: const EdgeInsets.all(15),
               margin: const EdgeInsets.only(left: 7, right: 7),
-              child: const Stack(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: SizedBox(
-                      height: 20,
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Cerca",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text(
+                        "Cerca",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
                       ),
-                    ),
+                      Text(
+                        "Ver más",
+                        style: TextStyle(
+                            color: Colors.blue, fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: SizedBox(
-                      height: 20,
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: Text(
-                          "Ver más",
-                          style: TextStyle(
-                              color: Colors.blue, fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        _buildHistoriaItem(context, "https://example.com/image1.jpg"),
+                        _buildHistoriaItem(context, "https://example.com/image2.jpg"),
+                        _buildHistoriaItem(context, "https://example.com/image3.jpg"),
+                      ],
                     ),
                   ),
                 ],
               ),
             )
+
           ],
         ));
   }
@@ -229,6 +229,30 @@ class MenuPrincipal extends StatelessWidget {
     );
   }
 }
+
+Widget _buildHistoriaItem(BuildContext context, String imageUrl) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => HistoriaScreen(imageUrl: imageUrl),
+        ),
+      );
+    },
+    child: Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      width: 80,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        image: DecorationImage(
+          image: NetworkImage(imageUrl),
+          fit: BoxFit.cover,
+        ),
+      ),
+    ),
+  );
+}
+
 
 class MySvgWidget extends StatelessWidget {
   final String path;
