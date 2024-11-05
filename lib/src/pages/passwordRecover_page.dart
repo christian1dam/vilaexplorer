@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async'; // Importar para el temporizador
 
 class PasswordRecoverPage extends StatefulWidget {
-  const PasswordRecoverPage({Key? key}) : super(key: key);
+  const PasswordRecoverPage({super.key});
 
   @override
   _PasswordRecoverPageState createState() => _PasswordRecoverPageState();

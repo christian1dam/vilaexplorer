@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'login_page.dart'; // Adjust the path to where LoginPage is defined
 
 class SplashPage extends StatefulWidget {
+  const SplashPage({super.key});
+
   @override
   _SplashPageState createState() => _SplashPageState();
 }
