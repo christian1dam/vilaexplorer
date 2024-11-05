@@ -162,9 +162,11 @@ class MenuPrincipal extends StatelessWidget {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        _buildHistoriaItem(context, "https://example.com/image1.jpg"),
-                        _buildHistoriaItem(context, "https://example.com/image2.jpg"),
-                        _buildHistoriaItem(context, "https://example.com/image3.jpg"),
+                        _buildHistoriaItem(context, "assets/images/images_historias/Aguilo.jpg"),
+                        _buildHistoriaItem(context, "assets/images/images_historias/Muralla.png"),
+                        _buildHistoriaItem(context, "assets/images/images_historias/EstatuaEsquerdo.png"),
+                        _buildHistoriaItem(context, "assets/images/images_historias/Moros&Cristianos.png"),
+                        _buildHistoriaItem(context, "assets/images/images_historias/TorreSantJosep.jpg"),
                       ],
                     ),
                   ),
@@ -230,12 +232,22 @@ class MenuPrincipal extends StatelessWidget {
   }
 }
 
+final Map<String, String> historiasMap = {
+  "assets/images/Aguilo.jpg": "assets/images/images_historias/TorreAguiloHistoria.jpg",
+  "assets/images/Muralla.png": "assets/images/images_historias/MurallaHistoria.jpg",
+  "assets/images/EstatuaEsquerdo.png": "assets/images/images_historias/EstatuaHistoria.jpg",
+  "assets/images/Moros&Cristianos.png": "assets/images/images_historias/MorosCristianosHistoria.jpg",
+  "assets/images/TorreSantJosep.jpg": "assets/images/images_historias/TorreSantJosepHistoria.jpg",
+};
+
 Widget _buildHistoriaItem(BuildContext context, String imageUrl) {
   return GestureDetector(
     onTap: () {
+      // Obtiene la imagen correspondiente al mapa
+      String historiaImageUrl = historiasMap[imageUrl] ?? imageUrl; // Usa la imagen del mapa o la original si no se encuentra
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => HistoriaScreen(imageUrl: imageUrl),
+          builder: (context) => HistoriaScreen(imageUrl: historiaImageUrl),
         ),
       );
     },
@@ -244,14 +256,21 @@ Widget _buildHistoriaItem(BuildContext context, String imageUrl) {
       width: 80,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        image: DecorationImage(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover,
-        ),
+        color: Colors.grey[850],
+      ),
+      child: FadeInImage.assetNetwork(
+        placeholder: 'assets/images/VilaExplorer.png', // Ruta de la imagen por defecto
+        image: imageUrl, // URL de la imagen que deseas cargar
+        fit: BoxFit.cover,
+        fadeInDuration: const Duration(milliseconds: 300),
+        fadeOutDuration: const Duration(milliseconds: 300),
       ),
     ),
   );
 }
+
+
+
 
 
 class MySvgWidget extends StatelessWidget {

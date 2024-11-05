@@ -29,6 +29,7 @@ flutter:
     - lib/icon/tradiciones/
     - assets/
     - assets/images_gastronomia/
+    -assets/images_historias/
 
   fonts:
     - family: Poppins
