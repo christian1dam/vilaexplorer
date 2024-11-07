@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vilaexplorer/src/pages/homePage/history_page.dart';
+import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 
 class MenuPrincipal extends StatelessWidget {
   final Function()? onShowTradicionesPressed;
   final Function()? onShowGastronomiaPressed;
+  final Function()? onShowFavoritosPressed;
 
   const MenuPrincipal({
     super.key,
     this.onShowTradicionesPressed,
     this.onShowGastronomiaPressed,
+    this.onShowFavoritosPressed,
   });
 
   @override
@@ -94,11 +97,12 @@ class MenuPrincipal extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    _crearBoton(140, "Tradiciones", "lib/icon/tradiciones.svg", 1),
-                    _crearBoton(145, "Favoritos", "lib/icon/favorite.svg", 1),
-                    _crearBoton(140, "Mi cuenta", "lib/icon/user_icon.svg", 1),
+                    _crearBoton(140, "Tradiciones", "lib/icon/tradiciones.svg", 1, context),
+                    _crearBoton(145, "Favoritos", "lib/icon/favorite.svg", 1, context),
+                    _crearBoton(140, "Mi cuenta", "lib/icon/user_icon.svg", 1, context),
                   ],
                 ),
+
 
                 const Divider(height: 5, color: Colors.transparent),
 
@@ -106,8 +110,8 @@ class MenuPrincipal extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    _crearBoton(210, "Gastronomia", "lib/icon/gastronomia.svg", 1),
-                    _crearBoton(221, "Monumentos", "lib/icon/monumentos.svg", 1),
+                    _crearBoton(210, "Gastronomia", "lib/icon/gastronomia.svg", 1, context),
+                    _crearBoton(221, "Monumentos", "lib/icon/monumentos.svg", 1, context),
                   ],
                 ),
 
@@ -166,42 +170,53 @@ class MenuPrincipal extends StatelessWidget {
   }
 
   // Método para crear los botones del menú principal
-  Widget _crearBoton(double mywidth, String texto, String imagePath, double tamanoTexto) {
-    return SizedBox(
-      width: mywidth,
-      height: 110,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(15),
-          foregroundColor: Colors.white,
-          backgroundColor: const Color.fromRGBO(39, 39, 39, 0.92),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-          splashFactory: InkRipple.splashFactory,
-          shadowColor: Colors.white.withOpacity(0.3),
+  Widget _crearBoton(double mywidth, String texto, String imagePath, double tamanoTexto, BuildContext context) {
+  return SizedBox(
+    width: mywidth,
+    height: 110,
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.all(15),
+        foregroundColor: Colors.white,
+        backgroundColor: const Color.fromRGBO(39, 39, 39, 0.92),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
         ),
-        onPressed: () {
-          if (texto == "Tradiciones" && onShowTradicionesPressed != null) {
-            onShowTradicionesPressed!();
-          } else if (texto == "Gastronomia" && onShowGastronomiaPressed != null) {
-            onShowGastronomiaPressed!();
-          }
-        },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            MySvgWidget(path: imagePath, width: 50, height: 50),
-            const SizedBox(height: 5),
-            Text(
-              texto,
-              style: TextStyle(fontSize: tamanoTexto * 16),
-            ),
-          ],
-        ),
+        splashFactory: InkRipple.splashFactory,
+        shadowColor: Colors.white.withOpacity(0.3),
       ),
-    );
-  }
+      onPressed: () {
+        if (texto == "Tradiciones" && onShowTradicionesPressed != null) {
+          onShowTradicionesPressed!();
+        } else if (texto == "Gastronomia" && onShowGastronomiaPressed != null) {
+          onShowGastronomiaPressed!();
+        } else if (texto == "Favoritos") {
+          // Aquí se hace la navegación a la página de Favoritos
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => FavoritosPage(),  // Asegúrate de importar la página
+            ),
+          );
+        }
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          MySvgWidget(path: imagePath, width: 50, height: 50),
+          const SizedBox(height: 5),
+          Text(
+            texto,
+            style: TextStyle(fontSize: tamanoTexto * 16),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
+
+
 
   // Método para cargar el JSON desde los assets
   static Future<Map<String, Map<String, String>>> _loadHistoriasFromJson() async {
@@ -210,8 +225,6 @@ class MenuPrincipal extends StatelessWidget {
     return data.map((key, value) => MapEntry(key, Map<String, String>.from(value)));
   }
 
-  // Método para crear los ítems de historia
-  // Método para crear los ítems de historia
   // Método para crear los ítems de historia
   Widget _buildHistoriaItem(BuildContext context, String imageUrl, Map<String, String> historia, Map<String, Map<String, String>> historiasMap) {
     return GestureDetector(
