@@ -92,11 +92,11 @@ class MenuPrincipal extends StatelessWidget {
 
                 // Botones principales
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    _crearBoton(120, "Tradiciones", "lib/icon/tradiciones.svg", 1),
-                    _crearBoton(120, "Favoritos", "lib/icon/favorite.svg", 1),
-                    _crearBoton(120, "Mi cuenta", "lib/icon/user_icon.svg", 1),
+                    _crearBoton(140, "Tradiciones", "lib/icon/tradiciones.svg", 1),
+                    _crearBoton(145, "Favoritos", "lib/icon/favorite.svg", 1),
+                    _crearBoton(140, "Mi cuenta", "lib/icon/user_icon.svg", 1),
                   ],
                 ),
 
@@ -104,10 +104,10 @@ class MenuPrincipal extends StatelessWidget {
 
                 // Segunda fila de botones
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    _crearBoton(190, "Gastronomia", "lib/icon/gastronomia.svg", 1),
-                    _crearBoton(190, "Monumentos", "lib/icon/monumentos.svg", 1),
+                    _crearBoton(210, "Gastronomia", "lib/icon/gastronomia.svg", 1),
+                    _crearBoton(221, "Monumentos", "lib/icon/monumentos.svg", 1),
                   ],
                 ),
 
