@@ -1,0 +1,28 @@
+{
+    "assets/images_historias/Aguilo.jpg": {
+      "imageUrl": "assets/images_historias/TorreAguiloHistoria.jpg",
+      "title": "Torre del Aguiló",
+      "subtitle": "Villajoyosa, España"
+    },
+    "assets/images_historias/Muralla.png": {
+      "imageUrl": "assets/images_historias/MurallaHistoria.png",
+      "title": "Muralla del Casco Antiguo",
+      "subtitle": "Villajoyosa, España"
+    },
+    "assets/images_historias/EstatuaEsquerdo.png": {
+      "imageUrl": "assets/images_historias/EstatuaEsquerdo.png",
+      "title": "Estatua del Doctor Esquerdo",
+      "subtitle": "Villajoyosa, España"
+    },
+    "assets/images_historias/Moros&Cristianos.png": {
+      "imageUrl": "assets/images_historias/Moros&CristianosHistoria.jpg",
+      "title": "Fiesta de Moros y Cristianos",
+      "subtitle": "Villajoyosa, España"
+    },
+    "assets/images_historias/TorreSantJosep.jpg": {
+      "imageUrl": "assets/images_historias/TorreSantJosep.jpg",
+      "title": "Torre de Sant Josep",
+      "subtitle": "Villajoyosa, España"
+    }
+  }
+  
