@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FavoritosPage extends StatelessWidget {
+  const FavoritosPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,6 +100,8 @@ class FavoritosPage extends StatelessWidget {
                       'Lugares',
                       style: TextStyle(color: Colors.white),
                     ),
+                    collapsedIconColor: Colors.white,
+                    iconColor: Colors.white,
                     children: const [
                       ListTile(
                         title: Text(
@@ -118,11 +122,10 @@ class FavoritosPage extends StatelessWidget {
                         ),
                       ),
                     ],
-                    collapsedIconColor: Colors.white,
-                    iconColor: Colors.white,
                   ),
 
                   // Segunda lista desplegable
+                  /*
                   ExpansionTile(
                     title: const Text(
                       'Gastronomía',
@@ -151,8 +154,10 @@ class FavoritosPage extends StatelessWidget {
                     collapsedIconColor: Colors.white,
                     iconColor: Colors.white,
                   ),
+                  */
 
                   // Tercera lista desplegable
+                  /*
                   ExpansionTile(
                     title: const Text(
                       'Tradiciones',
@@ -181,6 +186,7 @@ class FavoritosPage extends StatelessWidget {
                     collapsedIconColor: Colors.white,
                     iconColor: Colors.white,
                   ),
+                  */
                 ],
               ),
             ),

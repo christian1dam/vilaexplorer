@@ -200,6 +200,7 @@ class MenuPrincipal extends StatelessWidget {
         }
       },
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           MySvgWidget(path: imagePath, width: 50, height: 50),
