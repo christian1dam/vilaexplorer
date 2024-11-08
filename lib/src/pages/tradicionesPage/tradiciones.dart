@@ -68,6 +68,19 @@ class _TradicionesPageState extends State<TradicionesPage> {
                   ),
                   child: Column(
                     children: [
+                      // Barra estilo iOS para cerrar el menú
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Container(
+                          width: 100,
+                          height: 5,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[400],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(

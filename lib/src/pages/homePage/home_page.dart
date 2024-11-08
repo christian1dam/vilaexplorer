@@ -32,13 +32,18 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Stack(
         children: [
+          // Mapa en el fondo
           MapView(clearScreen: _clearScreen),
+          
+          // AppBar en la parte superior
           Positioned(
             top: 0,
             left: 0,
             right: 0,
             child: AppBarCustom(onMenuPressed: _toggleMenuPrincipal),
           ),
+          
+          // Menú Principal con barra de iOS y deslizamiento para cerrar
           if (showMenuPrincipal)
             Positioned(
               bottom: 0,
@@ -47,8 +52,11 @@ class _MyHomePageState extends State<MyHomePage> {
               child: MenuPrincipal(
                 onShowTradicionesPressed: _toggleTradicionesPage,
                 onShowGastronomiaPressed: _toggleGastronomiaPage,
+                onCloseMenu: _toggleMenuPrincipal,  // Cerrar el menú al deslizar hacia abajo
               ),
             ),
+          
+          // Página de Tradiciones
           if (showTradicionesPage)
             Positioned(
               top: 0,
@@ -59,10 +67,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 onFiestaSelected: (fiestaName) {
                   _toggleDetalleFiestaTradicion(fiestaName);
                 },
-                onClose:
-                    _toggleTradicionesPage,
+                onClose: _toggleTradicionesPage,
               ),
             ),
+          
+          // Detalle de una Fiesta o Tradición seleccionada
           if (showDetalleFiestaTradicion)
             Positioned(
               top: 0,
@@ -74,41 +83,48 @@ class _MyHomePageState extends State<MyHomePage> {
                 onClose: () {
                   setState(() {
                     showDetalleFiestaTradicion = false;
-                    showTradicionesPage =
-                        true;
+                    showTradicionesPage = true;
                   });
                 },
               ),
             ),
+          
+          // Página de Gastronomía
           if (showGastronomia)
             Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: GastronomiaPage(
-                  onCategoriaPlatoSelected: (category) {
-                    _toggleGastronomiaPageDetail(category);
-                  },
-                )),
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: GastronomiaPage(
+                onCategoriaPlatoSelected: (category) {
+                  _toggleGastronomiaPageDetail(category);
+                },
+              ),
+            ),
+          
+          // Categoría de platos en la Gastronomía
           if (showGastronomiaCategory)
             Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: CategoriaPlatos(
-                  category: selectedCategory!,
-                  onClose: () {
-                    setState(() {
-                      showGastronomiaCategory = false;
-                      showGastronomia = true;
-                    });
-                  },
-                  onPlatilloSelected: (platillo) {
-                    _toggleDetallePlatillo(platillo);
-                  },
-                )),
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: CategoriaPlatos(
+                category: selectedCategory!,
+                onClose: () {
+                  setState(() {
+                    showGastronomiaCategory = false;
+                    showGastronomia = true;
+                  });
+                },
+                onPlatilloSelected: (platillo) {
+                  _toggleDetallePlatillo(platillo);
+                },
+              ),
+            ),
+          
+          // Detalle de un Platillo
           if (showDetallePlatillo)
             Positioned(
               top: 0,
@@ -130,6 +146,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  // Métodos para manejar la navegación entre las páginas y los detalles
+  
   void _toggleGastronomiaPage() {
     setState(() {
       showMenuPrincipal = false;
@@ -181,11 +199,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _toggleMenuPrincipal() {
     setState(() {
-      showGastronomia = false;
-      showDetallePlatillo = false;
-      showGastronomiaCategory = false;
-      showTradicionesPage = false;
-      showDetalleFiestaTradicion = false;
+      // Si el menú de gastronomía o tradiciones está abierto, lo cerramos
+      if (showGastronomia || showTradicionesPage || showDetalleFiestaTradicion) {
+        showGastronomia = false;
+        showTradicionesPage = false;
+        showDetalleFiestaTradicion = false;
+      }
       showMenuPrincipal = !showMenuPrincipal;
     });
   }
