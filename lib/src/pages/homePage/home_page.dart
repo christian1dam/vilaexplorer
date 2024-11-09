@@ -198,14 +198,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _toggleMenuPrincipal() {
-    setState(() {
-      // Si el menú de gastronomía o tradiciones está abierto, lo cerramos
-      if (showGastronomia || showTradicionesPage || showDetalleFiestaTradicion) {
-        showGastronomia = false;
-        showTradicionesPage = false;
-        showDetalleFiestaTradicion = false;
-      }
-      showMenuPrincipal = !showMenuPrincipal;
-    });
-  }
+  setState(() {
+    // Cerrar cualquier página abierta antes de abrir el menú
+    if (showGastronomia || showTradicionesPage || showDetalleFiestaTradicion || showGastronomiaCategory || showDetallePlatillo) {
+      showGastronomia = false;
+      showTradicionesPage = false;
+      showDetalleFiestaTradicion = false;
+      showGastronomiaCategory = false;
+      showDetallePlatillo = false;
+    }
+    showMenuPrincipal = !showMenuPrincipal;
+  });
+}
+
 }

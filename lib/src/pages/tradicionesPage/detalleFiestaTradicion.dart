@@ -4,7 +4,7 @@ import 'package:flutter/services.dart' show rootBundle;
 
 class DetalleFiestaTradicion extends StatefulWidget {
   final String fiestaName;
-  final VoidCallback onClose; // Añadido para gestionar el cierre
+  final VoidCallback onClose;
 
   const DetalleFiestaTradicion(
       {super.key, required this.fiestaName, required this.onClose});
@@ -62,8 +62,7 @@ class _DetalleFiestaTradicionState extends State<DetalleFiestaTradicion> {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(20)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)), // Redondeamos ambas esquinas superiores de la imagen
                   child: Image.asset(
                     fiestaDetalles['imagen']!,
                     fit: BoxFit.cover,
@@ -74,13 +73,14 @@ class _DetalleFiestaTradicionState extends State<DetalleFiestaTradicion> {
                 Positioned(
                   top: 0,
                   left: 0,
+                  right: 0, // Aseguramos que el contenedor ocupe toda la anchura
                   child: Container(
-                    width: 500,
-                    padding: EdgeInsets.all(15),
+                    padding: const EdgeInsets.all(15),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          topRight: Radius.circular(15)),
+                        topLeft: Radius.circular(20),  // Redondeamos la esquina superior izquierda
+                        topRight: Radius.circular(20), // Redondeamos la esquina superior derecha
+                      ),
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -102,14 +102,14 @@ class _DetalleFiestaTradicionState extends State<DetalleFiestaTradicion> {
                 ),
                 Positioned(
                   top: 10,
-                  right: 10,
+                  right: 10, // Mover la flecha hacia la derecha
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(14)),
+                      borderRadius: const BorderRadius.all(Radius.circular(14)),
                       color: Color.fromRGBO(15, 15, 15, 0.9),
                     ),
                     child: IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white),
+                      icon: const Icon(Icons.arrow_back, color: Colors.white), // Flecha hacia atrás
                       onPressed: widget.onClose,
                     ),
                   ),
@@ -128,7 +128,7 @@ class _DetalleFiestaTradicionState extends State<DetalleFiestaTradicion> {
             Expanded(
               child: SingleChildScrollView(
                 child: Container(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                  padding: const EdgeInsets.only(top: 10, bottom: 10),
                   child: Text(
                     fiestaDetalles['descripcion']!,
                     style: const TextStyle(color: Colors.white, fontSize: 18),
