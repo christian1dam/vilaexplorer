@@ -176,48 +176,46 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          padding: const EdgeInsets.all(8.0),
-                          child: SvgPicture.asset(
-                            'lib/icon/language.svg',
-                            height: 30,
-                            width: 30,
-                          )
+                        
+                      
+                        // Botón de idioma
+                      IconButton(
+                        icon: const Icon(Icons.language, color: Colors.white),
+                        iconSize: 40,
+                        onPressed: () {
+                          _showLanguageOptions(context);
+                        },
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 155, 58, 51),
+                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 155, 58, 51),
-                            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pushReplacement(
-                              PageRouteBuilder(
-                                pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  const begin = Offset(0.0, 1.0);
-                                  const end = Offset.zero;
-                                  const curve = Curves.easeInOut;
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(0.0, 1.0);
+                                const end = Offset.zero;
+                                const curve = Curves.easeInOut;
 
-                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-                                  return SlideTransition(
-                                    position: animation.drive(tween),
-                                    child: child,
-                                  );
-                                },
-                                transitionDuration: const Duration(seconds: 2),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            'ACCEDER',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                              transitionDuration: const Duration(seconds: 2),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'ACCEDER',
+                          style: TextStyle(color: Colors.white),
                         ),
+                      ),
                       ],
                     ),
                   ),
@@ -229,6 +227,44 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
         ),
       );
     }
+
+    // Función para mostrar las opciones de idioma
+  void _showLanguageOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+          color: Colors.grey[850]?.withOpacity(0.8),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildLanguageOption('Español', 'assets/images/BanderaEspañola.png'),
+              _buildLanguageOption('English', 'assets/images/BanderaInglaterra.png'),
+              _buildLanguageOption('Valencià', 'assets/images/BanderaComunidadValenciana.png'),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // Widget para mostrar una opción de idioma con la bandera
+  Widget _buildLanguageOption(String language, String flagPath) {
+    return ListTile(
+      onTap: () {
+        // Aquí puedes agregar la lógica para cambiar el idioma
+        Navigator.pop(context); // Cerrar el modal
+      },
+      leading: Image.asset(flagPath, height: 60, width: 60),
+      title: Text(language, style: TextStyle(color: Colors.white)),
+    );
+  }
 
   Widget _buildTextField(String label, bool isPassword) {
     return Container(
