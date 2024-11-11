@@ -19,7 +19,7 @@ class CategoriaPlatos extends StatelessWidget {
   final VoidCallback onClose;
   final ValueChanged<String> onPlatilloSelected;
 
-  CategoriaPlatos({
+  const CategoriaPlatos({
     super.key,
     required this.category,
     required this.onClose,

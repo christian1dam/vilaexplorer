@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
 import 'package:vilaexplorer/src/pages/passwordRecover_page.dart';
 import 'package:vilaexplorer/src/pages/register_page.dart';
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,7 +13,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
   late AnimationController _rotationController;
   late Animation<double> _rotationAnimation;
-  late Animation<double> _buttonAnimation; // Nueva animación para los botones
+  late Animation<double> _buttonAnimation;
 
   @override
   void initState() {
@@ -31,7 +29,6 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       curve: Curves.easeInOut,
     );
 
-    // Inicializa la animación de los botones
     _buttonAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _rotationController,
@@ -72,7 +69,6 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             child: Column(
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.18),
-                // LoginPage
                 Hero(
                   tag: 'logoHero',
                   child: RotationTransition(
@@ -84,30 +80,32 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 20),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'VILA ',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontFamily: 'Poppins',
+                Hero(
+                  tag: 'textHero', 
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'VILA ',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontFamily: 'Poppins',
+                          ),
                         ),
-                      ),
-                      TextSpan(
-                        text: 'Explorer',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w200,
-                          color: Colors.white,
-                          fontFamily: 'Poppins',
+                        TextSpan(
+                          text: 'Explorer',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w200,
+                            color: Colors.white,
+                            fontFamily: 'Poppins',
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -142,12 +140,10 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                     ),
                   ),
                 ),
-
                 SizedBox(height: MediaQuery.of(context).size.height * 0.20),
-                // Usar SlideTransition aquí
                 SlideTransition(
                   position: Tween<Offset>(
-                    begin: Offset(0.0, 0.5), // Desplazar hacia arriba
+                    begin: Offset(0.0, 0.10),
                     end: Offset.zero,
                   ).animate(_buttonAnimation),
                   child: Row(
@@ -159,11 +155,11 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                         ),
                         onPressed: () {
-                          Navigator.of(context).push(
+                          Navigator.of(context).pushReplacement(
                             PageRouteBuilder(
                               pageBuilder: (context, animation, secondaryAnimation) => RegisterPage(),
                               transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(1.0, 0.0);
+                                const begin = Offset(-0.0, 1.0);
                                 const end = Offset.zero;
                                 const curve = Curves.easeInOut;
 
@@ -174,7 +170,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                   child: child,
                                 );
                               },
-                              transitionDuration: const Duration(milliseconds: 500),
+                              transitionDuration: const Duration(seconds: 1),
                             ),
                           );
                         },
@@ -183,17 +179,13 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        padding: const EdgeInsets.all(8.0),
-                        child: SvgPicture.asset(
-                          'lib/icon/language.svg',
-                          height: 30,
-                          width: 30,
-                        )
+                      // Botón de idioma
+                      IconButton(
+                        icon: const Icon(Icons.language, color: Colors.white),
+                        iconSize: 40,
+                        onPressed: () {
+                          _showLanguageOptions(context);
+                        },
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -236,7 +228,43 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
+  // Función para mostrar las opciones de idioma
+  void _showLanguageOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+          color: Colors.grey[850]?.withOpacity(0.8),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildLanguageOption('Español', 'assets/images/BanderaEspañola.png'),
+              _buildLanguageOption('English', 'assets/images/BanderaInglaterra.png'),
+              _buildLanguageOption('Valencià', 'assets/images/BanderaComunidadValenciana.png'),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
+  // Widget para mostrar una opción de idioma con la bandera
+  Widget _buildLanguageOption(String language, String flagPath) {
+    return ListTile(
+      onTap: () {
+        // Aquí puedes agregar la lógica para cambiar el idioma
+        Navigator.pop(context); // Cerrar el modal
+      },
+      leading: Image.asset(flagPath, height: 60, width: 60),
+      title: Text(language, style: TextStyle(color: Colors.white)),
+    );
+  }
 
   Widget _buildTextField(String label, bool isPassword) {
     return TextField(
@@ -253,25 +281,4 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       style: const TextStyle(color: Colors.white),
     );
   }
-  
-}
-
-
-  class MySvgWidget extends StatelessWidget {
-  final String path;
-  final double? height;
-  final double? width;
-  final Alignment? alignment;
-
-  const MySvgWidget({
-    super.key,
-    required this.path,
-    this.height,
-    this.width,
-    this.alignment,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SvgPicture.asset(path, height: height, width:width);}
 }

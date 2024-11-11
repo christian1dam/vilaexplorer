@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
 import 'package:vilaexplorer/src/pages/login_page.dart';
 
@@ -12,6 +13,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderStateMixin {
   late AnimationController _rotationController;
   late Animation<double> _rotationAnimation;
+  late Animation<double> _buttonAnimation;
 
   @override
   void initState() {
@@ -27,7 +29,13 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
       curve: Curves.easeInOut,
     );
 
-    _rotationController.forward();
+    // Ahora inicializamos correctamente la animación de los botones
+    _buttonAnimation = CurvedAnimation(
+      parent: _rotationController, // Usamos el mismo AnimationController
+      curve: Curves.easeInOut,  // Ajusta la curva como desees
+    );
+
+    _rotationController.forward();  // Inicia la animación de rotación
   }
 
   @override
@@ -77,30 +85,34 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                   const SizedBox(height: 20),
 
                   // Título
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'VILA ',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontFamily: 'Poppins',
+                  Hero(
+                    tag: 'textHero', // Debe coincidir con el `tag` de LoginPage
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'VILA ',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontFamily: 'Poppins',
+                            ),
                           ),
-                        ),
-                        TextSpan(
-                          text: 'Explorer',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w200,
-                            color: Colors.white,
-                            fontFamily: 'Poppins',
+                          TextSpan(
+                            text: 'Explorer',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w200,
+                              color: Colors.white,
+                              fontFamily: 'Poppins',
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
+
                   const SizedBox(height: 20),
                   const Text(
                     'REGISTRARSE',
@@ -122,92 +134,94 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                   _buildTextField('Confirmar Contraseña', true),
 
                   // Espacio desde el fondo del 10%
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.10),
 
                   // Botones de registro y entrar
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 58, 58, 58),
-                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  SlideTransition(
+                    position: Tween<Offset>(
+                      begin: Offset(0.0, 0.5), // Desplazar hacia arriba
+                      end: Offset.zero,
+                    ).animate(_buttonAnimation),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromARGB(255, 58, 58, 58),
+                            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  // Cambiar Offset a (-1.0, 0.0) para deslizar hacia la izquierda
+                                  const begin = Offset(-0.0, 1.0);
+                                  const end = Offset.zero;
+                                  const curve = Curves.easeInOut;
+
+                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                                  return SlideTransition(
+                                    position: animation.drive(tween),
+                                    child: child,
+                                  );
+                                },
+                                transitionDuration: const Duration(seconds: 1),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'VOLVER',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(1.0, 0.0);
-                                const end = Offset.zero;
-                                const curve = Curves.easeInOut;
-
-                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                              transitionDuration: const Duration(milliseconds: 500),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'VOLVER',
-                          style: TextStyle(color: Colors.white),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          padding: const EdgeInsets.all(8.0),
+                          child: SvgPicture.asset(
+                            'lib/icon/language.svg',
+                            height: 30,
+                            width: 30,
+                          )
                         ),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 136, 55, 55),
-                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(255, 155, 58, 51),
+                            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pushReplacement(
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  const begin = Offset(0.0, 1.0);
+                                  const end = Offset.zero;
+                                  const curve = Curves.easeInOut;
+
+                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                                  return SlideTransition(
+                                    position: animation.drive(tween),
+                                    child: child,
+                                  );
+                                },
+                                transitionDuration: const Duration(seconds: 2),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'ACCEDER',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(1.0, 0.0);
-                                const end = Offset.zero;
-                                const curve = Curves.easeInOut;
-
-                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                              transitionDuration: const Duration(milliseconds: 500),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'ACCEDER',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-
-                  // Icono de idioma con fondo blanco
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15), // Esquinas redondeadas
-                      ),
-                      padding: const EdgeInsets.all(8.0), // Espacio interno
-                      child: Image.asset(
-                        'assets/images/language.png',
-                        height: 30,
-                        width: 30,
-                      ),
+                      ],
                     ),
                   ),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),
@@ -219,13 +233,6 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
   Widget _buildTextField(String label, bool isPassword) {
     return Container(
       decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.white.withOpacity(0.5), // Sombra blanca
-            blurRadius: 10, // Desenfoque
-            offset: Offset(0, 4), // Desplazamiento horizontal y vertical de la sombra
-          ),
-        ],
         borderRadius: BorderRadius.circular(30), // El mismo radio que el TextField
       ),
       child: TextField(
@@ -234,7 +241,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
           labelText: label,
           labelStyle: const TextStyle(color: Colors.white),
           filled: true,
-          fillColor: Color.fromARGB(255, 65, 65, 65), // Fondo semitransparente
+          fillColor: Colors.black26, // Fondo semitransparente
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
           ),

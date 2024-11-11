@@ -96,7 +96,7 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
                       const SizedBox(height: 20),
                       if (!_isButtonEnabled) // Mostrar el contador solo si el botón está deshabilitado
                         Text(
-                          'Por favor, espera $_counter segundos.',
+                          'Podrás reenviar en $_counter segundos.',
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
