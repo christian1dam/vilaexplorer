@@ -7,6 +7,7 @@ import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
 import 'app_bar_custom.dart';
 import 'map_view.dart';
 import 'menu_principal.dart';
+import 'dart:async';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -16,6 +17,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool isMapLoaded = false;
+
   bool showMenuPrincipal = false;
   bool showTradicionesPage = false;
   bool showDetalleFiestaTradicion = false;
@@ -28,126 +31,143 @@ class _MyHomePageState extends State<MyHomePage> {
   String? selectedPlatillo;
 
   @override
+  void initState() {
+    super.initState();
+    _loadMap();  // Cargar el mapa al iniciar
+  }
+
+  Future<void> _loadMap() async {
+    await Future.delayed(Duration(seconds: 2)); // Simula la carga del mapa
+    setState(() {
+      isMapLoaded = true;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Mapa en el fondo
-          MapView(clearScreen: _clearScreen),
-          
-          // AppBar en la parte superior
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: AppBarCustom(onMenuPressed: _toggleMenuPrincipal),
-          ),
-          
-          // Menú Principal con barra de iOS y deslizamiento para cerrar
-          if (showMenuPrincipal)
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: MenuPrincipal(
-                onShowTradicionesPressed: _toggleTradicionesPage,
-                onShowGastronomiaPressed: _toggleGastronomiaPage,
-                onCloseMenu: _toggleMenuPrincipal,  // Cerrar el menú al deslizar hacia abajo
-              ),
-            ),
-          
-          // Página de Tradiciones
-          if (showTradicionesPage)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: TradicionesPage(
-                onFiestaSelected: (fiestaName) {
-                  _toggleDetalleFiestaTradicion(fiestaName);
-                },
-                onClose: _toggleTradicionesPage,
-              ),
-            ),
-          
-          // Detalle de una Fiesta o Tradición seleccionada
-          if (showDetalleFiestaTradicion)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: DetalleFiestaTradicion(
-                fiestaName: selectedFiesta!,
-                onClose: () {
-                  setState(() {
-                    showDetalleFiestaTradicion = false;
-                    showTradicionesPage = true;
-                  });
-                },
-              ),
-            ),
-          
-          // Página de Gastronomía
-          if (showGastronomia)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: GastronomiaPage(
-                onCategoriaPlatoSelected: (category) {
-                  _toggleGastronomiaPageDetail(category);
-                },
-              ),
-            ),
-          
-          // Categoría de platos en la Gastronomía
-          if (showGastronomiaCategory)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: CategoriaPlatos(
-                category: selectedCategory!,
-                onClose: () {
-                  setState(() {
-                    showGastronomiaCategory = false;
-                    showGastronomia = true;
-                  });
-                },
-                onPlatilloSelected: (platillo) {
-                  _toggleDetallePlatillo(platillo);
-                },
-              ),
-            ),
-          
-          // Detalle de un Platillo
-          if (showDetallePlatillo)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: DetallePlatillo(
-                platillo: selectedPlatillo!,
-                closeWidget: () {
-                  setState(() {
-                    showDetallePlatillo = false;
-                    showGastronomiaCategory = true;
-                  });
-                },
-              ),
-            ),
-        ],
-      ),
+      body: isMapLoaded
+          ? Stack(
+              children: [
+                // Mapa en el fondo
+                MapView(
+                  clearScreen: _clearScreen,
+                ),
+
+                // AppBar en la parte superior
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: AppBarCustom(onMenuPressed: _toggleMenuPrincipal),
+                ),
+
+                // Menú Principal con barra de iOS y deslizamiento para cerrar
+                if (showMenuPrincipal)
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: MenuPrincipal(
+                      onShowTradicionesPressed: _toggleTradicionesPage,
+                      onShowGastronomiaPressed: _toggleGastronomiaPage,
+                      onCloseMenu: _toggleMenuPrincipal,
+                    ),
+                  ),
+
+                // Página de Tradiciones
+                if (showTradicionesPage)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: TradicionesPage(
+                      onFiestaSelected: (fiestaName) {
+                        _toggleDetalleFiestaTradicion(fiestaName);
+                      },
+                      onClose: _toggleTradicionesPage,
+                    ),
+                  ),
+
+                // Detalle de una Fiesta o Tradición seleccionada
+                if (showDetalleFiestaTradicion)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: DetalleFiestaTradicion(
+                      fiestaName: selectedFiesta!,
+                      onClose: () {
+                        setState(() {
+                          showDetalleFiestaTradicion = false;
+                          showTradicionesPage = true;
+                        });
+                      },
+                    ),
+                  ),
+
+                // Página de Gastronomía
+                if (showGastronomia)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: GastronomiaPage(
+                      onCategoriaPlatoSelected: (category) {
+                        _toggleGastronomiaPageDetail(category);
+                      },
+                    ),
+                  ),
+
+                // Categoría de platos en la Gastronomía
+                if (showGastronomiaCategory)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: CategoriaPlatos(
+                      category: selectedCategory!,
+                      onClose: () {
+                        setState(() {
+                          showGastronomiaCategory = false;
+                          showGastronomia = true;
+                        });
+                      },
+                      onPlatilloSelected: (platillo) {
+                        _toggleDetallePlatillo(platillo);
+                      },
+                    ),
+                  ),
+
+                // Detalle de un Platillo
+                if (showDetallePlatillo)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: DetallePlatillo(
+                      platillo: selectedPlatillo!,
+                      closeWidget: () {
+                        setState(() {
+                          showDetallePlatillo = false;
+                          showGastronomiaCategory = true;
+                        });
+                      },
+                    ),
+                  ),
+              ],
+            )
+          : Center(child: CircularProgressIndicator()),
     );
   }
 
   // Métodos para manejar la navegación entre las páginas y los detalles
-  
+
   void _toggleGastronomiaPage() {
     setState(() {
       showMenuPrincipal = false;
@@ -193,22 +213,24 @@ class _MyHomePageState extends State<MyHomePage> {
   void _toggleTradicionesPage() {
     setState(() {
       showTradicionesPage = !showTradicionesPage;
-      showMenuPrincipal = !showTradicionesPage; 
+      showMenuPrincipal = !showTradicionesPage;
     });
   }
 
   void _toggleMenuPrincipal() {
-  setState(() {
-    // Cerrar cualquier página abierta antes de abrir el menú
-    if (showGastronomia || showTradicionesPage || showDetalleFiestaTradicion || showGastronomiaCategory || showDetallePlatillo) {
-      showGastronomia = false;
-      showTradicionesPage = false;
-      showDetalleFiestaTradicion = false;
-      showGastronomiaCategory = false;
-      showDetallePlatillo = false;
-    }
-    showMenuPrincipal = !showMenuPrincipal;
-  });
-}
-
+    setState(() {
+      if (showGastronomia ||
+          showTradicionesPage ||
+          showDetalleFiestaTradicion ||
+          showGastronomiaCategory ||
+          showDetallePlatillo) {
+        showGastronomia = false;
+        showTradicionesPage = false;
+        showDetalleFiestaTradicion = false;
+        showGastronomiaCategory = false;
+        showDetallePlatillo = false;
+      }
+      showMenuPrincipal = !showMenuPrincipal;
+    });
+  }
 }
