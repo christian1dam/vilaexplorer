@@ -8,9 +8,12 @@
     "access": "ACCESS",
     "name": "Name",
     "email": "Email",
+    "put_email": "Enter your email",
     "password": "Password",
     "confirm_password": "Confirm Password",
     "return": "RETURN",
+    "look_email": "Look at your Email",
+    "send": "Send",
     "resend_in1": "You can resend in ",
     "resend_in2": " seconds.",
 

@@ -9,9 +9,12 @@
     "access": "ACCEDIR",
     "name": "Nom",
     "email": "Correu electrònic",
+    "put_email": "Introdueix el teu correu",
     "password": "Contrasenya",
     "confirm_password": "Confirma Contrasenya",
     "return": "TORNAR",
+    "look_email": "Mira el teu Correu Electrònic",
+    "send": "Envia",
     "resend_in1": "Pots reenviar en ",
     "resend_in2": " segons.",
 

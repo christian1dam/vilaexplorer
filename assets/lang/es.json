@@ -8,9 +8,12 @@
     "access": "ACCEDER",
     "name": "Nombre",
     "email": "Correo",
+    "put_email": "Introduce tu correo",
     "password": "Contraseña",
     "confirm_password": "Confirmar Contraseña",
     "return": "VOLVER",
+    "look_email": "Mira tu Correo Electrónico",
+    "send": "Enviar",
     "resend_in1": "Podrás reenviar en ",
     "resend_in2": " segundos.",
 

@@ -15,10 +15,12 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
   bool _isButtonEnabled = true; // Estado del botón
   int _counter = 60; // Contador inicial
   Timer? _timer; // Temporizador
+  TextEditingController _emailController = TextEditingController(); // Controlador para el campo de texto
 
   @override
   void dispose() {
     _timer?.cancel(); // Cancelar el temporizador si la página se cierra
+    _emailController.dispose(); // Limpiar el controlador cuando la página se cierra
     super.dispose();
   }
 
@@ -67,8 +69,8 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(height: 40), // Espacio superior para la X
-                      const Text(
-                        'Introduce tu correo electrónico',
+                      Text(
+                        AppLocalizations.of(context)!.translate('put_email'),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -77,9 +79,10 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
                       ),
                       const SizedBox(height: 20),
                       TextField(
+                        controller: _emailController, // Asignar el controlador
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          labelText: 'Correo',
+                          labelText: AppLocalizations.of(context)!.translate('email'),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -92,18 +95,42 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
                             ? () {
                                 // Aquí puedes agregar lógica para enviar el correo
                                 _startTimer(); // Iniciar el temporizador
+                                _emailController.clear(); // Limpiar el campo de texto después de presionar el botón
                               }
                             : null, // Deshabilitar el botón si no se puede enviar
-                        child: const Text('Enviar'),
+                        child: Text(AppLocalizations.of(context)!.translate('send')),
                       ),
                       const SizedBox(height: 20),
                       if (!_isButtonEnabled) // Mostrar el contador solo si el botón está deshabilitado
-                        Text(
-                          AppLocalizations.of(context)!.translate('resend_in1') + _counter.toString() + AppLocalizations.of(context)!.translate('resend_in2'),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
+                        Column(
+                          children: [
+                            // Aquí agregamos otro texto antes del contador
+                            Text(
+                              AppLocalizations.of(context)!.translate('look_email'), // Nuevo texto
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 10), 
+                            
+                            Divider(
+                              color: Colors.white, 
+                              thickness: 1, 
+                              indent: 0, 
+                              endIndent: 0, 
+                            ),
+
+                            const SizedBox(height: 10), 
+
+                            Text(
+                              AppLocalizations.of(context)!.translate('resend_in1') + _counter.toString() + AppLocalizations.of(context)!.translate('resend_in2'),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
                     ],
                   ),
