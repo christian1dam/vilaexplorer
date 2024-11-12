@@ -99,9 +99,7 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
                       const SizedBox(height: 20),
                       if (!_isButtonEnabled) // Mostrar el contador solo si el botón está deshabilitado
                         Text(
-                          AppLocalizations.of(context)!
-                              .translate('resend_in')
-                              .replaceFirst('{seconds}', '$_counter'),
+                          AppLocalizations.of(context)!.translate('resend_in1') + _counter.toString() + AppLocalizations.of(context)!.translate('resend_in2'),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,

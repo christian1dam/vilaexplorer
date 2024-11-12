@@ -12,8 +12,8 @@
     "password": "Contrasenya",
     "confirm_password": "Confirma Contrasenya",
     "return": "TORNAR",
-    "resend_in": "Pots reenviar en {seconds} segons.",
-
+    "resend_in1": "Pots reenviar en ",
+    "resend_in2": " segons.",
 
 
     "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN"

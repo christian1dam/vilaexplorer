@@ -11,7 +11,8 @@
     "password": "Password",
     "confirm_password": "Confirm Password",
     "return": "RETURN",
-    "resend_in": "You can resend in {seconds} seconds.",
+    "resend_in1": "You can resend in ",
+    "resend_in2": " seconds.",
 
 
     "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN"

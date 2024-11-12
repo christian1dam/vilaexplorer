@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
-import '../login_page.dart';
 
 class FiestaCard extends StatelessWidget {
   final String nombre;
