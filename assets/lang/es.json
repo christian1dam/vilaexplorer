@@ -19,7 +19,15 @@
 
     
 
-    "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN"
+    "_comment": "TRADUCCIONES PARA LA PAGINA PRINCIPAL",
 
+    "mp_search": "Search for a place, event or address...",
+    "traditions": "Tradicions",
+    "favorites": "Favorit",
+    "my_account": "El meu Compte",
+    "gastronomy": "Gastronomia",
+    "monuments": "Monuments",
+    "near": "A prop",
+    "see_more": "Veure Més"
   }
   

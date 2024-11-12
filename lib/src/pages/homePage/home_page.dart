@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/categoria_platos.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/detalle_platillo.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
@@ -24,6 +25,8 @@ class _MyHomePageState extends State<MyHomePage> {
   bool showDetalleFiestaTradicion = false;
   bool showGastronomia = false;
   bool showGastronomiaCategory = false;
+  bool showFavoritosPage = false;
+
 
   String? selectedFiesta;
   String? selectedCategory;
@@ -71,9 +74,25 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: MenuPrincipal(
                       onShowTradicionesPressed: _toggleTradicionesPage,
                       onShowGastronomiaPressed: _toggleGastronomiaPage,
+                      onShowFavoritosPressed: _toggleFavoritosPage,
                       onCloseMenu: _toggleMenuPrincipal,
                     ),
                   ),
+
+
+                // Página de Favoritos
+                if (showFavoritosPage)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: FavoritosPage(
+                      onClose: _toggleFavoritosPage,  // Pasa la referencia de la función
+                    ),
+                  ),
+
+
 
                 // Página de Tradiciones
                 if (showTradicionesPage)
@@ -210,27 +229,49 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _toggleTradicionesPage() {
+  void _toggleFavoritosPage() {
     setState(() {
-      showTradicionesPage = !showTradicionesPage;
-      showMenuPrincipal = !showTradicionesPage;
+      // Si el menú principal está abierto, lo cerramos.
+      showMenuPrincipal = false;
+      // Alternar la visibilidad de la página de Favoritos.
+      showFavoritosPage = !showFavoritosPage;
+      // Si se está mostrando Tradiciones, cerramos Tradiciones para evitar bloqueo.
+      if (showTradicionesPage) {
+        showTradicionesPage = false;
+      }
     });
   }
 
+
+
+  void _toggleTradicionesPage() {
+  setState(() {
+    // Si el menú principal está abierto, lo cerramos.
+    showMenuPrincipal = false;
+    // Alternar la visibilidad de la página de Tradiciones.
+    showTradicionesPage = !showTradicionesPage;
+    // Si se está mostrando Favoritos, cerramos Favoritos.
+    if (showFavoritosPage) {
+      showFavoritosPage = false;
+    }
+  });
+}
+
+
   void _toggleMenuPrincipal() {
-    setState(() {
-      if (showGastronomia ||
-          showTradicionesPage ||
-          showDetalleFiestaTradicion ||
-          showGastronomiaCategory ||
-          showDetallePlatillo) {
-        showGastronomia = false;
-        showTradicionesPage = false;
-        showDetalleFiestaTradicion = false;
-        showGastronomiaCategory = false;
-        showDetallePlatillo = false;
-      }
-      showMenuPrincipal = !showMenuPrincipal;
-    });
-  }
+  setState(() {
+    // Si alguna página está abierta, cerramos todo antes de abrir el menú
+    if (showGastronomia || showTradicionesPage || showDetalleFiestaTradicion || showGastronomiaCategory || showDetallePlatillo || showFavoritosPage) {
+      showGastronomia = false;
+      showTradicionesPage = false;
+      showDetalleFiestaTradicion = false;
+      showGastronomiaCategory = false;
+      showDetallePlatillo = false;
+      showFavoritosPage = false;
+    }
+    // Alternar la visibilidad del menú
+    showMenuPrincipal = !showMenuPrincipal;
+  });
+}
+
 }

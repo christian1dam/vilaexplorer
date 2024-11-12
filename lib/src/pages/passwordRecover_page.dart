@@ -15,7 +15,7 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
   bool _isButtonEnabled = true; // Estado del botón
   int _counter = 60; // Contador inicial
   Timer? _timer; // Temporizador
-  TextEditingController _emailController = TextEditingController(); // Controlador para el campo de texto
+  final TextEditingController _emailController = TextEditingController(); // Controlador para el campo de texto
 
   @override
   void dispose() {

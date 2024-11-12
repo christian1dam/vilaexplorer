@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vilaexplorer/src/pages/homePage/history_page.dart';
-import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
+
 import 'dart:convert';
 import 'package:flutter/services.dart';
 
@@ -155,6 +155,8 @@ class MenuPrincipal extends StatelessWidget {
     );
   }
 
+  
+
   // Método para crear los botones del menú principal
   Widget _crearBoton(double mywidth, String texto, String imagePath, double tamanoTexto, BuildContext context) {
     return SizedBox(
@@ -172,17 +174,16 @@ class MenuPrincipal extends StatelessWidget {
           shadowColor: Colors.white.withOpacity(0.3),
         ),
         onPressed: () {
-          if (texto == "Tradiciones" && onShowTradicionesPressed != null) {
-            onShowTradicionesPressed!();
+          if (texto == "Favoritos") {
+            // Redirigir a la página de Favoritos desde el controlador principal
+            if (onShowFavoritosPressed != null) {
+              onShowFavoritosPressed!();
+            }
           } else if (texto == "Gastronomia" && onShowGastronomiaPressed != null) {
             onShowGastronomiaPressed!();
-          } else if (texto == "Favoritos") {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => FavoritosPage(),
-              ),
-            );
-          }
+          }else if (texto == "Tradiciones" && onShowTradicionesPressed != null) {
+            onShowTradicionesPressed!();
+          } 
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,6 +200,8 @@ class MenuPrincipal extends StatelessWidget {
       ),
     );
   }
+
+
 
   // Método para cargar el JSON desde los assets
   static Future<Map<String, Map<String, String>>> _loadHistoriasFromJson() async {
