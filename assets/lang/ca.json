@@ -1,0 +1,21 @@
+{
+
+    "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN",
+
+    "login": "INICIAR SESSIÓ",
+    "register": "REGISTRE",
+    "do_register": "REGISTRARSE",
+    "forgot_password": "Has oblidat la teva contrasenya?",
+    "access": "ACCEDIR",
+    "name": "Nom",
+    "email": "Correu electrònic",
+    "password": "Contrasenya",
+    "confirm_password": "Confirma Contrasenya",
+    "return": "TORNAR",
+    "resend_in": "Pots reenviar en {seconds} segons.",
+
+
+
+    "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN"
+  }
+  

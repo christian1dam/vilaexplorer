@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:vilaexplorer/l10n/app_localizations.dart';
+import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
 import 'package:vilaexplorer/src/pages/login_page.dart';
 
@@ -114,24 +116,24 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                   ),
 
                   const SizedBox(height: 20),
-                  const Text(
-                    'REGISTRARSE',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                  Text(
+                  AppLocalizations.of(context)!.translate('do_register'),
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
+                ),
                   const SizedBox(height: 20),
 
                   // Campos de texto
-                  _buildTextField('Nombre', false),
+                  _buildTextField(AppLocalizations.of(context)!.translate('name'), false),
                   const SizedBox(height: 20),
-                  _buildTextField('Correo', false),
+                  _buildTextField(AppLocalizations.of(context)!.translate('email'), false),
                   const SizedBox(height: 20),
-                  _buildTextField('Contraseña', true),
+                  _buildTextField(AppLocalizations.of(context)!.translate('password'), true),
                   const SizedBox(height: 20),
-                  _buildTextField('Confirmar Contraseña', true),
+                  _buildTextField(AppLocalizations.of(context)!.translate('confirm_password'), false),
 
                   // Espacio desde el fondo del 10%
                   SizedBox(height: MediaQuery.of(context).size.height * 0.10),
@@ -171,10 +173,10 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                               ),
                             );
                           },
-                          child: const Text(
-                            'VOLVER',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                          child: Text(
+                          AppLocalizations.of(context)!.translate('return'),
+                          style: TextStyle(color: Colors.white),
+                        ),
                         ),
                         
                       
@@ -211,8 +213,8 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                             ),
                           );
                         },
-                        child: const Text(
-                          'ACCEDER',
+                        child: Text(
+                          AppLocalizations.of(context)!.translate('access'),
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -254,12 +256,26 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
     );
   }
 
+  void _changeLanguage(BuildContext context, Locale locale) {
+    setState(() {
+      MyApp.setLocale(context, locale);
+    });
+  }
+
   // Widget para mostrar una opción de idioma con la bandera
   Widget _buildLanguageOption(String language, String flagPath) {
     return ListTile(
       onTap: () {
-        // Aquí puedes agregar la lógica para cambiar el idioma
-        Navigator.pop(context); // Cerrar el modal
+        Locale newLocale;
+        if (language == 'Español') {
+          newLocale = Locale('es');
+        } else if (language == 'English') {
+          newLocale = Locale('en');
+        } else {
+          newLocale = Locale('ca'); // Valenciano
+        }
+        _changeLanguage(context, newLocale);
+        Navigator.pop(context);
       },
       leading: Image.asset(flagPath, height: 60, width: 60),
       title: Text(language, style: TextStyle(color: Colors.white)),

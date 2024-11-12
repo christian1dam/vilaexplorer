@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vilaexplorer/l10n/app_localizations.dart';
+import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
 import 'package:vilaexplorer/src/pages/passwordRecover_page.dart';
 import 'package:vilaexplorer/src/pages/register_page.dart';
@@ -109,8 +111,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'INICIAR SESIÓN',
+                Text(
+                  AppLocalizations.of(context)!.translate('login'),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -118,9 +120,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildTextField('Correo', false),
+                _buildTextField(AppLocalizations.of(context)!.translate('email'), false),
                 const SizedBox(height: 20),
-                _buildTextField('Contraseña', true),
+                _buildTextField(AppLocalizations.of(context)!.translate('password'), true),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -134,8 +136,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                         },
                       );
                     },
-                    child: const Text(
-                      '¿Has olvidado tu contraseña?',
+                    child: Text(
+                      AppLocalizations.of(context)!.translate('forgot_password'),
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -174,10 +176,10 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                             ),
                           );
                         },
-                        child: const Text(
-                          'REGISTRO',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.translate('register'),
+                          style: const TextStyle(color: Colors.white),),
+
                       ),
                       // Botón de idioma
                       IconButton(
@@ -212,8 +214,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                             ),
                           );
                         },
-                        child: const Text(
-                          'ACCEDER',
+                        child: Text(
+                          AppLocalizations.of(context)!.translate('access'),
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -254,13 +256,29 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
+  void _changeLanguage(BuildContext context, Locale locale) {
+  setState(() {
+    MyApp.setLocale(context, locale);
+  });
+}
+
+
   // Widget para mostrar una opción de idioma con la bandera
   Widget _buildLanguageOption(String language, String flagPath) {
     return ListTile(
       onTap: () {
-        // Aquí puedes agregar la lógica para cambiar el idioma
-        Navigator.pop(context); // Cerrar el modal
+        Locale newLocale;
+        if (language == 'Español') {
+          newLocale = Locale('es');
+        } else if (language == 'English') {
+          newLocale = Locale('en');
+        } else {
+          newLocale = Locale('ca'); // Valenciano
+        }
+        _changeLanguage(context, newLocale);
+        Navigator.pop(context);
       },
+
       leading: Image.asset(flagPath, height: 60, width: 60),
       title: Text(language, style: TextStyle(color: Colors.white)),
     );

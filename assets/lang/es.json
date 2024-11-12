@@ -1,0 +1,21 @@
+{
+  "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN",
+
+    "login": "INICIAR SESIÓN",
+    "register": "REGISTRO",
+    "do_register": "REGISTRARSE",
+    "forgot_password": "¿Has olvidado tu contraseña?",
+    "access": "ACCEDER",
+    "name": "Nombre",
+    "email": "Correo",
+    "password": "Contraseña",
+    "confirm_password": "Confirmar Contraseña",
+    "return": "VOLVER",
+    "resend_in": "Podrás reenviar en {seconds} segundos.",
+
+    
+
+    "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN"
+
+  }
+  
