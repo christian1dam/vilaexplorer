@@ -248,6 +248,8 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
               _buildLanguageOption('Español', 'assets/images/BanderaEspañola.png'),
               _buildLanguageOption('English', 'assets/images/BanderaInglaterra.png'),
               _buildLanguageOption('Valencià', 'assets/images/BanderaComunidadValenciana.png'),
+              _buildLanguageOption('Chino', 'assets/images/BanderaChina.png'),
+              _buildLanguageOption('Francés', 'assets/images/BanderaFrancia.png'),
             ],
           ),
         );
@@ -270,6 +272,10 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
           newLocale = Locale('es');
         } else if (language == 'English') {
           newLocale = Locale('en');
+        } else if (language == 'Chino') {
+          newLocale = Locale('zh');
+        } else if (language == 'Francés') {
+          newLocale = Locale('fr');
         } else {
           newLocale = Locale('ca'); // Valenciano
         }

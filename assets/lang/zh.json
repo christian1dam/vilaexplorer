@@ -1,0 +1,49 @@
+{
+    "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN",
+  
+      "login": "登录",
+      "register": "注册",
+      "do_register": "注册",
+      "forgot_password": "忘记密码？",
+      "access": "访问",
+      "name": "姓名",
+      "email": "电子邮箱",
+      "put_email": "输入您的电子邮箱",
+      "password": "密码",
+      "confirm_password": "确认密码",
+      "return": "返回",
+      "look_email": "查看您的电子邮件",
+      "send": "发送",
+      "resend_in1": "可以重新发送在",
+      "resend_in2": "秒内。",
+  
+      "_comment": "TRADUCCIONES PARA LA PAGINA PRINCIPAL",
+  
+      "mp_search": "搜索地点、活动或地址...",
+      "traditions": "传统",
+      "favorites": "收藏",
+      "my_account": "我的账户",
+      "gastronomy": "美食",
+      "monuments": "纪念碑",
+      "near": "附近",
+      "see_more": "查看更多",
+  
+      "_comment": "TRADUCCIONES PARA LA PAGINA TRADICIONES",
+  
+      "holidays_traditions": "节日与传统",
+      "search_traditions": "搜索当地节日或传统...",
+      "all": "全部",
+      "popular": "热门",
+      "nearby": "附近",
+  
+      "_comment": "TRADUCCIONES PARA LA PAGINA FAVORITOS",
+  
+      "search_favorites": "搜索地点、餐厅或传统...",
+      "monuments_place": "纪念碑 / 地点",
+
+      "_comment": "TRADUCCIONES PARA LA PAGINA GASTRONOMÍA",
+  
+      "search_recipe": "搜索食谱..."
+      
+    }
+    

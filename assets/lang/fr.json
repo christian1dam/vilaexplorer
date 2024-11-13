@@ -1,0 +1,49 @@
+{
+    "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN",
+  
+      "login": "CONNEXION",
+      "register": "INSCRIPTION",
+      "do_register": "S'INSCRIRE",
+      "forgot_password": "Mot de passe oublié ?",
+      "access": "ACCÉDER",
+      "name": "Nom",
+      "email": "E-mail",
+      "put_email": "Entrez votre e-mail",
+      "password": "Mot de passe",
+      "confirm_password": "Confirmer le mot de passe",
+      "return": "RETOUR",
+      "look_email": "Vérifiez votre boîte e-mail",
+      "send": "Envoyer",
+      "resend_in1": "Vous pourrez renvoyer dans",
+      "resend_in2": "secondes.",
+  
+      "_comment": "TRADUCCIONES PARA LA PAGINA PRINCIPAL",
+  
+      "mp_search": "Rechercher un lieu, un événement ou une adresse...",
+      "traditions": "Traditions",
+      "favorites": "Favoris",
+      "my_account": "Mon compte",
+      "gastronomy": "Gastronomie",
+      "monuments": "Monuments",
+      "near": "À proximité",
+      "see_more": "Voir plus",
+  
+      "_comment": "TRADUCCIONES PARA LA PAGINA TRADICIONES",
+  
+      "holidays_traditions": "Fêtes & Traditions",
+      "search_traditions": "Rechercher des fêtes ou traditions locales...",
+      "all": "Tout",
+      "popular": "Populaire",
+      "nearby": "À proximité",
+  
+      "_comment": "TRADUCCIONES PARA LA PAGINA FAVORITOS",
+  
+      "search_favorites": "Rechercher un lieu, un restaurant ou une tradition...",
+      "monuments_place": "Monuments / Lieux",
+
+      "_comment": "TRADUCCIONES PARA LA PAGINA GASTRONOMÍA",
+  
+      "search_recipe": "Rechercher une recette..."
+      
+    }
+    

@@ -138,6 +138,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       onCategoriaPlatoSelected: (category) {
                         _toggleGastronomiaPageDetail(category);
                       },
+                      onClose: () {
+                        Navigator.of(context).pop();
+                      },
                     ),
                   ),
 

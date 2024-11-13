@@ -11,7 +11,24 @@
           },
           {
             "name": "Arroz con Pollo",
-            "image": "assets/images_gastronomia/arroz-con-pollo.jpg",
+            "image": "assets/images_gastronomia/paella-valenciana.jpg",
+            "ingredients": "1 taza de arroz, 1 pechuga de pollo, 50g de guisantes...",
+            "recipe": "En una sartén, dora el pollo y añade el arroz..."
+          }
+        ]
+      },
+      {
+        "name": "Arroces Melosos",
+        "dishes": [
+          {
+            "name": "Meloso 1",
+            "image": "assets/images_gastronomia/paella-valenciana.jpg",
+            "ingredients": "1 taza de arroz, 2 muslos de pollo, 100g de judías verdes, pimiento rojo...",
+            "recipe": "En una paellera, sofríe el pollo con las verduras. Luego añade el arroz..."
+          },
+          {
+            "name": "Meloso 2",
+            "image": "assets/images_gastronomia/paella-valenciana.jpg",
             "ingredients": "1 taza de arroz, 1 pechuga de pollo, 50g de guisantes...",
             "recipe": "En una sartén, dora el pollo y añade el arroz..."
           }

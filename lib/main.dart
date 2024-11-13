@@ -40,7 +40,9 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: const [
         Locale('en'), // Inglés
         Locale('es'), // Español
-        Locale('ca'), // Valenciano/Catalán
+        Locale('ca'), // Valenciano
+        Locale('zh'), // Chino
+        Locale('fr'), // Francés
       ],
       localizationsDelegates: const [
         AppLocalizations.delegate,

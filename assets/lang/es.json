@@ -17,7 +17,6 @@
     "resend_in1": "Podrás reenviar en ",
     "resend_in2": " segundos.",
 
-
     "_comment": "TRADUCCIONES PARA LA PAGINA PRINCIPAL",
 
     "mp_search": "Buscar un lugar, evento o dirección...",
@@ -40,7 +39,11 @@
     "_comment": "TRADUCCIONES PARA LA PAGINA FAVORITOS",
 
     "search_favorites": "Buscar un lugar, restaurante o tradición...",
-    "monuments_place": "Monumentos / Lugares"
+    "monuments_place": "Monumentos / Lugares",
+
+    "_comment": "TRADUCCIONES PARA LA PAGINA GASTRONOMÍA",
+
+    "search_recipe": "Buscar receta..."
 
   }
   
