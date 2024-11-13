@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vilaexplorer/l10n/app_localizations.dart';
+import 'package:vilaexplorer/main.dart';
 
 class FavoritosPage extends StatefulWidget {
   final Function onClose;
@@ -90,9 +92,9 @@ class _FavoritosPageState extends State<FavoritosPage> {
                           margin: const EdgeInsets.only(top: 10, left: 10),
                           width: size.width * 0.5,
                           height: 35,
-                          child: const Center(
+                          child: Center(
                             child: Text(
-                              'Favoritos',
+                              AppLocalizations.of(context)!.translate('favorites'),
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -118,8 +120,8 @@ class _FavoritosPageState extends State<FavoritosPage> {
                       child: TextField(
                         controller: searchController,
                         style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(
-                          hintText: 'Buscar un lugar, restaurante o tradición...',
+                        decoration: InputDecoration(
+                          hintText: AppLocalizations.of(context)!.translate('search_favorites'),
                           hintStyle: TextStyle(color: Colors.white54),
                           fillColor: Color.fromARGB(255, 47, 42, 42),
                           filled: true,
@@ -145,8 +147,8 @@ class _FavoritosPageState extends State<FavoritosPage> {
                       children: [
                         // Primera lista desplegable
                         ExpansionTile(
-                          title: const Text(
-                            'Monumentos / Lugares',
+                          title: Text(
+                            AppLocalizations.of(context)!.translate('monuments_place'),
                             style: TextStyle(color: Colors.white),
                           ),
                           collapsedIconColor: Colors.white,
@@ -173,8 +175,8 @@ class _FavoritosPageState extends State<FavoritosPage> {
                           ],
                         ),
                         ExpansionTile(
-                          title: const Text(
-                            'Gastronomía',
+                          title: Text(
+                            AppLocalizations.of(context)!.translate('gastronomy'),
                             style: TextStyle(color: Colors.white),
                           ),
                           collapsedIconColor: Colors.white,
@@ -201,8 +203,8 @@ class _FavoritosPageState extends State<FavoritosPage> {
                           ],
                         ),
                         ExpansionTile(
-                          title: const Text(
-                            'Tradiciones',
+                          title: Text(
+                            AppLocalizations.of(context)!.translate('traditions'),
                             style: TextStyle(color: Colors.white),
                           ),
                           collapsedIconColor: Colors.white,
@@ -238,6 +240,12 @@ class _FavoritosPageState extends State<FavoritosPage> {
         ),
       ],
     );
+  }
+
+  void _changeLanguage(BuildContext context, Locale locale) {
+    setState(() {
+      MyApp.setLocale(context, locale);
+    });
   }
 
   SizedBox MyBotonText(String texto) {

@@ -20,14 +20,27 @@
 
     "_comment": "TRADUCCIONES PARA LA PAGINA PRINCIPAL",
 
-    "mp_search": "Cerca un lloc, esdeveniment o adreça...",
+    "mp_search": "Search for a place, event or address...",
     "traditions": "Traditions",
     "favorites": "Favorites",
     "my_account": "My Account",
     "gastronomy": "Gastronomy",
     "monuments": "Monuments",
     "near": "Near",
-    "see_more": "See More"
+    "see_more": "See More",
+
+    "_comment": "TRADUCCIONES PARA LA PAGINA TRADICIONES",
+
+    "holidays_traditions": "Holidays & Traditions",
+    "search_traditions": "Search traditions or local holidays...",
+    "all": "All",
+    "popular": "Popular",
+    "nearby": "Nearby",
+
+    "_comment": "TRADUCCIONES PARA LA PAGINA FAVORITOS",
+
+    "search_favorites": "Search a place, restaurant or tradition...",
+    "monuments_place": "Monuments / Places"
 
 
 

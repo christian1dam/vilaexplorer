@@ -1,5 +1,4 @@
 {
-
     "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN",
 
     "login": "INICIAR SESSIÓ",
@@ -21,15 +20,28 @@
 
     "_comment": "TRADUCCIONES PARA LA PAGINA PRINCIPAL",
 
-    "mp_search": "Buscar un lugar, evento o dirección...",
-    "traditions": "Tradiciones",
-    "favorites": "Favoritos",
-    "my_account": "Mi Cuenta",
-    "gastronomy": "Gastronomía",
-    "monuments": "Monumentos",
-    "near": "Cerca",
-    "see_more": "Ver Más"
+    "mp_search": "Cerca un lloc, esdeveniment o adreça...",
+    "traditions": "Tradicions",
+    "favorites": "Favorits",
+    "my_account": "El meu Compte",
+    "gastronomy": "Gastronomia",
+    "monuments": "Monuments",
+    "near": "A prop",
+    "see_more": "Veure Més",
 
+    "_comment": "TRADUCCIONES PARA LA PAGINA TRADICIONES",
+
+    "holidays_traditions": "Festes & Tradicions",
+    "search_traditions": "Cerca tradicions o festes locals...",
+    "all": "Tot",
+    "popular": "Populars",
+    "nearby": "Propers",
+
+    "_comment": "TRADUCCIONES PARA LA PAGINA FAVORITOS",
+
+    "search_favorites": "Cerca un lloc, restaurant o tradició...",
+    "monuments_place": "Monuments / Llocs"
+    
 
 
 

@@ -101,11 +101,7 @@ class CategoriaPlatos extends StatelessWidget {
                     itemCount: dishes.length,
                     itemBuilder: (context, index) {
                       final dish = dishes[index];
-                      return _buildPlatoCard(
-                        context,
-                        dish['name'],
-                        dish['image'],
-                      );
+                      return _buildDishExpansionTile(context, dish);
                     },
                   ),
                 ),
@@ -117,25 +113,54 @@ class CategoriaPlatos extends StatelessWidget {
     );
   }
 
-  Widget _buildPlatoCard(BuildContext context, String name, String imagePath) {
+  Widget _buildDishExpansionTile(BuildContext context, Map<String, dynamic> dish) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          backgroundColor: kContainerColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: kContainerColor,
+          borderRadius: BorderRadius.circular(20),
         ),
-        onPressed: () => onPlatilloSelected(name),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ExpansionTile(
+          collapsedIconColor: Colors.white,
+          iconColor: Colors.white,
+          title: Text(
+            dish['name'],
+            style: const TextStyle(
+              color: Colors.white,
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.w300,
+              fontSize: 20,
+            ),
+          ),
           children: [
-            _buildImage(imagePath),
+            _buildImage(dish['image']),
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: _buildTitle(name),
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSectionTitle('Ingredientes:'),
+                  Text(
+                    dish['ingredients'],
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 16,
+                      fontFamily: 'Roboto',
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  _buildSectionTitle('Receta:'),
+                  Text(
+                    dish['recipe'],
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 16,
+                      fontFamily: 'Roboto',
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -145,7 +170,10 @@ class CategoriaPlatos extends StatelessWidget {
 
   Widget _buildImage(String imagePath) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(15.0),
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(20),
+        topRight: Radius.circular(20),
+      ),
       child: Image.asset(
         imagePath,
         width: double.infinity,
@@ -155,10 +183,17 @@ class CategoriaPlatos extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(String name) {
+  Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Text(name, style: kTitleTextStyle),
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+        ),
+      ),
     );
   }
 }

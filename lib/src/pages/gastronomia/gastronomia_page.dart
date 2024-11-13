@@ -16,6 +16,7 @@ class GastronomiaPage extends StatefulWidget {
 
 class _GastronomiaPageState extends State<GastronomiaPage> {
   List<dynamic> categories = [];
+  String? selectedCategory;
 
   @override
   void initState() {
@@ -28,6 +29,9 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
     final data = json.decode(response);
     setState(() {
       categories = data['categories'];
+      if (categories.isNotEmpty) {
+        selectedCategory = categories.first['name']; // Selecciona la primera categoría por defecto
+      }
     });
   }
 
@@ -86,8 +90,37 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
             ),
             const SizedBox(height: 10),
 
+            // Lista desplegable para categorías
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: DropdownButton<String>(
+                value: selectedCategory,
+                dropdownColor: const Color.fromARGB(255, 47, 42, 42),
+                style: const TextStyle(color: Colors.white),
+                iconEnabledColor: Colors.white,
+                isExpanded: true,
+                items: categories.map((category) {
+                  return DropdownMenuItem<String>(
+                    value: category['name'],
+                    child: Text(category['name']),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedCategory = newValue;
+                  });
+                  if (newValue != null) {
+                    widget.onCategoriaPlatoSelected(newValue);
+                  }
+                },
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
             Expanded(
               child: ListView.builder(
+                padding: EdgeInsets.all(0),
                 itemCount: categories.length,
                 itemBuilder: (context, index) {
                   final category = categories[index]['name'];

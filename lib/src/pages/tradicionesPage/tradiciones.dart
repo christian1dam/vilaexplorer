@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:vilaexplorer/l10n/app_localizations.dart';
+import 'package:vilaexplorer/main.dart';
 import 'tarjetaFiestaTradicion.dart';
 
 class TradicionesPage extends StatefulWidget {
@@ -116,11 +118,11 @@ class _TradicionesPageState extends State<TradicionesPage> {
                                   borderRadius: BorderRadius.all(Radius.circular(10)),
                                 ),
                                 margin: const EdgeInsets.only(top: 10, left: 10),
-                                width: size.width * 0.5,
+                                width: size.width * 0.7,
                                 height: 35,
-                                child: const Center(
+                                child: Center(
                                   child: Text(
-                                    'Fiestas & tradiciones',
+                                    AppLocalizations.of(context)!.translate('holidays_traditions'),
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -143,8 +145,8 @@ class _TradicionesPageState extends State<TradicionesPage> {
                             child: TextField(
                               controller: searchController,
                               style: const TextStyle(color: Colors.white),
-                              decoration: const InputDecoration(
-                                hintText: 'Buscar tradiciones o fiestas locales...',
+                              decoration: InputDecoration(
+                                hintText: AppLocalizations.of(context)!.translate('search_traditions'),
                                 hintStyle: TextStyle(color: Colors.white54),
                                 fillColor: Color.fromARGB(255, 47, 42, 42),
                                 filled: true,
@@ -169,9 +171,9 @@ class _TradicionesPageState extends State<TradicionesPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                MyBotonText("Todo"),
-                                MyBotonText("Populares"),
-                                MyBotonText("Cercanos")
+                                MyBotonText(AppLocalizations.of(context)!.translate('all')),
+                                MyBotonText(AppLocalizations.of(context)!.translate('popular')), // Filtrar por tradiciones puntuadas de más de 3 estrellas
+                                MyBotonText(AppLocalizations.of(context)!.translate('nearby'))
                               ],
                             ),
                           ),
@@ -197,6 +199,13 @@ class _TradicionesPageState extends State<TradicionesPage> {
               ),
             ],
           );
+  }
+
+//Necesario para hacer las traducciones
+  void _changeLanguage(BuildContext context, Locale locale) {
+    setState(() {
+      MyApp.setLocale(context, locale);
+    });
   }
 
   SizedBox MyBotonText(String texto) {

@@ -17,17 +17,30 @@
     "resend_in1": "Podrás reenviar en ",
     "resend_in2": " segundos.",
 
-    
 
     "_comment": "TRADUCCIONES PARA LA PAGINA PRINCIPAL",
 
-    "mp_search": "Search for a place, event or address...",
-    "traditions": "Tradicions",
-    "favorites": "Favorit",
-    "my_account": "El meu Compte",
-    "gastronomy": "Gastronomia",
-    "monuments": "Monuments",
-    "near": "A prop",
-    "see_more": "Veure Més"
+    "mp_search": "Buscar un lugar, evento o dirección...",
+    "traditions": "Tradiciones",
+    "favorites": "Favoritos",
+    "my_account": "Mi Cuenta",
+    "gastronomy": "Gastronomía",
+    "monuments": "Monumentos",
+    "near": "Cerca",
+    "see_more": "Ver Más",
+
+    "_comment": "TRADUCCIONES PARA LA PAGINA TRADICIONES",
+
+    "holidays_traditions": "Fiestas & Tradiciones",
+    "search_traditions": "Buscar tradiciones o fiestas locales...",
+    "all": "Todo",
+    "popular": "Populares",
+    "nearby": "Cercanos",
+
+    "_comment": "TRADUCCIONES PARA LA PAGINA FAVORITOS",
+
+    "search_favorites": "Buscar un lugar, restaurante o tradición...",
+    "monuments_place": "Monumentos / Lugares"
+
   }
   
