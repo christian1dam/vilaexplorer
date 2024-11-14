@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:vilaexplorer/l10n/app_localizations.dart';
+import 'package:vilaexplorer/main.dart';
 
 // Definimos constantes para los estilos de los botones y textos
-const kButtonBackgroundColorSelected = Colors.black87;
-const kButtonBackgroundColorUnselected = Colors.grey;
+const kButtonBackgroundColorSelected = Color.fromRGBO(32, 29, 29, 0.9);
+const kButtonBackgroundColorUnselected = Color.fromRGBO(45, 45, 45, 1);
 const kButtonTextStyle = TextStyle(
   color: Colors.white,
-  fontFamily: 'Roboto',
+  fontFamily: 'Poppins',
   fontWeight: FontWeight.w300,
   fontSize: 18,
   decoration: TextDecoration.none,
@@ -13,23 +15,31 @@ const kButtonTextStyle = TextStyle(
 const kIngredientesTextStyle = TextStyle(
   fontSize: 16,
   color: Colors.white,
-  fontFamily: 'Roboto',
+  fontFamily: 'Poppins',
   fontWeight: FontWeight.w300,
   decoration: TextDecoration.none,
 );
 const kTituloTextStyle = TextStyle(
   color: Colors.white,
-  fontFamily: 'Roboto',
-  fontWeight: FontWeight.w400,
+  fontFamily: 'Poppins',
+  fontWeight: FontWeight.bold,
   fontSize: 22,
   decoration: TextDecoration.none,
 );
 
 class DetallePlatillo extends StatefulWidget {
   final String platillo;
+  final String ingredientes;
+  final String receta;
   final VoidCallback closeWidget;
 
-  const DetallePlatillo({super.key, required this.platillo, required this.closeWidget});
+  const DetallePlatillo({
+    super.key,
+    required this.platillo,
+    required this.ingredientes,
+    required this.receta,
+    required this.closeWidget,
+  });
 
   @override
   _DetallePlatilloState createState() => _DetallePlatilloState();
@@ -40,88 +50,99 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
 
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        height: MediaQuery.of(context).size.height *
-            0.75, // Ajustamos la altura al 75%
-        decoration: BoxDecoration(
-          color: Colors.black
-              .withOpacity(0.7), // Semi-transparente para dejar ver el mapa
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+    return GestureDetector(
+      // Cierra el widget cuando se toca fuera de la zona activa
+      onTap: () {
+        widget.closeWidget();
+      },
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          height: size.height * 0.65,
+          width: size.width,
+          decoration: const BoxDecoration(
+            color: Color.fromRGBO(32, 29, 29, 0.9),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
           ),
-        ),
-        child: Column(
-          children: [
-            // Encabezado con título centrado y flecha de regreso
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                      icon:
-                          const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => widget.closeWidget(),
+          child: GestureDetector(
+            onTap: () {}, // Evita que el toque en el contenedor interior cierre la página
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_back, color: Colors.white),
+                          onPressed: () => widget.closeWidget(),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          widget.platillo,
+                          style: kTituloTextStyle,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.asset(
+                      'assets/images_gastronomia/paella-valenciana.jpg',
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      widget.platillo,
-                      style: kTituloTextStyle,
+                ),
+                SizedBox(height: 10),
+                _buildButtonRow(),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: SingleChildScrollView(
+                      child: showIngredientes
+                          ? _buildIngredientes()
+                          : _buildReceta(),
                     ),
                   ),
-                ],
-              ),
-            ),
-            // Imagen del platillo con borde redondeado
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(
-                    15), // Aplicamos radio de borde de 15
-                child: Image.asset(
-                  'assets/images_gastronomia/paella-valenciana.jpg',
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
                 ),
-              ),
+              ],
             ),
-            _buildButtonRow(),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SingleChildScrollView(
-                  // Añadimos scroll en caso de contenido largo
-                  child: showIngredientes
-                      ? _buildIngredientes()
-                      : _buildReceta(),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
+  }
+
+   void _changeLanguage(BuildContext context, Locale locale) {
+    setState(() {
+      MyApp.setLocale(context, locale);
+    });
   }
 
   Widget _buildButtonRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildToggleButton('Ingredientes', showIngredientes, () {
+        _buildToggleButton(AppLocalizations.of(context)!.translate('ingredients'), showIngredientes, () {
           setState(() {
             showIngredientes = true;
           });
         }),
         const SizedBox(width: 10),
-        _buildToggleButton('Receta', !showIngredientes, () {
+        _buildToggleButton(AppLocalizations.of(context)!.translate('recipe'), !showIngredientes, () {
           setState(() {
             showIngredientes = false;
           });
@@ -135,9 +156,9 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: isSelected
-            ? kButtonBackgroundColorSelected
-            : kButtonBackgroundColorUnselected,
-        minimumSize: const Size(150, 50), // Tamaño uniforme de los botones
+            ? kButtonBackgroundColorUnselected
+            : kButtonBackgroundColorSelected,
+        minimumSize: const Size(150, 50),
       ),
       onPressed: onPressed,
       child: Text(
@@ -149,14 +170,14 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
 
   Widget _buildIngredientes() {
     return Text(
-      '1 taza de arroz\n2 muslos de pollo\n100g de judías verdes\nPimiento rojo\n...',
+      widget.ingredientes,
       style: kIngredientesTextStyle,
     );
   }
 
   Widget _buildReceta() {
     return Text(
-      'En una paellera, sofríe el pollo con las verduras. Luego añade el arroz y cubre con caldo de pollo...',
+      widget.receta,
       style: kIngredientesTextStyle,
     );
   }

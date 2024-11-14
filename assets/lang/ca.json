@@ -1,4 +1,6 @@
 {
+    "villajoyosa": "La Vila Joiosa",
+
     "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN",
 
     "login": "INICIAR SESSIÓ",
@@ -24,9 +26,10 @@
     "favorites": "Favorits",
     "my_account": "El meu Compte",
     "gastronomy": "Gastronomia",
-    "monuments": "Monuments",
+    "sights": "Monuments",
     "near": "A prop",
     "see_more": "Veure Més",
+    "weather_number": "+2",
 
     "_comment": "TRADUCCIONES PARA LA PAGINA TRADICIONES",
 
@@ -43,7 +46,10 @@
 
     "_comment": "TRADUCCIONES PARA LA PAGINA GASTRONOMÍA",
 
-    "search_recipe": "Cercar recepta..."
+    "search_recipe": "Cerca recepta...",
+    "filter": "Filtrar",
+    "ingredients": "Ingredients",
+    "recipe": "Recepta"
+}
     
-  }
   

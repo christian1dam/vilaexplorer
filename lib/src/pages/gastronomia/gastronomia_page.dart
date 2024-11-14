@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:vilaexplorer/l10n/app_localizations.dart';
-import 'package:vilaexplorer/main.dart';
+import 'package:vilaexplorer/src/pages/gastronomia/detalle_platillo.dart';
 
 class GastronomiaPage extends StatefulWidget {
   final Function(String) onCategoriaPlatoSelected;
@@ -23,6 +23,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
   List<dynamic> allDishes = [];
   List<dynamic> displayedDishes = [];
   String? selectedCategory;
+  String? selectedDish;
   bool isSearchActive = false;
   TextEditingController searchController = TextEditingController();
 
@@ -56,6 +57,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
       selectedCategory = category;
       if (category == null) {
         displayedDishes = List.from(allDishes); // Muestra todos los platos
+        selectedDish = null; // Restablece el plato seleccionado
       } else {
         final selectedCategoryObj = categories.firstWhere(
           (cat) => cat['name'] == category,
@@ -64,9 +66,31 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
         displayedDishes = selectedCategoryObj != null
             ? List.from(selectedCategoryObj['dishes'])
             : [];
+        selectedDish = null; // Restablece el plato seleccionado al cambiar la categoría
       }
     });
   }
+
+  void _filterByDish(String? dish) {
+  setState(() {
+    selectedDish = dish;
+    if (dish == null) {
+      // Si no hay plato seleccionado, muestra todos los platos de la categoría actual
+      displayedDishes = categories
+          .firstWhere((category) => category['name'] == selectedCategory)
+          ['dishes'];
+    } else {
+      // Filtra los platos por nombre o subtipo
+      displayedDishes = categories
+          .firstWhere((category) => category['name'] == selectedCategory)
+          ['dishes']
+          .where((item) {
+            // Si el plato tiene 'name_type', lo filtramos por 'name_type'
+            return item['name'] == dish || item['name_type'] == dish;
+          }).toList();
+    }
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +196,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                   child: DropdownButton<String>(
                     value: selectedCategory,
                     hint: Text(
-                      'Filtrar',
+                      AppLocalizations.of(context)!.translate('filter'),
                       style: const TextStyle(color: Colors.white),
                     ),
                     dropdownColor: const Color.fromARGB(255, 47, 42, 42),
@@ -184,8 +208,8 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                         value: null,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text('Filtrar', style: TextStyle(color: Colors.white54)),
+                          children: [
+                            Text(AppLocalizations.of(context)!.translate('filter'), style: TextStyle(color: Colors.white54)),
                           ],
                         ),
                       ),
@@ -213,6 +237,44 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                     },
                   ),
                 ),
+                if (selectedCategory != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: DropdownButton<String>(
+                      value: selectedDish,
+                      hint: Text(
+                        AppLocalizations.of(context)!.translate('select_dish'),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      dropdownColor: const Color.fromARGB(255, 47, 42, 42),
+                      style: const TextStyle(color: Colors.white),
+                      iconEnabledColor: Colors.white,
+                      isExpanded: true,
+                      items: [
+                        DropdownMenuItem<String>(
+                          value: null,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(AppLocalizations.of(context)!.translate('select_dish'), style: TextStyle(color: Colors.white54)),
+                            ],
+                          ),
+                        ),
+                        ...categories
+                            .firstWhere((category) => category['name'] == selectedCategory)
+                            ['dishes']
+                            .map<DropdownMenuItem<String>>((dish) {
+                          return DropdownMenuItem<String>(
+                            value: dish['name'],
+                            child: Text(dish['name']),
+                          );
+                        }).toList(),
+                      ],
+                      onChanged: (String? newValue) {
+                        _filterByDish(newValue);
+                      },
+                    ),
+                  ),
                 const SizedBox(height: 10),
                 Expanded(
                   child: ListView.builder(
@@ -224,6 +286,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                     },
                   ),
                 ),
+                
               ],
             ),
           ),
@@ -233,40 +296,50 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
   }
 
   Widget _buildDishItem(BuildContext context, dynamic dish) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          backgroundColor: const Color.fromRGBO(45, 45, 45, 1),
-        ),
-        onPressed: () {
-          widget.onCategoriaPlatoSelected(dish['name']);
-        },
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                dish['image'], // Aquí usamos la imagen del platillo
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(width: 15),
-            Text(
-              dish['name'], // Nombre del platillo
-              style: const TextStyle(
-                fontSize: 24,
-                color: Colors.white,
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w300,
-              ),
-            ),
-          ],
-        ),
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        backgroundColor: const Color.fromRGBO(45, 45, 45, 1),
       ),
-    );
-  }
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetallePlatillo(
+              platillo: dish['name'],
+              ingredientes: dish['ingredients'],  // Pasamos los ingredientes específicos
+              receta: dish['recipe'],             // Pasamos la receta específica
+              closeWidget: () => Navigator.of(context).pop(),
+            ),
+          ),
+        );
+      },
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
+              dish['image'], // Aquí usamos la imagen del platillo
+              width: 80,
+              height: 80,
+              fit: BoxFit.cover,
+            ),
+          ),
+          const SizedBox(width: 15),
+          Text(
+            dish['name'], // Nombre del platillo
+            style: const TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 }

@@ -1,4 +1,5 @@
 {
+    "villajoyosa": "Villajoyosa",
   "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN",
 
     "login": "LOGIN",
@@ -24,9 +25,10 @@
     "favorites": "Favorites",
     "my_account": "My Account",
     "gastronomy": "Gastronomy",
-    "monuments": "Monuments",
+    "sights": "Monuments",
     "near": "Near",
     "see_more": "See More",
+    "weather_number": "+2", 
 
     "_comment": "TRADUCCIONES PARA LA PAGINA TRADICIONES",
 
@@ -43,8 +45,13 @@
 
     "_comment": "TRADUCCIONES PARA LA PAGINA GASTRONOMÍA",
 
-    "search_recipe": "Search recipe..."
+    "search_recipe": "Search recipe...",
+    "filter": "Filter",
+    "ingredients": "Ingredients",
+    "recipe": "Recipe"
     
-  }
+    
+    
+}
   
   

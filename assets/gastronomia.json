@@ -1,40 +1,93 @@
 {
-    "categories": [
-      {
-        "name": "Arroces Secos",
-        "dishes": [
-          {
-            "name": "Paella Valenciana",
-            "image": "assets/images_gastronomia/paella-valenciana.jpg",
-            "ingredients": "1 taza de arroz, 2 muslos de pollo, 100g de judías verdes, pimiento rojo...",
-            "recipe": "En una paellera, sofríe el pollo con las verduras. Luego añade el arroz..."
-          },
-          {
-            "name": "Arroz con Pollo",
-            "image": "assets/images_gastronomia/paella-valenciana.jpg",
-            "ingredients": "1 taza de arroz, 1 pechuga de pollo, 50g de guisantes...",
-            "recipe": "En una sartén, dora el pollo y añade el arroz..."
-          }
-        ]
-      },
-      {
-        "name": "Arroces Melosos",
-        "dishes": [
-          {
-            "name": "Meloso 1",
-            "image": "assets/images_gastronomia/paella-valenciana.jpg",
-            "ingredients": "1 taza de arroz, 2 muslos de pollo, 100g de judías verdes, pimiento rojo...",
-            "recipe": "En una paellera, sofríe el pollo con las verduras. Luego añade el arroz..."
-          },
-          {
-            "name": "Meloso 2",
-            "image": "assets/images_gastronomia/paella-valenciana.jpg",
-            "ingredients": "1 taza de arroz, 1 pechuga de pollo, 50g de guisantes...",
-            "recipe": "En una sartén, dora el pollo y añade el arroz..."
-          }
-        ]
-      }
-      
-    ]
-  }
-  
+  "categories": [
+    {
+      "name": "Arroces Secos",
+      "dishes": [
+        {
+          "name": "Paella Valenciana",
+          "dish_type": "paella_valenciana",
+          "image": "assets/images_gastronomia/paella-valenciana.jpg",
+          "ingredients": "1 taza de arroz, 2 muslos de pollo, 100g de judías verdes, pimiento rojo...",
+          "recipe": "En una paellera, sofríe el pollo con las verduras. Luego añade el arroz..."
+        },
+        {
+          "name": "Arroz con Pollo",
+          "dish_type": "arroz_pollo",
+          "image": "assets/images_gastronomia/paella-valenciana.jpg",
+          "ingredients": "1 taza de arroz, 1 pechuga de pollo, 50g de guisantes...",
+          "recipe": "En una sartén, dora el pollo y añade el arroz..."
+        }
+      ]
+    },
+    {
+      "name": "Arroces Melosos",
+      "dishes": [
+        {
+          "name": "Meloso 1",
+          "dish_type": "caldero",
+          "image": "assets/images_gastronomia/paella-valenciana.jpg",
+          "ingredients": "1 taza de arroz, 2 muslos de pollo, 100g de judías verdes, pimiento rojo...",
+          "recipe": "En una paellera, sofríe el pollo con las verduras. Luego añade el arroz..."
+        },
+        {
+          "name": "Meloso 2",
+          "dish_type": "caldero",
+          "image": "assets/images_gastronomia/paella-valenciana.jpg",
+          "ingredients": "1 taza de arroz, 1 pechuga de pollo, 50g de guisantes...",
+          "recipe": "En una sartén, dora el pollo y añade el arroz..."
+        }
+      ]
+    },
+    {
+      "name": "Bebidas",
+      "dishes": [
+        {
+          "name": "CocaCola",
+          "image": "assets/images_gastronomia/paella-valenciana.jpg",
+          "ingredients": "Agua carbonatada, azúcar, cafeína, ácido fosfórico, colorante...",
+          "recipe": "Refrigerar y servir bien fría en vaso con hielo."
+        },
+        {
+          "name": "Nardo",
+          "dish_type": "nardo",
+          "image": "assets/images_gastronomia/paella-valenciana.jpg",
+          "ingredients": "Vino tinto, agua con gas, limón, hielo...",
+          "recipe": "Mezclar el vino con el agua con gas y el limón, añadir hielo y servir."
+        }
+      ]
+    },
+    {
+      "name": "Tapas",
+      "dishes": [
+        {
+          "name": "Tortilla Española",
+          "dish_type": "tortilla",
+          "image": "assets/images_gastronomia/paella-valenciana.jpg",
+          "ingredients": "Patatas, huevos, cebolla, aceite de oliva...",
+          "recipe": "Freír las patatas y la cebolla, batir los huevos y cocinar a fuego lento."
+        },
+        {
+          "name": "Croquetas",
+          "dish_type": "Croquetas",
+          "image": "assets/images_gastronomia/paella-valenciana.jpg",
+          "ingredients": "Leche, harina, jamón, mantequilla, pan rallado...",
+          "recipe": "Preparar la bechamel, añadir jamón picado, formar las croquetas, empanarlas y freírlas."
+        },
+        {
+          "name": "Croquetas 2",
+          "dish_type": "Croquetas",
+          "image": "assets/images_gastronomia/paella-valenciana.jpg",
+          "ingredients": "Leche, harina, jamón, mantequilla, pan rallado...",
+          "recipe": "Preparar la bechamel, añadir jamón picado, formar las croquetas, empanarlas y freírlas."
+        },
+        {
+          "name": "Pimientos de Padrón",
+          "dish_type": "Pimientos",
+          "image": "assets/images_gastronomia/paella-valenciana.jpg",
+          "ingredients": "Pimientos de Padrón, aceite de oliva, sal gruesa...",
+          "recipe": "Freír los pimientos en aceite de oliva y espolvorearlos con sal."
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,6 @@
 {
+    "villajoyosa": "Villajoyosa",
+
     "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN",
   
       "login": "CONNEXION",
@@ -24,9 +26,10 @@
       "favorites": "Favoris",
       "my_account": "Mon compte",
       "gastronomy": "Gastronomie",
-      "monuments": "Monuments",
+      "sights": "Monuments",
       "near": "À proximité",
       "see_more": "Voir plus",
+      "weather_number": "+2",
   
       "_comment": "TRADUCCIONES PARA LA PAGINA TRADICIONES",
   
@@ -42,8 +45,9 @@
       "monuments_place": "Monuments / Lieux",
 
       "_comment": "TRADUCCIONES PARA LA PAGINA GASTRONOMÍA",
-  
-      "search_recipe": "Rechercher une recette..."
-      
-    }
-    
+
+      "search_recipe": "Rechercher une recette...",
+      "filter": "Filtrer",
+      "ingredients": "Ingrédients",
+      "recipe": "Recette"
+}

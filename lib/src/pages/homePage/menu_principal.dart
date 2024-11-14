@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:vilaexplorer/l10n/app_localizations.dart';
+import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/src/pages/homePage/history_page.dart';
 
 import 'dart:convert';
@@ -63,17 +65,18 @@ class MenuPrincipal extends StatelessWidget {
                   const Spacer(),
 
                   // Buscador
-                  _buildSearchBar(),
+                  _buildSearchBar(AppLocalizations.of(context)!.translate('mp_search')),
 
                   const Divider(height: 5, color: Colors.transparent),
 
                   // Botones principales
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      _crearBoton(140, "Tradiciones", "lib/icon/tradiciones.svg", 1, context),
-                      _crearBoton(145, "Favoritos", "lib/icon/favorite.svg", 1, context),
-                      _crearBoton(140, "Mi cuenta", "lib/icon/user_icon.svg", 1, context),
+                      _crearBoton(140, AppLocalizations.of(context)!.translate('traditions'), "Tradiciones", "lib/icon/tradiciones.svg", 1, context),
+                      _crearBoton(145, AppLocalizations.of(context)!.translate('favorites'), "Favoritos", "lib/icon/favorite.svg", 1, context),
+                      _crearBoton(140, AppLocalizations.of(context)!.translate('my_account'), "Mi cuenta", "lib/icon/user_icon.svg", 1, context),
                     ],
                   ),
 
@@ -81,10 +84,11 @@ class MenuPrincipal extends StatelessWidget {
 
                   // Segunda fila de botones
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      _crearBoton(210, "Gastronomia", "lib/icon/gastronomia.svg", 1, context),
-                      _crearBoton(221, "Monumentos", "lib/icon/monumentos.svg", 1, context),
+                      _crearBoton(210, AppLocalizations.of(context)!.translate('gastronomy'), "Gastronomia", "lib/icon/gastronomia.svg", 1, context),
+                      _crearBoton(221, AppLocalizations.of(context)!.translate('sights'), "Monumentos", "lib/icon/monumentos.svg", 1, context),
                     ],
                   ),
 
@@ -102,7 +106,7 @@ class MenuPrincipal extends StatelessWidget {
   }
 
   // Método para crear el buscador
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(String texto) {
     return Container(
       decoration: BoxDecoration(
         color: const Color.fromRGBO(39, 39, 39, 1).withOpacity(0.92),
@@ -133,7 +137,7 @@ class MenuPrincipal extends StatelessWidget {
                           ),
                         ),
                       ),
-                      hintText: 'Buscar un lugar, evento o dirección...',
+                      hintText: texto,
                       hintStyle: const TextStyle(
                         color: Color.fromRGBO(239, 239, 239, 0.8),
                       ),
@@ -158,7 +162,7 @@ class MenuPrincipal extends StatelessWidget {
   
 
   // Método para crear los botones del menú principal
-  Widget _crearBoton(double mywidth, String texto, String imagePath, double tamanoTexto, BuildContext context) {
+  Widget _crearBoton(double mywidth, String texto, String redirector, String imagePath, double tamanoTexto, BuildContext context) {
     return SizedBox(
       width: mywidth,
       height: 110,
@@ -174,14 +178,14 @@ class MenuPrincipal extends StatelessWidget {
           shadowColor: Colors.white.withOpacity(0.3),
         ),
         onPressed: () {
-          if (texto == "Favoritos") {
+          if (redirector == "Favoritos") {
             // Redirigir a la página de Favoritos desde el controlador principal
             if (onShowFavoritosPressed != null) {
               onShowFavoritosPressed!();
             }
-          } else if (texto == "Gastronomia" && onShowGastronomiaPressed != null) {
+          } else if (redirector == "Gastronomia" && onShowGastronomiaPressed != null) {
             onShowGastronomiaPressed!();
-          }else if (texto == "Tradiciones" && onShowTradicionesPressed != null) {
+          }else if (redirector == "Tradiciones" && onShowTradicionesPressed != null) {
             onShowTradicionesPressed!();
           } 
         },
@@ -199,6 +203,11 @@ class MenuPrincipal extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Método para cambiar el idioma
+  void _changeLanguage(BuildContext context, Locale locale) {
+    MyApp.setLocale(context, locale);
   }
 
 
@@ -255,16 +264,16 @@ class MenuPrincipal extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Text(
-                "Cerca",
+                AppLocalizations.of(context)!.translate('near'),
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
-                "Ver más",
+                AppLocalizations.of(context)!.translate('see_more'),
                 style: TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.bold,

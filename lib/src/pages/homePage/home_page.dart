@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/categoria_platos.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/detalle_platillo.dart';
@@ -26,12 +27,13 @@ class _MyHomePageState extends State<MyHomePage> {
   bool showGastronomia = false;
   bool showGastronomiaCategory = false;
   bool showFavoritosPage = false;
-
+  bool showDetallePlatillo = false;
 
   String? selectedFiesta;
   String? selectedCategory;
-  bool showDetallePlatillo = false;
   String? selectedPlatillo;
+  String? selectedIngredientes;
+  String? selectedReceta;
 
   @override
   void initState() {
@@ -136,6 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     bottom: 0,
                     child: GastronomiaPage(
                       onCategoriaPlatoSelected: (category) {
+                        
                         _toggleGastronomiaPageDetail(category);
                       },
                       onClose: () {
@@ -160,8 +163,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         });
                       },
                       onPlatilloSelected: (platillo) {
-                        _toggleDetallePlatillo(platillo);
+                        _toggleDetallePlatillo(platillo, 'Lista de ingredientes del platillo', 'Instrucciones de la receta del platillo');
                       },
+
                     ),
                   ),
 
@@ -174,6 +178,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     bottom: 0,
                     child: DetallePlatillo(
                       platillo: selectedPlatillo!,
+                      ingredientes: selectedIngredientes!,
+                      receta: selectedReceta!,
                       closeWidget: () {
                         setState(() {
                           showDetallePlatillo = false;
@@ -182,10 +188,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     ),
                   ),
+
               ],
             )
           : Center(child: CircularProgressIndicator()),
     );
+  }
+
+  void _changeLanguage(BuildContext context, Locale locale) {
+    setState(() {
+      MyApp.setLocale(context, locale);
+    });
   }
 
   // Métodos para manejar la navegación entre las páginas y los detalles
@@ -205,13 +218,18 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _toggleDetallePlatillo(String platillo) {
+  void _toggleDetallePlatillo(String platillo, String ingredientes, String receta) {
     setState(() {
       selectedPlatillo = platillo;
       showGastronomiaCategory = false;
       showDetallePlatillo = true;
+
+      // Asignar ingredientes y receta seleccionados a variables
+      selectedIngredientes = ingredientes;
+      selectedReceta = receta;
     });
   }
+
 
   void _clearScreen() {
     setState(() {

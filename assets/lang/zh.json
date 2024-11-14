@@ -1,4 +1,6 @@
 {
+    "villajoyosa": "比利亞霍約薩",
+
     "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN",
   
       "login": "登录",
@@ -24,9 +26,10 @@
       "favorites": "收藏",
       "my_account": "我的账户",
       "gastronomy": "美食",
-      "monuments": "纪念碑",
+      "sights": "纪念碑",
       "near": "附近",
       "see_more": "查看更多",
+      "weather_number": "加二",
   
       "_comment": "TRADUCCIONES PARA LA PAGINA TRADICIONES",
   
@@ -43,7 +46,10 @@
 
       "_comment": "TRADUCCIONES PARA LA PAGINA GASTRONOMÍA",
   
-      "search_recipe": "搜索食谱..."
+        "search_recipe": "搜索食谱...",
+        "filter": "筛选",
+        "ingredients": "配料",
+        "recipe": "食谱"
+}
       
-    }
     
