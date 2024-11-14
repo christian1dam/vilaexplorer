@@ -24,7 +24,7 @@
     "mp_search": "Cerca un lloc, esdeveniment o adreça...",
     "traditions": "Tradicions",
     "favorites": "Favorits",
-    "my_account": "El meu Compte",
+    "my_account": "Compte",
     "gastronomy": "Gastronomia",
     "sights": "Monuments",
     "near": "A prop",
@@ -49,7 +49,8 @@
     "search_recipe": "Cerca recepta...",
     "filter": "Filtrar",
     "ingredients": "Ingredients",
-    "recipe": "Recepta"
+    "recipe": "Recepta",
+    "type": "Tipus"
 }
     
   

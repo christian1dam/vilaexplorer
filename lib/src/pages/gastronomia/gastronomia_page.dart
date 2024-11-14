@@ -23,7 +23,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
   List<dynamic> allDishes = [];
   List<dynamic> displayedDishes = [];
   String? selectedCategory;
-  String? selectedDish;
+  String? selectedDishType;  // Cambiamos selectedDish a selectedDishType
   bool isSearchActive = false;
   TextEditingController searchController = TextEditingController();
 
@@ -57,7 +57,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
       selectedCategory = category;
       if (category == null) {
         displayedDishes = List.from(allDishes); // Muestra todos los platos
-        selectedDish = null; // Restablece el plato seleccionado
+        selectedDishType = null; // Restablece el tipo de plato seleccionado
       } else {
         final selectedCategoryObj = categories.firstWhere(
           (cat) => cat['name'] == category,
@@ -66,31 +66,29 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
         displayedDishes = selectedCategoryObj != null
             ? List.from(selectedCategoryObj['dishes'])
             : [];
-        selectedDish = null; // Restablece el plato seleccionado al cambiar la categoría
+        selectedDishType = null; // Restablece el tipo de plato seleccionado al cambiar la categoría
       }
     });
   }
 
-  void _filterByDish(String? dish) {
-  setState(() {
-    selectedDish = dish;
-    if (dish == null) {
-      // Si no hay plato seleccionado, muestra todos los platos de la categoría actual
-      displayedDishes = categories
-          .firstWhere((category) => category['name'] == selectedCategory)
-          ['dishes'];
-    } else {
-      // Filtra los platos por nombre o subtipo
-      displayedDishes = categories
-          .firstWhere((category) => category['name'] == selectedCategory)
-          ['dishes']
-          .where((item) {
-            // Si el plato tiene 'name_type', lo filtramos por 'name_type'
-            return item['name'] == dish || item['name_type'] == dish;
-          }).toList();
-    }
-  });
-}
+  void _filterByDishType(String? dishType) {
+    setState(() {
+      selectedDishType = dishType;
+      if (dishType == null) {
+        // Muestra todos los platos de la categoría actual si no hay tipo seleccionado
+        displayedDishes = categories
+            .firstWhere((category) => category['name'] == selectedCategory)
+            ['dishes'];
+      } else {
+        // Filtra los platos por `dish_type`
+        displayedDishes = categories
+            .firstWhere((category) => category['name'] == selectedCategory)
+            ['dishes']
+            .where((item) => item['dish_type'] == dishType)
+            .toList();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +102,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
             searchController.clear();
           });
         } else {
-          widget.onClose();  // Se ejecuta el cierre si se toca fuera
+          widget.onClose();
         }
       },
       child: Align(
@@ -119,7 +117,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
             ),
           ),
           child: GestureDetector(
-            onTap: () {}, // Evita que el toque en el contenedor interior cierre la página
+            onTap: () {},
             child: Column(
               children: [
                 Padding(
@@ -167,7 +165,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                       ),
                       IconButton(
                         icon: const Icon(Icons.close, color: Colors.white),
-                        onPressed: widget.onClose, // Cierra la página
+                        onPressed: widget.onClose,
                       ),
                     ],
                   ),
@@ -191,90 +189,94 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                     ),
                   ),
                 const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: DropdownButton<String>(
-                    value: selectedCategory,
-                    hint: Text(
-                      AppLocalizations.of(context)!.translate('filter'),
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    dropdownColor: const Color.fromARGB(255, 47, 42, 42),
+               Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: DropdownButton<String>(
+                  value: selectedCategory,
+                  hint: Text(
+                    AppLocalizations.of(context)!.translate('filter'),
                     style: const TextStyle(color: Colors.white),
-                    iconEnabledColor: Colors.white,
-                    isExpanded: true,
-                    items: [
-                      DropdownMenuItem<String>(
-                        value: null,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(AppLocalizations.of(context)!.translate('filter'), style: TextStyle(color: Colors.white54)),
-                          ],
-                        ),
-                      ),
-                      ...categories.map((category) {
-                        return DropdownMenuItem<String>(
-                          value: category['name'],
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(category['name']),
-                              if (selectedCategory == category['name'])
-                                IconButton(
-                                  icon: const Icon(Icons.close, color: Colors.white),
-                                  onPressed: () {
-                                    _filterByCategory(null); // Quita el filtro
-                                  },
-                                ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    ],
-                    onChanged: (String? newValue) {
-                      _filterByCategory(newValue);
-                    },
                   ),
-                ),
+                  dropdownColor: const Color.fromARGB(255, 47, 42, 42),
+                  style: const TextStyle(color: Colors.white),
+                  iconEnabledColor: Colors.white,
+                  isExpanded: true,
+                  // Cambia el icono entre la flecha y la "X" si hay una categoría seleccionada
+                  icon: selectedCategory == null
+                      ? const Icon(Icons.arrow_drop_down, color: Colors.white)
+                      : GestureDetector(
+                          onTap: () {
+                            // Restablece el filtro de categoría al presionar la "X"
+                            _filterByCategory(null);
+                          },
+                          child: const Icon(Icons.close, color: Colors.white),
+                        ),
+                        items: [
+                          DropdownMenuItem<String>(
+                            value: null,
+                            child: Text(
+                              AppLocalizations.of(context)!.translate('filter'),
+                              style: TextStyle(color: Colors.white54),
+                            ),
+                          ),
+                          ...categories.map((category) {
+                            return DropdownMenuItem<String>(
+                              value: category['name'],
+                              child: Text(category['name']),
+                            );
+                          }).toList(),
+                        ],
+                        onChanged: (String? newValue) {
+                          _filterByCategory(newValue);
+                        },
+                      ),
+                    ),
+
                 if (selectedCategory != null)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: DropdownButton<String>(
-                      value: selectedDish,
+                      value: selectedDishType,
                       hint: Text(
-                        AppLocalizations.of(context)!.translate('select_dish'),
+                        AppLocalizations.of(context)!.translate('type'),
                         style: const TextStyle(color: Colors.white),
                       ),
                       dropdownColor: const Color.fromARGB(255, 47, 42, 42),
                       style: const TextStyle(color: Colors.white),
                       iconEnabledColor: Colors.white,
                       isExpanded: true,
+                      // Cambia el icono entre la flecha y la "X" si hay un tipo seleccionado
+                      icon: selectedDishType == null
+                          ? const Icon(Icons.arrow_drop_down, color: Colors.white)
+                          : GestureDetector(
+                              onTap: () {
+                                // Restablece el filtro de tipo de plato al presionar la "X"
+                                _filterByDishType(null);
+                              },
+                              child: const Icon(Icons.close, color: Colors.white),
+                            ),
                       items: [
                         DropdownMenuItem<String>(
                           value: null,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(AppLocalizations.of(context)!.translate('select_dish'), style: TextStyle(color: Colors.white54)),
-                            ],
-                          ),
+                          child: Text(AppLocalizations.of(context)!.translate('type'), style: TextStyle(color: Colors.white54)),
                         ),
-                        ...categories
-                            .firstWhere((category) => category['name'] == selectedCategory)
-                            ['dishes']
-                            .map<DropdownMenuItem<String>>((dish) {
+                        ...{
+                          for (var dish in categories
+                              .firstWhere((category) => category['name'] == selectedCategory)['dishes'])
+                            dish['dish_type']
+                        }.map((dishType) {
                           return DropdownMenuItem<String>(
-                            value: dish['name'],
-                            child: Text(dish['name']),
+                            value: dishType,
+                            child: Text(dishType),
                           );
                         }).toList(),
                       ],
                       onChanged: (String? newValue) {
-                        _filterByDish(newValue);
+                        _filterByDishType(newValue);
                       },
                     ),
                   ),
+
                 const SizedBox(height: 10),
                 Expanded(
                   child: ListView.builder(
@@ -286,7 +288,6 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                     },
                   ),
                 ),
-                
               ],
             ),
           ),
@@ -300,7 +301,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
     child: ElevatedButton(
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        padding: const EdgeInsets.symmetric(vertical: 10), // Ajustamos el padding
         backgroundColor: const Color.fromRGBO(45, 45, 45, 1),
       ),
       onPressed: () {
@@ -309,32 +310,31 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
           MaterialPageRoute(
             builder: (context) => DetallePlatillo(
               platillo: dish['name'],
-              ingredientes: dish['ingredients'],  // Pasamos los ingredientes específicos
-              receta: dish['recipe'],             // Pasamos la receta específica
-              closeWidget: () => Navigator.of(context).pop(),
+              ingredientes: dish['ingredients'],
+              receta: dish['recipe'],
+              closeWidget: widget.onClose,
             ),
           ),
         );
       },
       child: Row(
         children: [
+          // Imagen del plato
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.asset(
-              dish['image'], // Aquí usamos la imagen del platillo
-              width: 80,
-              height: 80,
+              dish['image'],
+              width: 50, // Ajusta el tamaño de la imagen según lo que necesites
+              height: 50,
               fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(width: 15),
-          Text(
-            dish['name'], // Nombre del platillo
-            style: const TextStyle(
-              fontSize: 24,
-              color: Colors.white,
-              fontFamily: 'Roboto',
-              fontWeight: FontWeight.w300,
+          const SizedBox(width: 10), // Espacio entre imagen y texto
+          // Nombre del plato
+          Expanded(
+            child: Text(
+              dish['name'],
+              style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
           ),
         ],
@@ -342,4 +342,5 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
     ),
   );
 }
+
 }

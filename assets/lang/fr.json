@@ -49,5 +49,7 @@
       "search_recipe": "Rechercher une recette...",
       "filter": "Filtrer",
       "ingredients": "Ingrédients",
-      "recipe": "Recette"
+      "recipe": "Recette",
+      "type": "Type"
+      
 }

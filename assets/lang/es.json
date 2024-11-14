@@ -50,7 +50,8 @@
     "search_recipe": "Buscar receta...",
     "filter": "Filtrar",
     "ingredients": "Ingredientes",
-    "recipe": "Receta"
+    "recipe": "Receta",
+    "type": "Tipo"
 
   }
   

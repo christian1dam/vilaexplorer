@@ -1,4 +1,6 @@
 {
+  "_comentario": "ESTE ARCHIVO SE DEBERÁ ADAPTAR A LA FORMA DE TRABAJAR DE LOS JSONS CON LA BBDD",
+  
   "categories": [
     {
       "name": "Arroces Secos",
@@ -24,14 +26,14 @@
       "dishes": [
         {
           "name": "Meloso 1",
-          "dish_type": "caldero",
+          "dish_type": "Caldero",
           "image": "assets/images_gastronomia/paella-valenciana.jpg",
           "ingredients": "1 taza de arroz, 2 muslos de pollo, 100g de judías verdes, pimiento rojo...",
           "recipe": "En una paellera, sofríe el pollo con las verduras. Luego añade el arroz..."
         },
         {
           "name": "Meloso 2",
-          "dish_type": "caldero",
+          "dish_type": "Caldoso",
           "image": "assets/images_gastronomia/paella-valenciana.jpg",
           "ingredients": "1 taza de arroz, 1 pechuga de pollo, 50g de guisantes...",
           "recipe": "En una sartén, dora el pollo y añade el arroz..."
@@ -43,13 +45,14 @@
       "dishes": [
         {
           "name": "CocaCola",
+          "dish_type": "Cocacola",
           "image": "assets/images_gastronomia/paella-valenciana.jpg",
           "ingredients": "Agua carbonatada, azúcar, cafeína, ácido fosfórico, colorante...",
           "recipe": "Refrigerar y servir bien fría en vaso con hielo."
         },
         {
           "name": "Nardo",
-          "dish_type": "nardo",
+          "dish_type": "Nardo",
           "image": "assets/images_gastronomia/paella-valenciana.jpg",
           "ingredients": "Vino tinto, agua con gas, limón, hielo...",
           "recipe": "Mezclar el vino con el agua con gas y el limón, añadir hielo y servir."
@@ -75,6 +78,13 @@
         },
         {
           "name": "Croquetas 2",
+          "dish_type": "Croquetas",
+          "image": "assets/images_gastronomia/paella-valenciana.jpg",
+          "ingredients": "Leche, harina, jamón, mantequilla, pan rallado...",
+          "recipe": "Preparar la bechamel, añadir jamón picado, formar las croquetas, empanarlas y freírlas."
+        },
+        {
+          "name": "Las Croquetas",
           "dish_type": "Croquetas",
           "image": "assets/images_gastronomia/paella-valenciana.jpg",
           "ingredients": "Leche, harina, jamón, mantequilla, pan rallado...",
