@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:vilaexplorer/l10n/app_localizations.dart';
+import 'package:vilaexplorer/src/pages/gastronomia/addPlato.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/detalle_platillo.dart';
 
 class GastronomiaPage extends StatefulWidget {
@@ -149,7 +150,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
                         margin: const EdgeInsets.only(top: 10, left: 10),
-                        width: size.width * 0.7,
+                        width: size.width * 0.6,
                         height: 35,
                         child: Center(
                           child: Text(
@@ -163,9 +164,24 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                           ),
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.close, color: Colors.white),
-                        onPressed: widget.onClose,
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.add, color: Colors.white),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AddPlato(),
+                                ),
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close, color: Colors.white),
+                            onPressed: widget.onClose,
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -224,7 +240,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                               value: category['name'],
                               child: Text(category['name']),
                             );
-                          }).toList(),
+                          }),
                         ],
                         onChanged: (String? newValue) {
                           _filterByCategory(newValue);
@@ -269,7 +285,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                             value: dishType,
                             child: Text(dishType),
                           );
-                        }).toList(),
+                        }),
                       ],
                       onChanged: (String? newValue) {
                         _filterByDishType(newValue);

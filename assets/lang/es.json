@@ -51,7 +51,9 @@
     "filter": "Filtrar",
     "ingredients": "Ingredientes",
     "recipe": "Receta",
-    "type": "Tipo"
+    "type": "Tipo",
+    "new_dish": "Nueva Receta"
+
 
   }
   
