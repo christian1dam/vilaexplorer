@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/main.dart';
+import 'package:vilaexplorer/src/pages/cuentaPage/cuenta_page.dart';
 import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/categoria_platos.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/detalle_platillo.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
+import 'package:vilaexplorer/src/pages/monumentosPage/monumentos_page.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/detalleFiestaTradicion.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
 import 'app_bar_custom.dart';
@@ -28,6 +30,10 @@ class _MyHomePageState extends State<MyHomePage> {
   bool showGastronomiaCategory = false;
   bool showFavoritosPage = false;
   bool showDetallePlatillo = false;
+  bool showMonumentosPage = false;
+  bool showCuentaPage = false;
+
+
 
   String? selectedFiesta;
   String? selectedCategory;
@@ -77,6 +83,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       onShowTradicionesPressed: _toggleTradicionesPage,
                       onShowGastronomiaPressed: _toggleGastronomiaPage,
                       onShowFavoritosPressed: _toggleFavoritosPage,
+                      onShowCuentaPressed: _toggleCuentaPage,
+                      onShowMonumentosPressed: _toggleMonumentosPage,
                       onCloseMenu: _toggleMenuPrincipal,
                     ),
                   ),
@@ -91,6 +99,30 @@ class _MyHomePageState extends State<MyHomePage> {
                     bottom: 0,
                     child: FavoritosPage(
                       onClose: _toggleFavoritosPage,  // Pasa la referencia de la función
+                    ),
+                  ),
+
+                // Página de Monumentos
+                if (showMonumentosPage)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: MonumentosPage(
+                      onClose: _toggleMonumentosPage,  // Pasa la referencia de la función
+                    ),
+                  ),
+
+                // Página de Cuenta
+                if (showCuentaPage)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: CuentaPage(
+                      onClose: _toggleCuentaPage,  // Pasa la referencia de la función
                     ),
                   ),
 
@@ -263,6 +295,21 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+ void _toggleMonumentosPage() {
+  setState(() {
+    showMenuPrincipal = false;
+    showMonumentosPage = !showMonumentosPage; // Solo alterna el estado
+  });
+}
+
+void _toggleCuentaPage() {
+  setState(() {
+    showMenuPrincipal = false;
+    showCuentaPage = !showCuentaPage; // Solo alterna el estado
+  });
+}
+
+
 
 
   void _toggleTradicionesPage() {
@@ -282,13 +329,15 @@ class _MyHomePageState extends State<MyHomePage> {
   void _toggleMenuPrincipal() {
   setState(() {
     // Si alguna página está abierta, cerramos todo antes de abrir el menú
-    if (showGastronomia || showTradicionesPage || showDetalleFiestaTradicion || showGastronomiaCategory || showDetallePlatillo || showFavoritosPage) {
+    if (showGastronomia || showTradicionesPage || showDetalleFiestaTradicion || showGastronomiaCategory || showDetallePlatillo || showFavoritosPage || showCuentaPage || showMonumentosPage) {
       showGastronomia = false;
       showTradicionesPage = false;
       showDetalleFiestaTradicion = false;
       showGastronomiaCategory = false;
       showDetallePlatillo = false;
       showFavoritosPage = false;
+      showCuentaPage = false;
+      showMonumentosPage = false;
     }
     // Alternar la visibilidad del menú
     showMenuPrincipal = !showMenuPrincipal;

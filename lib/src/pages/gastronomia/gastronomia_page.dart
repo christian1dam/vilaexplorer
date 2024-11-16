@@ -178,9 +178,11 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                             },
                           ),
                           IconButton(
-                            icon: const Icon(Icons.close, color: Colors.white),
-                            onPressed: widget.onClose,
-                          ),
+          icon: const Icon(Icons.close, color: Colors.white),
+          onPressed: () {
+            widget.onClose();  // Llamas al onClose aquí
+          },
+        ),
                         ],
                       ),
                     ],

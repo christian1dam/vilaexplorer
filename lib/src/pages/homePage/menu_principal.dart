@@ -9,15 +9,22 @@ import 'package:flutter/services.dart';
 
 class MenuPrincipal extends StatelessWidget {
   final Function()? onShowTradicionesPressed;
-  final Function()? onShowGastronomiaPressed;
   final Function()? onShowFavoritosPressed;
+  final Function()? onShowCuentaPressed;
+  final Function()? onShowGastronomiaPressed;
+  final Function()? onShowMonumentosPressed;
+
+
   final VoidCallback? onCloseMenu;
 
   const MenuPrincipal({
     super.key,
     this.onShowTradicionesPressed,
-    this.onShowGastronomiaPressed,
     this.onShowFavoritosPressed,
+    this.onShowCuentaPressed,
+    this.onShowGastronomiaPressed,
+    this.onShowMonumentosPressed,
+
     this.onCloseMenu,
   });
 
@@ -76,7 +83,7 @@ class MenuPrincipal extends StatelessWidget {
                     children: <Widget>[
                       _crearBoton(140, AppLocalizations.of(context)!.translate('traditions'), "Tradiciones", "lib/icon/tradiciones.svg", 1, context),
                       _crearBoton(145, AppLocalizations.of(context)!.translate('favorites'), "Favoritos", "lib/icon/favorite.svg", 1, context),
-                      _crearBoton(140, AppLocalizations.of(context)!.translate('my_account'), "Mi cuenta", "lib/icon/user_icon.svg", 1, context),
+                      _crearBoton(140, AppLocalizations.of(context)!.translate('my_account'), "Cuenta", "lib/icon/user_icon.svg", 1, context),
                     ],
                   ),
 
@@ -178,16 +185,17 @@ class MenuPrincipal extends StatelessWidget {
           shadowColor: Colors.white.withOpacity(0.3),
         ),
         onPressed: () {
-          if (redirector == "Favoritos") {
-            // Redirigir a la página de Favoritos desde el controlador principal
-            if (onShowFavoritosPressed != null) {
+          if (redirector == "Favoritos" && onShowFavoritosPressed != null) {
               onShowFavoritosPressed!();
-            }
           } else if (redirector == "Gastronomia" && onShowGastronomiaPressed != null) {
             onShowGastronomiaPressed!();
           }else if (redirector == "Tradiciones" && onShowTradicionesPressed != null) {
             onShowTradicionesPressed!();
-          } 
+          }else if (redirector == "Cuenta" && onShowCuentaPressed != null) {
+            onShowCuentaPressed!();
+          }else if (redirector == "Monumentos" && onShowMonumentosPressed != null) {
+            onShowMonumentosPressed!();
+          }
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
