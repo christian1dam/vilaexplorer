@@ -8,7 +8,7 @@ class UsuarioRepository {
 
   // Obtener un usuario por ID
   Future<Usuario> getUsuarioById(int id) async {
-    final response = await _apiClient.get('/usuario/$id');
+    final response = await _apiClient.get(  '/usuario/$id');
     return Usuario.fromMap(json.decode(response.body));
   }
 
