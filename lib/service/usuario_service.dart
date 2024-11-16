@@ -24,11 +24,16 @@ class UsuarioService {
     }
   }
 
-  // Crear un nuevo usuario con un rol
+// Crear un nuevo usuario con un rol
   Future<Usuario> crearUsuario(Usuario usuario, String rol) async {
     try {
-      return await _usuarioRepository.createUsuario(usuario, rol);
+      print("Se ha entrado en el Service");
+      final usuarioCreado =
+          await _usuarioRepository.createUsuario(usuario, rol);
+      print("Usuario creado en el Service: $usuarioCreado");
+      return usuarioCreado;
     } catch (e) {
+      print("Error en el Service al crear usuario: $e");
       throw Exception('Error al crear el usuario: $e');
     }
   }

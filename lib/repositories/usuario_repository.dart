@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter_map/flutter_map.dart';
 import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
 
@@ -8,7 +10,7 @@ class UsuarioRepository {
 
   // Obtener un usuario por ID
   Future<Usuario> getUsuarioById(int id) async {
-    final response = await _apiClient.get(  '/usuario/$id');
+    final response = await _apiClient.get('/usuario/$id');
     return Usuario.fromMap(json.decode(response.body));
   }
 
@@ -20,13 +22,27 @@ class UsuarioRepository {
     return Usuario.fromMap(json.decode(response.body));
   }
 
-  // Crear un nuevo usuario con un rol
+// Crear un nuevo usuario con un rol
   Future<Usuario> createUsuario(Usuario usuario, String rol) async {
-    final response = await _apiClient.post(
-      '/usuario/add?rol=$rol',
-      body: usuario.toMap(),
-    );
-    return Usuario.fromMap(json.decode(response.body));
+    try {
+      print("Se ha entrado en el Repository");
+      final response = await _apiClient.post(
+        '/usuario/add?rol=$rol',
+        body: usuario.toMap(),
+      );
+
+      // Validación de la respuesta
+      if (response.statusCode == 201) {
+        final usuarioCreado = Usuario.fromMap(json.decode(response.body));
+        print("Usuario creado: $usuarioCreado");
+        return usuarioCreado;
+      } else {
+        print("Error en la creación del usuario: ${response.body}");
+        throw Exception('Error en el servidor: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error en el Repository al crear usuario: $e');
+    }
   }
 
   // Actualizar un usuario existente

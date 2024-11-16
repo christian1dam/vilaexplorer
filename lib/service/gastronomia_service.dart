@@ -2,9 +2,7 @@ import 'package:vilaexplorer/models/gastronomia/plato.dart';
 import 'package:vilaexplorer/repositories/gastronomia_repository.dart';
 
 class GastronomiaService {
-  final GastronomiaRepository _repository;
-
-  GastronomiaService(this._repository);
+  final GastronomiaRepository _repository = GastronomiaRepository();
 
   // Obtener un plato por su ID
   Future<Plato> getPlatoById(int id) async {

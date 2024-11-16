@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
 
-
 class UsuarioProvider extends ChangeNotifier {
   final UsuarioService _usuarioService = UsuarioService();
 
@@ -31,6 +30,7 @@ class UsuarioProvider extends ChangeNotifier {
   // Registrar un nuevo usuario
   Future<void> registrarUsuario(Usuario usuario, String rol) async {
     try {
+      print("SE HA ENTRADO EN EL PROVIDER REGISTRAR USUARIO");
       _usuarioAutenticado = await _usuarioService.crearUsuario(usuario, rol);
       _error = null; // Limpia errores previos
       notifyListeners();
@@ -50,7 +50,7 @@ class UsuarioProvider extends ChangeNotifier {
 
     try {
       _usuarioAutenticado = await _usuarioService.actualizarUsuario(
-          _usuarioAutenticado!.idUsuario, usuario);
+          _usuarioAutenticado!.idUsuario!, usuario);
       _error = null; // Limpia errores previos
       notifyListeners();
     } catch (e) {
@@ -68,13 +68,47 @@ class UsuarioProvider extends ChangeNotifier {
     }
 
     try {
-      await _usuarioService.desactivarUsuario(_usuarioAutenticado!.idUsuario);
+      await _usuarioService.desactivarUsuario(_usuarioAutenticado!.idUsuario!);
       _usuarioAutenticado = null; // Limpia el usuario autenticado
       _error = null; // Limpia errores previos
       notifyListeners();
     } catch (e) {
       _error = 'Error al desactivar la cuenta: $e';
       notifyListeners();
+    }
+  }
+
+// Registrar un nuevo usuario desde un formulario
+  Future<bool> registrarUsuarioDesdeFormulario({
+    required String nombre,
+    required String email,
+    required String password,
+    required String confirmPassword,
+  }) async {
+    if (password != confirmPassword) {
+      _error = 'Las contraseñas no coinciden';
+      notifyListeners();
+      return false;
+    }
+
+    try {
+      print("Se ha entrado en el Provider para registrar usuario");
+      final nuevoUsuario = Usuario(
+        nombre: nombre,
+        email: email,
+        password: password,
+        fechaCreacion: DateTime.now(),
+        activo: true,
+      );
+      _usuarioAutenticado =
+          await _usuarioService.crearUsuario(nuevoUsuario, 'Cliente');
+      _error = null;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _error = 'Error al registrar el usuario: $e';
+      notifyListeners();
+      return false;
     }
   }
 

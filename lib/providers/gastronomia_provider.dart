@@ -3,9 +3,7 @@ import 'package:vilaexplorer/models/gastronomia/plato.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 
 class GastronomiaProvider extends ChangeNotifier {
-  final GastronomiaService _gastronomiaService;
-
-  GastronomiaProvider(this._gastronomiaService);
+  final GastronomiaService _gastronomiaService = GastronomiaService();
 
   List<Plato> _platos = [];
   List<Plato> get platos => _platos;

@@ -4,9 +4,7 @@ import 'package:vilaexplorer/models/tradiciones/tradiciones.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 
 class TradicionesProvider extends ChangeNotifier {
-  final TradicionesService _tradicionesService;
-
-  TradicionesProvider(this._tradicionesService);
+  final TradicionesService _tradicionesService = TradicionesService();
 
   List<Tradiciones> _tradiciones = [];
   List<Tradiciones> get tradiciones => _tradiciones;

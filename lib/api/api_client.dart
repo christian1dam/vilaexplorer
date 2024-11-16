@@ -11,13 +11,14 @@ class ApiClient {
     try {
       final response = await http.get(url, headers: _defaultHeaders());
       _handleResponse(response);
+
       return response;
     } catch (e) {
       throw Exception('Error en GET: $e');
     }
   }
 
-  // POST request
+// POST request
   Future<http.Response> post(String endpoint,
       {Map<String, dynamic>? body}) async {
     final url = Uri.parse('$_baseUrl$endpoint');
@@ -27,6 +28,8 @@ class ApiClient {
         headers: _defaultHeaders(),
         body: jsonEncode(body),
       );
+      print("POST request to $url with body: $body");
+      print("Response status: ${response.statusCode}, body: ${response.body}");
       _handleResponse(response);
       return response;
     } catch (e) {
