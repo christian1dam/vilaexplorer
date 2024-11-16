@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vilaexplorer/pages/homePage/home_page.dart';
-import 'package:vilaexplorer/pages/login_page.dart';
+import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
+import 'package:vilaexplorer/src/pages/login_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:vilaexplorer/pages/gastronomia/categoria_platos.dart';
-import 'package:vilaexplorer/pages/gastronomia/detalle_platillo.dart';
-import 'package:vilaexplorer/pages/gastronomia/gastronomia_page.dart';
-import 'package:vilaexplorer/pages/tradicionesPage/detalleFiestaTradicion.dart';
-import 'package:vilaexplorer/pages/tradicionesPage/tradiciones.dart';
+import 'package:vilaexplorer/src/pages/gastronomia/categoria_platos.dart';
+import 'package:vilaexplorer/src/pages/gastronomia/detalle_platillo.dart';
+import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
+import 'package:vilaexplorer/src/pages/tradicionesPage/detalleFiestaTradicion.dart';
+import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
 import 'app_bar_custom.dart';
 import 'map_view.dart';
 import 'menu_principal.dart';

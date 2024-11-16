@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vilaexplorer/pages/homePage/menu_principal.dart';
+import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class FiestaCard extends StatelessWidget {
   final String nombre;

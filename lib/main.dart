@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/usuarios_provider.dart';
-import 'pages/splash_page.dart';
+import 'src/pages/splash_page.dart';
 
 void main() {
   runApp(AppState());
