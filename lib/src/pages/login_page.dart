@@ -45,8 +45,6 @@ class _LoginPageState extends State<LoginPage>
   @override
   void dispose() {
     _rotationController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
     super.dispose();
   }
 
@@ -89,7 +87,7 @@ class _LoginPageState extends State<LoginPage>
                 ),
                 const SizedBox(height: 20),
                 Hero(
-                  tag: 'textHero', 
+                  tag: 'textHero',
                   child: RichText(
                     text: TextSpan(
                       children: [
@@ -125,9 +123,11 @@ class _LoginPageState extends State<LoginPage>
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildTextField(AppLocalizations.of(context)!.translate('email'), false),
+                _buildTextField(
+                    AppLocalizations.of(context)!.translate('email'), false),
                 const SizedBox(height: 20),
-                _buildTextField(AppLocalizations.of(context)!.translate('password'), true),
+                _buildTextField(
+                    AppLocalizations.of(context)!.translate('password'), true),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -142,7 +142,8 @@ class _LoginPageState extends State<LoginPage>
                       );
                     },
                     child: Text(
-                      AppLocalizations.of(context)!.translate('forgot_password'),
+                      AppLocalizations.of(context)!
+                          .translate('forgot_password'),
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -159,18 +160,23 @@ class _LoginPageState extends State<LoginPage>
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color.fromARGB(255, 58, 58, 58),
-                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 15),
                         ),
                         onPressed: () {
                           Navigator.of(context).pushReplacement(
                             PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => RegisterPage(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      RegisterPage(),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
                                 const begin = Offset(-0.0, 1.0);
                                 const end = Offset.zero;
                                 const curve = Curves.easeInOut;
 
-                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                var tween = Tween(begin: begin, end: end)
+                                    .chain(CurveTween(curve: curve));
 
                                 return SlideTransition(
                                   position: animation.drive(tween),
@@ -183,8 +189,8 @@ class _LoginPageState extends State<LoginPage>
                         },
                         child: Text(
                           AppLocalizations.of(context)!.translate('register'),
-                          style: const TextStyle(color: Colors.white),),
-
+                          style: const TextStyle(color: Colors.white),
+                        ),
                       ),
                       // Botón de idioma
                       IconButton(
@@ -196,19 +202,25 @@ class _LoginPageState extends State<LoginPage>
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 155, 58, 51),
-                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                          backgroundColor:
+                              const Color.fromARGB(255, 155, 58, 51),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 15),
                         ),
                         onPressed: () {
                           Navigator.of(context).pushReplacement(
                             PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      MyHomePage(),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
                                 const begin = Offset(0.0, 1.0);
                                 const end = Offset.zero;
                                 const curve = Curves.easeInOut;
 
-                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                var tween = Tween(begin: begin, end: end)
+                                    .chain(CurveTween(curve: curve));
 
                                 return SlideTransition(
                                   position: animation.drive(tween),
@@ -245,17 +257,21 @@ class _LoginPageState extends State<LoginPage>
         return Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-          color: Colors.grey[850]?.withOpacity(0.8),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
+            color: Colors.grey[850]?.withOpacity(0.8),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildLanguageOption('Español', 'assets/images/BanderaEspañola.png'),
-              _buildLanguageOption('English', 'assets/images/BanderaInglaterra.png'),
-              _buildLanguageOption('Valencià', 'assets/images/BanderaComunidadValenciana.png'),
+              _buildLanguageOption(
+                  'Español', 'assets/images/BanderaEspañola.png'),
+              _buildLanguageOption(
+                  'English', 'assets/images/BanderaInglaterra.png'),
+              _buildLanguageOption(
+                  'Valencià', 'assets/images/BanderaComunidadValenciana.png'),
               _buildLanguageOption('Chino', 'assets/images/BanderaChina.png'),
-              _buildLanguageOption('Francés', 'assets/images/BanderaFrancia.png'),
+              _buildLanguageOption(
+                  'Francés', 'assets/images/BanderaFrancia.png'),
             ],
           ),
         );
@@ -264,11 +280,10 @@ class _LoginPageState extends State<LoginPage>
   }
 
   void _changeLanguage(BuildContext context, Locale locale) {
-  setState(() {
-    MyApp.setLocale(context, locale);
-  });
-}
-
+    setState(() {
+      MyApp.setLocale(context, locale);
+    });
+  }
 
   // Widget para mostrar una opción de idioma con la bandera
   Widget _buildLanguageOption(String language, String flagPath) {
@@ -296,7 +311,6 @@ class _LoginPageState extends State<LoginPage>
 
   Widget _buildTextField(String label, bool isPassword) {
     return TextField(
-      controller: controller,
       obscureText: isPassword,
       decoration: InputDecoration(
         labelText: label,
@@ -310,6 +324,4 @@ class _LoginPageState extends State<LoginPage>
       style: const TextStyle(color: Colors.white),
     );
   }
-}
-
 }
