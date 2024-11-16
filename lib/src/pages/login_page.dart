@@ -12,7 +12,8 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
+class _LoginPageState extends State<LoginPage>
+    with SingleTickerProviderStateMixin {
   late AnimationController _rotationController;
   late Animation<double> _rotationAnimation;
   late Animation<double> _buttonAnimation;
@@ -44,6 +45,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   @override
   void dispose() {
     _rotationController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -74,11 +77,13 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                 Hero(
                   tag: 'logoHero',
                   child: RotationTransition(
-                    turns: Tween(begin: 1.0, end: 0.0).animate(_rotationAnimation),
+                    turns:
+                        Tween(begin: 1.0, end: 0.0).animate(_rotationAnimation),
                     child: CircleAvatar(
                       radius: 80,
                       backgroundColor: Colors.transparent,
-                      backgroundImage: AssetImage('assets/images/VilaExplorer.png'),
+                      backgroundImage:
+                          AssetImage('assets/images/VilaExplorer.png'),
                     ),
                   ),
                 ),
@@ -291,6 +296,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
   Widget _buildTextField(String label, bool isPassword) {
     return TextField(
+      controller: controller,
       obscureText: isPassword,
       decoration: InputDecoration(
         labelText: label,
@@ -304,4 +310,6 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       style: const TextStyle(color: Colors.white),
     );
   }
+}
+
 }
