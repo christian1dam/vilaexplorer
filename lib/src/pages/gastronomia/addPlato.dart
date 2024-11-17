@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vilaexplorer/l10n/app_localizations.dart';
 
 class AddPlato extends StatefulWidget {
   const AddPlato({super.key});
@@ -68,6 +69,59 @@ class _AddPlatoState extends State<AddPlato> {
         ingredientsFilled;
   }
 
+  void _showSuccessDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false, // Impide que el pop-up se cierre al tocar fuera de él
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 500), // Duración de la animación
+            child: Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 350,
+                height: 350, // Aumenta el alto del contenedor para evitar overflow
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(32, 29, 29, 1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/sending.gif', // Ruta a tu archivo GIF
+                      width: 250, // Ajusta el tamaño del GIF
+                      height: 250,
+                    ),
+                    const SizedBox(height: 20), // Espacio adicional debajo del GIF
+                    Text('Enviando',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontFamily: 'Poppins',
+                    ),)
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+
+  // Cierra el diálogo después de 3 segundos (simula que el proceso se completó)
+  Future.delayed(const Duration(seconds: 3), () {
+    Navigator.of(context).pop(); // Cierra el diálogo después de 3 segundos
+  });
+}
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,8 +133,8 @@ class _AddPlatoState extends State<AddPlato> {
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          child: const Text(
-            "Crear Receta",
+          child: Text(
+            AppLocalizations.of(context)!.translate('new_dish'),
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -102,18 +156,25 @@ class _AddPlatoState extends State<AddPlato> {
           color: const Color.fromRGBO(32, 29, 29, 1),
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              const Text(
-                "Nombre del Plato:",
+              Text(
+                AppLocalizations.of(context)!.translate('dish_name'),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5), // Ajusta el valor según necesites
+                child: SizedBox(
+                  width: 150, // Ancho fijo para el divider
+                  child: const Divider(color: Colors.white),
+                ),
+              ),
               TextField(
                 onChanged: (value) {
                   setState(() {
@@ -122,7 +183,7 @@ class _AddPlatoState extends State<AddPlato> {
                 },
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: "Introduce el nombre del plato",
+                  hintText: AppLocalizations.of(context)!.translate('insert_dish_name'),
                   hintStyle: const TextStyle(color: Colors.white54),
                   fillColor: const Color.fromARGB(255, 47, 42, 42),
                   filled: true,
@@ -130,7 +191,7 @@ class _AddPlatoState extends State<AddPlato> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   errorText: _isFormSubmitted && (nombrePlato == null || nombrePlato!.isEmpty)
-                      ? "Campo obligatorio"
+                      ? "*Campo obligatorio"
                       : null,
                 ),
               ),
@@ -153,7 +214,7 @@ class _AddPlatoState extends State<AddPlato> {
                               ))
                           .toList(),
                       decoration: InputDecoration(
-                        hintText: "Categoría",
+                        hintText: AppLocalizations.of(context)!.translate('category'),
                         hintStyle: const TextStyle(color: Colors.white54),
                         fillColor: const Color.fromARGB(255, 47, 42, 42),
                         filled: true,
@@ -161,7 +222,7 @@ class _AddPlatoState extends State<AddPlato> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         errorText: _isFormSubmitted && selectedCategory == null
-                            ? "Campo obligatorio"
+                            ? "*Campo obligatorio"
                             : null,
                       ),
                       dropdownColor: const Color.fromRGBO(47, 42, 42, 1),
@@ -188,7 +249,7 @@ class _AddPlatoState extends State<AddPlato> {
                               ))
                           .toList(),
                       decoration: InputDecoration(
-                        hintText: "Tipo",
+                        hintText: AppLocalizations.of(context)!.translate('type'),
                         hintStyle: const TextStyle(color: Colors.white54),
                         fillColor: const Color.fromARGB(255, 47, 42, 42),
                         filled: true,
@@ -196,7 +257,7 @@ class _AddPlatoState extends State<AddPlato> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         errorText: _isFormSubmitted && selectedType == null
-                            ? "Campo obligatorio"
+                            ? "*Campo obligatorio"
                             : null,
                       ),
                       dropdownColor: const Color.fromRGBO(47, 42, 42, 1),
@@ -206,15 +267,21 @@ class _AddPlatoState extends State<AddPlato> {
                 ],
               ),
               const SizedBox(height: 20),
-              const Text(
-                "Ingredientes:",
+              Text(
+                AppLocalizations.of(context)!.translate('ingredients'),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5), // Ajusta el valor según necesites
+                child: SizedBox(
+                  width: 150, // Ancho fijo para el divider
+                  child: const Divider(color: Colors.white),
+                ),
+              ),
               Column(
                 children: [
                   // Mostrar los ingredientes ya añadidos
@@ -231,7 +298,7 @@ class _AddPlatoState extends State<AddPlato> {
                                       controller: controllers['quantity'],
                                       style: const TextStyle(color: Colors.white),
                                       decoration: InputDecoration(
-                                        hintText: "Cantidad",
+                                        hintText: AppLocalizations.of(context)!.translate('quantity'),
                                         hintStyle: const TextStyle(color: Colors.white54),
                                         fillColor: const Color.fromARGB(255, 47, 42, 42),
                                         filled: true,
@@ -239,7 +306,7 @@ class _AddPlatoState extends State<AddPlato> {
                                           borderRadius: BorderRadius.circular(20),
                                         ),
                                         errorText: _isFormSubmitted && controllers['quantity']!.text.isEmpty
-                                            ? "Campo obligatorio"
+                                            ? "*Campo obligatorio"
                                             : null,
                                       ),
                                     ),
@@ -260,7 +327,7 @@ class _AddPlatoState extends State<AddPlato> {
                                               ))
                                           .toList(),
                                       decoration: InputDecoration(
-                                        hintText: "Unidad",
+                                        hintText: AppLocalizations.of(context)!.translate('units'),
                                         hintStyle: const TextStyle(color: Colors.white54),
                                         fillColor: const Color.fromARGB(255, 47, 42, 42),
                                         filled: true,
@@ -268,7 +335,7 @@ class _AddPlatoState extends State<AddPlato> {
                                           borderRadius: BorderRadius.circular(20),
                                         ),
                                         errorText: _isFormSubmitted && controllers['name']!.text.isEmpty
-                                            ? "Campo obligatorio"
+                                            ? "*Campo obligatorio"
                                             : null,
                                       ),
                                       dropdownColor: const Color.fromRGBO(47, 42, 42, 1),
@@ -281,7 +348,7 @@ class _AddPlatoState extends State<AddPlato> {
                                       controller: controllers['name'],
                                       style: const TextStyle(color: Colors.white),
                                       decoration: InputDecoration(
-                                        hintText: "Ingrediente",
+                                        hintText: AppLocalizations.of(context)!.translate('ingredients'),
                                         hintStyle: const TextStyle(color: Colors.white54),
                                         fillColor: const Color.fromARGB(255, 47, 42, 42),
                                         filled: true,
@@ -289,7 +356,7 @@ class _AddPlatoState extends State<AddPlato> {
                                           borderRadius: BorderRadius.circular(20),
                                         ),
                                         errorText: _isFormSubmitted && controllers['name']!.text.isEmpty
-                                            ? "Campo obligatorio"
+                                            ? "*Campo obligatorio"
                                             : null,
                                       ),
                                     ),
@@ -320,8 +387,8 @@ class _AddPlatoState extends State<AddPlato> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                          child: const Text(
-                            "+ Agregar Ingrediente",
+                          child: Text(
+                            "+ ${AppLocalizations.of(context)!.translate('add_ingredient')}",
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
@@ -330,15 +397,21 @@ class _AddPlatoState extends State<AddPlato> {
                 ],
               ),
               const SizedBox(height: 20),
-              const Text(
-                "Descripción:",
+              Text(
+                AppLocalizations.of(context)!.translate('description'),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5), // Ajusta el valor según necesites
+                child: SizedBox(
+                  width: 150, // Ancho fijo para el divider
+                  child: const Divider(color: Colors.white),
+                ),
+              ),
               TextField(
                 onChanged: (value) {
                   setState(() {
@@ -348,7 +421,7 @@ class _AddPlatoState extends State<AddPlato> {
                 maxLines: 6,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: "Describe los pasos para preparar la receta",
+                  hintText: AppLocalizations.of(context)!.translate('desc_text'),
                   hintStyle: const TextStyle(color: Colors.white54),
                   fillColor: const Color.fromARGB(255, 47, 42, 42),
                   filled: true,
@@ -356,20 +429,26 @@ class _AddPlatoState extends State<AddPlato> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   errorText: _isFormSubmitted && (descripcion == null || descripcion!.isEmpty)
-                      ? "Campo obligatorio"
+                      ? "*Campo obligatorio"
                       : null,
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
-                "Receta:",
+              Text(
+                AppLocalizations.of(context)!.translate('recipe'),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5), // Ajusta el valor según necesites
+                child: SizedBox(
+                  width: 150, // Ancho fijo para el divider
+                  child: const Divider(color: Colors.white),
+                ),
+              ),
               TextField(
                 onChanged: (value) {
                   setState(() {
@@ -379,7 +458,7 @@ class _AddPlatoState extends State<AddPlato> {
                 maxLines: ingredientControllers.isEmpty ? 12 : 6,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: "Describe la receta aquí",
+                  hintText: AppLocalizations.of(context)!.translate('recipe_text'),
                   hintStyle: const TextStyle(color: Colors.white54),
                   fillColor: const Color.fromARGB(255, 47, 42, 42),
                   filled: true,
@@ -400,12 +479,8 @@ class _AddPlatoState extends State<AddPlato> {
                     });
 
                     if (_isFormValid()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Receta guardada con éxito"),
-                        ),
-                      );
-                      Navigator.pop(context);
+                      // Mostrar el pop-up de éxito
+                      _showSuccessDialog(context);
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -415,14 +490,15 @@ class _AddPlatoState extends State<AddPlato> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: const Text(
-                    "Guardar",
+                  child: Text(
+                    AppLocalizations.of(context)!.translate('send'),
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
               const SizedBox(height: 20),
             ],
+            
           ),
         ),
       ),

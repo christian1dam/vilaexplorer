@@ -49,10 +49,32 @@
     "filter": "Filter",
     "ingredients": "Ingredients",
     "recipe": "Recipe",
-    "type": "Type"
+    "type": "Type",
+    "new_dish": "Create Recipe",
+    "dish_name": "Dish Name",
+    "insert_dish_name": "Enter the dish name",
+    "category": "Category",
+    "quantity": "Quantity",
+    "units": "Units",
+    "add_ingredient": "Add Ingredient",
+    "description": "Description",
+    "desc_text": "Describe the steps to prepare the recipe",
+    "recipe_text": "How is the recipe prepared?",
+
     
-    
-    
+    "account": "My Account",
+    "edit_profile": "Edit Profile",
+    "help": "Help",
+    "frequent_questions": "Frequently Asked Questions",
+    "contact": "Contact Us",
+    "settings": "Settings",
+    "language": "Language",
+    "news": "News",
+    "more_information": "More Information",
+    "terms_conditions": "Terms and Conditions",
+    "privacy_policy": "Privacy Policy",
+    "version": "Version"
+   
 }
   
   

@@ -24,8 +24,9 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
   List<dynamic> allDishes = [];
   List<dynamic> displayedDishes = [];
   String? selectedCategory;
-  String? selectedDishType;  // Cambiamos selectedDish a selectedDishType
+  String? selectedDishType;  
   bool isSearchActive = false;
+  bool isGridView = false;  // Variable para alternar entre vista de lista y cuadrícula
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -40,7 +41,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
     setState(() {
       categories = data['categories'];
       allDishes = categories.expand((category) => category['dishes']).toList();
-      displayedDishes = List.from(allDishes); // Muestra todos los platos inicialmente
+      displayedDishes = List.from(allDishes); 
     });
   }
 
@@ -57,8 +58,8 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
     setState(() {
       selectedCategory = category;
       if (category == null) {
-        displayedDishes = List.from(allDishes); // Muestra todos los platos
-        selectedDishType = null; // Restablece el tipo de plato seleccionado
+        displayedDishes = List.from(allDishes); 
+        selectedDishType = null; 
       } else {
         final selectedCategoryObj = categories.firstWhere(
           (cat) => cat['name'] == category,
@@ -67,7 +68,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
         displayedDishes = selectedCategoryObj != null
             ? List.from(selectedCategoryObj['dishes'])
             : [];
-        selectedDishType = null; // Restablece el tipo de plato seleccionado al cambiar la categoría
+        selectedDishType = null; 
       }
     });
   }
@@ -76,12 +77,10 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
     setState(() {
       selectedDishType = dishType;
       if (dishType == null) {
-        // Muestra todos los platos de la categoría actual si no hay tipo seleccionado
         displayedDishes = categories
             .firstWhere((category) => category['name'] == selectedCategory)
             ['dishes'];
       } else {
-        // Filtra los platos por `dish_type`
         displayedDishes = categories
             .firstWhere((category) => category['name'] == selectedCategory)
             ['dishes']
@@ -132,60 +131,81 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.search, 
-                          color: Colors.white
-                        ),
-                        onPressed: _toggleSearch,
-                      ),
-                      Container(
-                        decoration: const BoxDecoration(
-                          color: Color.fromRGBO(30, 30, 30, 1),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                        margin: const EdgeInsets.only(top: 10, left: 10),
-                        width: size.width * 0.6,
-                        height: 35,
-                        child: Center(
-                          child: Text(
-                            AppLocalizations.of(context)!.translate('gastronomy'),
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontFamily: 'Poppins',
-                            ),
-                          ),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.add, color: Colors.white),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AddPlato(),
-                                ),
-                              );
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close, color: Colors.white),
-                            onPressed: widget.onClose,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: Row(
+    // Asegura que los elementos estén espaciados
+    children: [
+      IconButton(
+        icon: const Icon(
+          Icons.search, 
+          color: Colors.white
+        ),
+        onPressed: _toggleSearch,
+      ),
+      // Botón para cambiar entre vista de lista y cuadrícula
+          IconButton(
+            icon: Icon(
+              isGridView ? Icons.list : Icons.grid_on,  // Alternar el icono
+              color: Colors.white,
+            ),
+            onPressed: () {
+              setState(() {
+                isGridView = !isGridView; // Alternar la vista
+              });
+            },
+          ),
+           SizedBox(width: 20),
+      Container(
+        decoration: const BoxDecoration(
+          color: Color.fromRGBO(30, 30, 30, 1),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        margin: const EdgeInsets.only(top: 10, left: 10),
+        width: size.width * 0.4, // Reducido para dejar espacio para los botones
+        height: 35,
+        child: Center(
+          child: Text(
+            AppLocalizations.of(context)!.translate('gastronomy'),
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: 'Poppins',
+            ),
+          ),
+        ),
+      ),
+      Spacer(),
+      Row(
+        children: [
+          // Botón para añadir receta
+          IconButton(
+            icon: const Icon(Icons.add, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddPlato(),
                 ),
+              );
+            },
+          ),
+          // Botón para volver atrás
+          IconButton(
+            icon: const Icon(Icons.close, color: Colors.white),
+            onPressed: widget.onClose,
+          ),
+          
+        ],
+      ),
+    ],
+  ),
+),
+
+                
+
+
                 if (isSearchActive)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -205,48 +225,46 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                     ),
                   ),
                 const SizedBox(height: 10),
-               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: DropdownButton<String>(
-                  value: selectedCategory,
-                  hint: Text(
-                    AppLocalizations.of(context)!.translate('filter'),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  dropdownColor: const Color.fromARGB(255, 47, 42, 42),
-                  style: const TextStyle(color: Colors.white),
-                  iconEnabledColor: Colors.white,
-                  isExpanded: true,
-                  // Cambia el icono entre la flecha y la "X" si hay una categoría seleccionada
-                  icon: selectedCategory == null
-                      ? const Icon(Icons.arrow_drop_down, color: Colors.white)
-                      : GestureDetector(
-                          onTap: () {
-                            // Restablece el filtro de categoría al presionar la "X"
-                            _filterByCategory(null);
-                          },
-                          child: const Icon(Icons.close, color: Colors.white),
-                        ),
-                        items: [
-                          DropdownMenuItem<String>(
-                            value: null,
-                            child: Text(
-                              AppLocalizations.of(context)!.translate('filter'),
-                              style: TextStyle(color: Colors.white54),
-                            ),
-                          ),
-                          ...categories.map((category) {
-                            return DropdownMenuItem<String>(
-                              value: category['name'],
-                              child: Text(category['name']),
-                            );
-                          }),
-                        ],
-                        onChanged: (String? newValue) {
-                          _filterByCategory(newValue);
-                        },
-                      ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: DropdownButton<String>(
+                    value: selectedCategory,
+                    hint: Text(
+                      AppLocalizations.of(context)!.translate('filter'),
+                      style: const TextStyle(color: Colors.white),
                     ),
+                    dropdownColor: const Color.fromARGB(255, 47, 42, 42),
+                    style: const TextStyle(color: Colors.white),
+                    iconEnabledColor: Colors.white,
+                    isExpanded: true,
+                    icon: selectedCategory == null
+                        ? const Icon(Icons.arrow_drop_down, color: Colors.white)
+                        : GestureDetector(
+                            onTap: () {
+                              _filterByCategory(null);
+                            },
+                            child: const Icon(Icons.close, color: Colors.white),
+                          ),
+                    items: [
+                      DropdownMenuItem<String>(
+                        value: null,
+                        child: Text(
+                          AppLocalizations.of(context)!.translate('filter'),
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                      ),
+                      ...categories.map((category) {
+                        return DropdownMenuItem<String>(
+                          value: category['name'],
+                          child: Text(category['name']),
+                        );
+                      }),
+                    ],
+                    onChanged: (String? newValue) {
+                      _filterByCategory(newValue);
+                    },
+                  ),
+                ),
 
                 if (selectedCategory != null)
                   Padding(
@@ -261,12 +279,10 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                       style: const TextStyle(color: Colors.white),
                       iconEnabledColor: Colors.white,
                       isExpanded: true,
-                      // Cambia el icono entre la flecha y la "X" si hay un tipo seleccionado
                       icon: selectedDishType == null
                           ? const Icon(Icons.arrow_drop_down, color: Colors.white)
                           : GestureDetector(
                               onTap: () {
-                                // Restablece el filtro de tipo de plato al presionar la "X"
                                 _filterByDishType(null);
                               },
                               child: const Icon(Icons.close, color: Colors.white),
@@ -293,16 +309,61 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                     ),
                   ),
 
-                const SizedBox(height: 10),
                 Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.all(0),
-                    itemCount: displayedDishes.length,
-                    itemBuilder: (context, index) {
-                      final dish = displayedDishes[index];
-                      return _buildDishItem(context, dish);
-                    },
-                  ),
+                  child: isGridView  // Cambiar entre vista de lista y cuadrícula
+                      ? GridView.builder(
+                          padding: const EdgeInsets.all(8.0),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 8.0,
+                            mainAxisSpacing: 8.0,
+                          ),
+                          itemCount: displayedDishes.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              color: Color.fromARGB(255, 47, 42, 42),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Image.asset(
+                                    displayedDishes[index]['image'],
+                                    width: double.infinity,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      displayedDishes[index]['name'],
+                                      style: const TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        )
+                      : ListView.builder(  // Vista de lista
+                          padding: const EdgeInsets.all(8.0),
+                          itemCount: displayedDishes.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              color: Color.fromARGB(255, 47, 42, 42),
+                              child: ListTile(
+                                leading: Image.asset(
+                                  displayedDishes[index]['image'],
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                ),
+                                title: Text(
+                                  displayedDishes[index]['name'],
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                 ),
               ],
             ),
@@ -311,52 +372,4 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
       ),
     );
   }
-
-  Widget _buildDishItem(BuildContext context, dynamic dish) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-    child: ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 10), // Ajustamos el padding
-        backgroundColor: const Color.fromRGBO(45, 45, 45, 1),
-      ),
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetallePlatillo(
-              platillo: dish['name'],
-              ingredientes: dish['ingredients'],
-              receta: dish['recipe'],
-              closeWidget: widget.onClose,
-            ),
-          ),
-        );
-      },
-      child: Row(
-        children: [
-          // Imagen del plato
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              dish['image'],
-              width: 50, // Ajusta el tamaño de la imagen según lo que necesites
-              height: 50,
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(width: 10), // Espacio entre imagen y texto
-          // Nombre del plato
-          Expanded(
-            child: Text(
-              dish['name'],
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
 }
