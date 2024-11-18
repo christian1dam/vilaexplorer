@@ -1,10 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:vilaexplorer/providers/gastronomia_provider.dart';
+import 'package:vilaexplorer/providers/tradiciones_provider.dart';
+import 'package:vilaexplorer/providers/usuarios_provider.dart';
 import 'src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const AppState());
+}
+
+// Envolver MyApp con MultiProvider para inyectar los Providers
+class AppState extends StatelessWidget {
+  const AppState({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UsuarioProvider(), lazy: false),
+        ChangeNotifierProvider(
+            create: (_) => TradicionesProvider(), lazy: false),
+        ChangeNotifierProvider(
+            create: (_) => GastronomiaProvider(), lazy: false),
+      ],
+      child: const MyApp(),
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {

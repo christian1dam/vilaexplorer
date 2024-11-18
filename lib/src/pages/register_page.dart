@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
-import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
+import 'package:vilaexplorer/providers/usuarios_provider.dart';
 import 'package:vilaexplorer/src/pages/login_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -11,10 +12,18 @@ class RegisterPage extends StatefulWidget {
   _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderStateMixin {
+class _RegisterPageState extends State<RegisterPage>
+    with SingleTickerProviderStateMixin {
   late AnimationController _rotationController;
   late Animation<double> _rotationAnimation;
   late Animation<double> _buttonAnimation;
+
+  // Controladores para los campos de texto
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   void initState() {
@@ -33,16 +42,62 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
     // Ahora inicializamos correctamente la animación de los botones
     _buttonAnimation = CurvedAnimation(
       parent: _rotationController, // Usamos el mismo AnimationController
-      curve: Curves.easeInOut,  // Ajusta la curva como desees
+      curve: Curves.easeInOut, // Ajusta la curva como desees
     );
 
-    _rotationController.forward();  // Inicia la animación de rotación
+    _rotationController.forward(); // Inicia la animación de rotación
   }
 
   @override
   void dispose() {
     _rotationController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  void _registerUser(BuildContext context) async {
+    final usuarioProvider =
+        Provider.of<UsuarioProvider>(context, listen: false);
+
+    final String name = _nameController.text.trim();
+    final String email = _emailController.text.trim();
+    final String password = _passwordController.text.trim();
+    final String confirmPassword = _confirmPasswordController.text.trim();
+
+    if (password != confirmPassword) {
+      if (!mounted) return; // Verifica si el widget sigue montado
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Las contraseñas no coinciden')),
+      );
+      return;
+    }
+
+    final bool success = await usuarioProvider.registrarUsuarioDesdeFormulario(
+      nombre: name,
+      email: email,
+      password: password,
+      confirmPassword: confirmPassword,
+    );
+
+    // Verifica si el widget sigue montado antes de interactuar con el BuildContext
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Usuario registrado exitosamente')),
+      );
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(usuarioProvider.error ?? 'Error desconocido')),
+      );
+    }
   }
 
   @override
@@ -55,7 +110,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
           Align(
             alignment: Alignment.bottomCenter,
             child: Opacity(
-              opacity: 0.5,
+              opacity: 0.3,
               child: Image.asset(
                 'assets/images/fondoVilaBN.png',
                 fit: BoxFit.cover,
@@ -69,53 +124,55 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
             child: Column(
               children: [
                 // Espacio superior del 30% de la pantalla
-                SizedBox(height: MediaQuery.of(context).size.height * 0.18),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
 
-                  // Hero con rotación
-                  Hero(
-                    tag: 'logoHero',
-                    child: RotationTransition(
-                      turns: Tween(begin: 0.0, end: 1.0).animate(_rotationAnimation),
-                      child: CircleAvatar(
-                        radius: 80,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: AssetImage('assets/images/VilaExplorer.png'),
-                      ),
+                // Hero con rotación
+                Hero(
+                  tag: 'logoHero',
+                  child: RotationTransition(
+                    turns:
+                        Tween(begin: 0.0, end: 1.0).animate(_rotationAnimation),
+                    child: CircleAvatar(
+                      radius: 80,
+                      backgroundColor: Colors.transparent,
+                      backgroundImage:
+                          AssetImage('assets/images/VilaExplorer.png'),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                ),
+               const SizedBox(height: 20),
 
-                  // Título
-                  Hero(
-                    tag: 'textHero', // Debe coincidir con el `tag` de LoginPage
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'VILA ',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontFamily: 'Poppins',
-                            ),
+                // Título
+                Hero(
+                  tag: 'textHero', // Debe coincidir con el `tag` de LoginPage
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'VILA ',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontFamily: 'Poppins',
                           ),
-                          TextSpan(
-                            text: 'Explorer',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w200,
-                              color: Colors.white,
-                              fontFamily: 'Poppins',
-                            ),
+                        ),
+                        TextSpan(
+                          text: 'Explorer',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w200,
+                            color: Colors.white,
+                            fontFamily: 'Poppins',
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
+                ),
 
-                  const SizedBox(height: 20),
-                  Text(
+                const SizedBox(height: 20),
+                Text(
                   AppLocalizations.of(context)!.translate('do_register'),
                   style: TextStyle(
                     fontSize: 20,
@@ -123,63 +180,78 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                     color: Colors.white,
                   ),
                 ),
-                  const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-                  // Campos de texto
-                  _buildTextField(AppLocalizations.of(context)!.translate('name'), false),
-                  const SizedBox(height: 20),
-                  _buildTextField(AppLocalizations.of(context)!.translate('email'), false),
-                  const SizedBox(height: 20),
-                  _buildTextField(AppLocalizations.of(context)!.translate('password'), true),
-                  const SizedBox(height: 20),
-                  _buildTextField(AppLocalizations.of(context)!.translate('confirm_password'), false),
+                // Campos de texto
+                _buildTextField(AppLocalizations.of(context)!.translate('name'),
+                    false, _nameController),
+                const SizedBox(height: 20),
+                _buildTextField(
+                    AppLocalizations.of(context)!.translate('email'),
+                    false,
+                    _emailController),
+                const SizedBox(height: 20),
+                _buildTextField(
+                    AppLocalizations.of(context)!.translate('password'),
+                    true,
+                    _passwordController),
+                const SizedBox(height: 20),
+                _buildTextField(
+                    AppLocalizations.of(context)!.translate('confirm_password'),
+                    true,
+                    _confirmPasswordController),
 
-                  // Espacio desde el fondo del 10%
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+                // Espacio desde el fondo del 10%
+                SizedBox(height: MediaQuery.of(context).size.height * 0.10),
 
-                  // Botones de registro y entrar
-                  SlideTransition(
-                    position: Tween<Offset>(
-                      begin: Offset(0.0, 0.5), // Desplazar hacia arriba
-                      end: Offset.zero,
-                    ).animate(_buttonAnimation),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 58, 58, 58),
-                            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              PageRouteBuilder(
-                                pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  // Cambiar Offset a (-1.0, 0.0) para deslizar hacia la izquierda
-                                  const begin = Offset(-0.0, 1.0);
-                                  const end = Offset.zero;
-                                  const curve = Curves.easeInOut;
+                Spacer(),
+                // Botones de registro y entrar
+                SlideTransition(
+                  position: Tween<Offset>(
+                    begin: Offset(0.0, 0.5), // Desplazar hacia arriba
+                    end: Offset.zero,
+                  ).animate(_buttonAnimation),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 58, 58, 58),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 15),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      LoginPage(),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                // Cambiar Offset a (-1.0, 0.0) para deslizar hacia la izquierda
+                                const begin = Offset(-0.0, 1.0);
+                                const end = Offset.zero;
+                                const curve = Curves.easeInOut;
 
-                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                var tween = Tween(begin: begin, end: end)
+                                    .chain(CurveTween(curve: curve));
 
-                                  return SlideTransition(
-                                    position: animation.drive(tween),
-                                    child: child,
-                                  );
-                                },
-                                transitionDuration: const Duration(seconds: 1),
-                              ),
-                            );
-                          },
-                          child: Text(
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                              transitionDuration: const Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                        child: Text(
                           AppLocalizations.of(context)!.translate('return'),
                           style: TextStyle(color: Colors.white),
                         ),
-                        ),
-                        
-                      
-                        // Botón de idioma
+                      ),
+
+                      // Botón de idioma
                       IconButton(
                         icon: const Icon(Icons.language, color: Colors.white),
                         iconSize: 40,
@@ -189,47 +261,32 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 155, 58, 51),
-                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                          backgroundColor:
+                              const Color.fromARGB(255, 155, 58, 51),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 15),
                         ),
                         onPressed: () {
-                          Navigator.of(context).pushReplacement(
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(0.0, 1.0);
-                                const end = Offset.zero;
-                                const curve = Curves.easeInOut;
-
-                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                              transitionDuration: const Duration(seconds: 2),
-                            ),
-                          );
+                          _registerUser(context);
                         },
                         child: Text(
                           AppLocalizations.of(context)!.translate('access'),
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      ],
-                    ),
+                    ],
                   ),
-                  const SizedBox(height: 30),
-                ],
-              ),
+                ),
+                const SizedBox(height: 80),
+              ],
             ),
-          ],
-        ),
-      );
-    }
+          ),
+        ],
+      ),
+    );
+  }
 
-    // Función para mostrar las opciones de idioma
+  // Función para mostrar las opciones de idioma
   void _showLanguageOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -239,14 +296,14 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
         return Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-          color: Colors.grey[850]?.withOpacity(0.8),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
+            color: Colors.grey[850]?.withOpacity(0.8),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildLanguageOption('Español', 'assets/images/BanderaEspañola.png'),
-              _buildLanguageOption('English', 'assets/images/BanderaInglaterra.png'),
+              _buildLanguageOption( 'English', 'assets/images/BanderaInglaterra.png'),
               _buildLanguageOption('Valencià', 'assets/images/BanderaComunidadValenciana.png'),
               _buildLanguageOption('Chino', 'assets/images/BanderaChina.png'),
               _buildLanguageOption('Francés', 'assets/images/BanderaFrancia.png'),
@@ -287,12 +344,15 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
     );
   }
 
-  Widget _buildTextField(String label, bool isPassword) {
+  Widget _buildTextField(
+      String label, bool isPassword, TextEditingController controller) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30), // El mismo radio que el TextField
+        borderRadius:
+            BorderRadius.circular(30), // El mismo radio que el TextField
       ),
       child: TextField(
+        controller: controller,
         obscureText: isPassword,
         decoration: InputDecoration(
           labelText: label,

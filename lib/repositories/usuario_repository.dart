@@ -1,12 +1,27 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter_map/flutter_map.dart';
 import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
 
 class UsuarioRepository {
   final ApiClient _apiClient = ApiClient();
+
+  // Método para autenticar al usuario
+  Future<Usuario?> autenticarUsuario(String nombre, String password) async {
+    final endpoint = '/usuario/signIn?nombre=$nombre&password=$password';
+
+    try {
+      final response = await _apiClient.get(endpoint);
+      if (response.statusCode == 200) {
+        return Usuario.fromJson(response.body);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception('Error al autenticar al usuario: $e');
+    }
+  }
 
   // Obtener un usuario por ID
   Future<Usuario> getUsuarioById(int id) async {
@@ -28,7 +43,7 @@ class UsuarioRepository {
       print("Se ha entrado en el Repository");
       final response = await _apiClient.post(
         '/usuario/add?rol=$rol',
-        body: usuario.toMap(),
+        body: usuario.toMap(),  
       );
 
       // Validación de la respuesta
