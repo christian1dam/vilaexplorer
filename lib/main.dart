@@ -4,12 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/gastronomia_provider.dart';
 import 'package:vilaexplorer/providers/tradiciones_provider.dart';
 import 'package:vilaexplorer/providers/usuarios_provider.dart';
-import 'package:vilaexplorer/repositories/gastronomia_repository.dart';
-import 'package:vilaexplorer/repositories/tradiciones_repository.dart';
-import 'package:vilaexplorer/service/gastronomia_service.dart';
-import 'package:vilaexplorer/service/tradiciones_service.dart';
-import 'package:vilaexplorer/service/usuario_service.dart';
-import 'src/pages/splash_page.dart';
+import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
+import 'package:vilaexplorer/src/pages/login_page.dart';
+import 'package:vilaexplorer/src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
 
 void main() {
@@ -25,10 +22,8 @@ class AppState extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UsuarioProvider(), lazy: false),
-        ChangeNotifierProvider(
-            create: (_) => TradicionesProvider(), lazy: false),
-        ChangeNotifierProvider(
-            create: (_) => GastronomiaProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => TradicionesProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => GastronomiaProvider(), lazy: false),
       ],
       child: const MyApp(),
     );
@@ -59,11 +54,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final usuarioProvider = Provider.of<UsuarioProvider>(context);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Vila Explorer',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const SplashPage(),
+      home: usuarioProvider.isAuthenticated
+          ? const MyHomePage()  // Si el usuario está autenticado, redirigir a la página principal
+          : const LoginPage(),  // Si no está autenticado, mostrar la página de inicio de sesión
       locale: _locale, // Define el idioma actual
       supportedLocales: const [
         Locale('en'), // Inglés

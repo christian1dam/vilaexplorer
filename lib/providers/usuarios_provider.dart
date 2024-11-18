@@ -1,28 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
-import 'package:vilaexplorer/service/usuario_service.dart';
+import 'package:vilaexplorer/repositories/usuario_repository.dart';
 
 class UsuarioProvider extends ChangeNotifier {
-  final UsuarioService _usuarioService = UsuarioService();
+  final UsuarioRepository _usuarioRepository = UsuarioRepository();
 
   // Estado local
   Usuario? _usuarioAutenticado;
   String? _error;
+  bool _isAuthenticated = false;
 
   // Getters
   Usuario? get usuarioAutenticado => _usuarioAutenticado;
   String? get error => _error;
+  bool get isAuthenticated => _isAuthenticated;
 
-  // Autenticar usuario (inicio de sesión)
+  // Método para autenticar al usuario
   Future<void> autenticarUsuario(String nombre, String password) async {
     try {
-      _usuarioAutenticado = await _usuarioService
-          .obtenerUsuarioPorNombreYPassword(nombre, password);
-      _error = null; // Limpia errores previos
+      _usuarioAutenticado =
+          await _usuarioRepository.autenticarUsuario(nombre, password);
+      if (_usuarioAutenticado != null) {
+        _isAuthenticated = true;
+      } else {
+        _isAuthenticated = false;
+        _error = 'Credenciales inválidas';
+      }
       notifyListeners();
     } catch (e) {
-      _usuarioAutenticado = null;
-      _error = 'Error al autenticar el usuario: $e';
+      _isAuthenticated = false;
+      _error = 'Error al autenticar al usuario: $e';
       notifyListeners();
     }
   }
@@ -31,7 +38,8 @@ class UsuarioProvider extends ChangeNotifier {
   Future<void> registrarUsuario(Usuario usuario, String rol) async {
     try {
       print("SE HA ENTRADO EN EL PROVIDER REGISTRAR USUARIO");
-      _usuarioAutenticado = await _usuarioService.crearUsuario(usuario, rol);
+      _usuarioAutenticado =
+          await _usuarioRepository.createUsuario(usuario, rol);
       _error = null; // Limpia errores previos
       notifyListeners();
     } catch (e) {
@@ -49,7 +57,7 @@ class UsuarioProvider extends ChangeNotifier {
     }
 
     try {
-      _usuarioAutenticado = await _usuarioService.actualizarUsuario(
+      _usuarioAutenticado = await _usuarioRepository.updateUsuario(
           _usuarioAutenticado!.idUsuario!, usuario);
       _error = null; // Limpia errores previos
       notifyListeners();
@@ -68,7 +76,8 @@ class UsuarioProvider extends ChangeNotifier {
     }
 
     try {
-      await _usuarioService.desactivarUsuario(_usuarioAutenticado!.idUsuario!);
+      await _usuarioRepository
+          .deleteUsuarioLogico(_usuarioAutenticado!.idUsuario!);
       _usuarioAutenticado = null; // Limpia el usuario autenticado
       _error = null; // Limpia errores previos
       notifyListeners();
@@ -78,7 +87,7 @@ class UsuarioProvider extends ChangeNotifier {
     }
   }
 
-// Registrar un nuevo usuario desde un formulario
+  // Registrar un nuevo usuario desde un formulario
   Future<bool> registrarUsuarioDesdeFormulario({
     required String nombre,
     required String email,
@@ -101,7 +110,7 @@ class UsuarioProvider extends ChangeNotifier {
         activo: true,
       );
       _usuarioAutenticado =
-          await _usuarioService.crearUsuario(nuevoUsuario, 'Cliente');
+          await _usuarioRepository.createUsuario(nuevoUsuario, 'Cliente');
       _error = null;
       notifyListeners();
       return true;
@@ -112,9 +121,10 @@ class UsuarioProvider extends ChangeNotifier {
     }
   }
 
-  // Cerrar sesión
+  // Método para cerrar sesión
   void cerrarSesion() {
     _usuarioAutenticado = null;
+    _isAuthenticated = false;
     _error = null;
     notifyListeners();
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
+import 'package:vilaexplorer/providers/usuarios_provider.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
 import 'package:vilaexplorer/src/pages/passwordRecover_page.dart';
 import 'package:vilaexplorer/src/pages/register_page.dart';
@@ -14,9 +16,60 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   late AnimationController _rotationController;
   late Animation<double> _rotationAnimation;
   late Animation<double> _buttonAnimation;
+
+  void _loginUser(BuildContext context) async {
+    final usuarioProvider =
+        Provider.of<UsuarioProvider>(context, listen: false);
+
+    final String email = _emailController.text.trim();
+    final String password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, ingrese todos los campos')),
+      );
+      return;
+    }
+
+    await usuarioProvider.autenticarUsuario(email, password);
+
+    if (usuarioProvider.error == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Inicio de sesión exitoso')),
+        
+      );
+      // Navegar a la pantalla principal si el inicio de sesión fue exitoso
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            const curve = Curves.easeInOut;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child, 
+            );
+          },
+          transitionDuration: const Duration(seconds: 2),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(usuarioProvider.error!)),
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -85,7 +138,7 @@ class _LoginPageState extends State<LoginPage>
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                // const SizedBox(height: 20),
                 Hero(
                   tag: 'textHero',
                   child: RichText(
@@ -124,10 +177,14 @@ class _LoginPageState extends State<LoginPage>
                 ),
                 const SizedBox(height: 20),
                 _buildTextField(
-                    AppLocalizations.of(context)!.translate('email'), false),
+                    AppLocalizations.of(context)!.translate('email'),
+                    false,
+                    _emailController),
                 const SizedBox(height: 20),
                 _buildTextField(
-                    AppLocalizations.of(context)!.translate('password'), true),
+                    AppLocalizations.of(context)!.translate('password'),
+                    true,
+                    _passwordController),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -208,28 +265,7 @@ class _LoginPageState extends State<LoginPage>
                               horizontal: 30, vertical: 15),
                         ),
                         onPressed: () {
-                          Navigator.of(context).pushReplacement(
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      MyHomePage(),
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                const begin = Offset(0.0, 1.0);
-                                const end = Offset.zero;
-                                const curve = Curves.easeInOut;
-
-                                var tween = Tween(begin: begin, end: end)
-                                    .chain(CurveTween(curve: curve));
-
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                              transitionDuration: const Duration(seconds: 2),
-                            ),
-                          );
+                          _loginUser(context);
                         },
                         child: Text(
                           AppLocalizations.of(context)!.translate('access'),
@@ -309,8 +345,10 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  Widget _buildTextField(String label, bool isPassword) {
+  Widget _buildTextField(
+      String label, bool isPassword, TextEditingController controller) {
     return TextField(
+      controller: controller,
       obscureText: isPassword,
       decoration: InputDecoration(
         labelText: label,

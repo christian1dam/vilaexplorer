@@ -140,7 +140,7 @@ class _RegisterPageState extends State<RegisterPage>
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                // const SizedBox(height: 20),
 
                 // Título
                 Hero(
