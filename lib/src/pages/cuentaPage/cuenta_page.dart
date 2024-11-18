@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
-import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
+import 'package:vilaexplorer/src/pages/login_page.dart';
 
 class CuentaPage extends StatefulWidget {
   final Function onClose;
@@ -270,25 +270,40 @@ class _CuentaPageState extends State<CuentaPage> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.center,
-                  child: SizedBox(
-                    width: 200,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        widget.onClose();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 40),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      child: const Text("Cerrar sesión", style: TextStyle(color: Colors.white)),
-                    ),
-                  ),
-                ),
+                Center(
+  child: ElevatedButton(
+    onPressed: () {
+      // Redirige a la página de inicio de sesión y muestra el mensaje de SnackBar
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => LoginPage(),
+        ),
+      );
+
+      // Muestra un SnackBar con el mensaje "Sesión cerrada"
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Sesión cerrada', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 3),
+        ),
+      );
+    },
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.green,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 40),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+    ),
+    child: Text(
+      AppLocalizations.of(context)!.translate('signout'),
+      style: TextStyle(color: const Color.fromARGB(255, 70, 56, 56)),
+    ),
+  ),
+),
+
+
                 SizedBox(height: 30),
                 Align(
                   alignment: Alignment.center, // Usa 'Alignment.center' en lugar de 'Center()'

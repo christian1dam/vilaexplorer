@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/addPlato.dart';
-import 'package:vilaexplorer/src/pages/gastronomia/detalle_platillo.dart';
 
 class GastronomiaPage extends StatefulWidget {
   final Function(String) onCategoriaPlatoSelected;

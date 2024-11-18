@@ -61,6 +61,7 @@
         "description": "描述",
         "desc_text": "描述如何准备这道菜",
         "recipe_text": "这道菜怎么做？",
+        "sending": "发送中...",
 
 
         "account": "我的账户",
@@ -74,7 +75,10 @@
         "more_information": "更多信息",
         "terms_conditions": "条款和条件",
         "privacy_policy": "隐私政策",
-        "version": "版本"
+        "version": "版本",
+        "signout": "退出登录",
+
+        "swipe_route": "滑动查看路线"   
 }
       
     

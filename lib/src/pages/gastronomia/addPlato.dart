@@ -88,23 +88,28 @@ class _AddPlatoState extends State<AddPlato> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/sending.gif', // Ruta a tu archivo GIF
-                      width: 250, // Ajusta el tamaño del GIF
-                      height: 250,
-                    ),
-                    const SizedBox(height: 20), // Espacio adicional debajo del GIF
-                    Text('Enviando',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontFamily: 'Poppins',
-                    ),)
-                  ],
-                ),
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Image.asset(
+      'assets/images/sending.gif',
+      width: 250,
+      height: 250,
+    ),
+    const SizedBox(height: 20),
+    Flexible(
+      child: Text(
+        AppLocalizations.of(context)!.translate('sending'),
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          fontFamily: 'Poppins',
+        ),
+      ),
+    ),
+  ],
+),
+
               ),
             ),
           );

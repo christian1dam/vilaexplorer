@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:vilaexplorer/l10n/app_localizations.dart';
 
 class HistoriaScreen extends StatefulWidget {
   final List<Map<String, String>> historias;
@@ -178,8 +179,8 @@ class _HistoriaScreenState extends State<HistoriaScreen>
                     },
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    "Deslizar para conocer la ruta",
+                  Text(
+                    AppLocalizations.of(context)!.translate('swipe_route'),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,

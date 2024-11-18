@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vilaexplorer/l10n/app_localizations.dart';
 
 class MonumentosPage extends StatelessWidget {
   final Function onClose;
@@ -59,7 +60,7 @@ class MonumentosPage extends StatelessWidget {
                           height: 35,
                           child: Center(
                             child: Text(
-                              'Monumentos',
+                              AppLocalizations.of(context)!.translate('sights'),
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,

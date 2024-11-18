@@ -61,6 +61,7 @@
     "description": "Descripció",
     "desc_text": "Descriu els passos per preparar la recepta",
     "recipe_text": "Com es prepara la recepta?",
+    "sending": "Enviant...",
 
 
     "account": "El meu compte",
@@ -74,7 +75,10 @@
     "more_information": "Més informació",
     "terms_conditions": "Termes i condicions",
     "privacy_policy": "Política de privadesa",
-    "version": "Versió"
+    "version": "Versió",
+    "signout": "Tancar sessió",
+
+    "swipe_route": "Desplaça per conèixer la ruta"   
 
 }
     

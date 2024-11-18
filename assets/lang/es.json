@@ -57,6 +57,7 @@
     "description": "Descripción",
     "desc_text": "Describe los pasos para preparar la receta",
     "recipe_text": "¿Cómo se prepara la receta?",
+    "sending": "Enviando...",
     
 
 
@@ -71,6 +72,9 @@
     "more_information": "Más Información",
     "terms_conditions": "Términos y Condiciones",
     "privacy_policy": "Política de Privacidad",
-    "version": "Versión"
+    "version": "Versión",
+    "signout": "Cerrar Sesión",
+
+    "swipe_route": "Desliza para conocer la ruta"    
   }
   

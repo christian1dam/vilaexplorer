@@ -61,6 +61,8 @@
       "description": "Description",
       "desc_text": "Décrivez les étapes pour préparer la recette",
       "recipe_text": "Comment préparer la recette?",
+      "sending": "Envoi en cours...",
+      
 
 
       "account": "Mon Compte",
@@ -74,6 +76,9 @@
       "more_information": "Plus d'informations",
       "terms_conditions": "Conditions générales",
       "privacy_policy": "Politique de confidentialité",
-      "version": "Version"
+      "version": "Version",
+    "signout": "Se déconnecter",
+
+    "swipe_route": "Faites glisser pour voir l'itinéraire"   
       
 }
