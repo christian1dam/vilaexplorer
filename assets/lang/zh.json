@@ -50,7 +50,31 @@
         "filter": "筛选",
         "ingredients": "配料",
         "recipe": "食谱",
-        "type": "类型"
+        "type": "类型",
+        "new_dish": "创建食谱",
+        "dish_name": "菜品名称",
+        "insert_dish_name": "请输入菜品名称",
+        "category": "类别",
+        "quantity": "数量",
+        "units": "单位",
+        "add_ingredient": "添加配料",
+        "description": "描述",
+        "desc_text": "描述如何准备这道菜",
+        "recipe_text": "这道菜怎么做？",
+
+
+        "account": "我的账户",
+        "edit_profile": "编辑个人资料",
+        "help": "帮助",
+        "frequent_questions": "常见问题",
+        "contact": "联系我们",
+        "settings": "设置",
+        "language": "语言",
+        "news": "新闻",
+        "more_information": "更多信息",
+        "terms_conditions": "条款和条件",
+        "privacy_policy": "隐私政策",
+        "version": "版本"
 }
       
     

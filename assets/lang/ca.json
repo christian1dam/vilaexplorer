@@ -50,7 +50,32 @@
     "filter": "Filtrar",
     "ingredients": "Ingredients",
     "recipe": "Recepta",
-    "type": "Tipus"
+    "type": "Tipus",
+    "new_dish": "Crear Recepta",
+    "dish_name": "Nom del Plat",
+    "insert_dish_name": "Introdueix el nom del plat",
+    "category": "Categoria",
+    "quantity": "Quantitat",
+    "units": "Unitats",
+    "add_ingredient": "Afegir Ingredient",
+    "description": "Descripció",
+    "desc_text": "Descriu els passos per preparar la recepta",
+    "recipe_text": "Com es prepara la recepta?",
+
+
+    "account": "El meu compte",
+    "edit_profile": "Editar perfil",
+    "help": "Ajuda",
+    "frequent_questions": "Preguntes freqüents",
+    "contact": "Ponte en contacte amb nosaltres",
+    "settings": "Configuració",
+    "language": "Idioma",
+    "news": "Notícies",
+    "more_information": "Més informació",
+    "terms_conditions": "Termes i condicions",
+    "privacy_policy": "Política de privadesa",
+    "version": "Versió"
+
 }
     
   

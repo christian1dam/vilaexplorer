@@ -2,7 +2,6 @@
 
     "villajoyosa": "Villajoyosa",
 
-  "_comment": "TRADUCCIONES PARA TODOS LOS REGISTROS / INICIOS DE SESIÓN",
 
     "login": "INICIAR SESIÓN",
     "register": "REGISTRO",
@@ -20,7 +19,6 @@
     "resend_in1": "Podrás reenviar en ",
     "resend_in2": " segundos.",
 
-    "_comment": "TRADUCCIONES PARA LA PAGINA PRINCIPAL",
 
     "mp_search": "Buscar un lugar, evento o dirección...",
     "traditions": "Tradiciones",
@@ -32,7 +30,6 @@
     "see_more": "Ver Más",
     "weather_number": "+2",
 
-    "_comment": "TRADUCCIONES PARA LA PAGINA TRADICIONES",
 
     "holidays_traditions": "Fiestas & Tradiciones",
     "search_traditions": "Buscar tradiciones o fiestas locales...",
@@ -40,20 +37,40 @@
     "popular": "Populares",
     "nearby": "Cercanos",
 
-    "_comment": "TRADUCCIONES PARA LA PAGINA FAVORITOS",
 
     "search_favorites": "Buscar un lugar, restaurante o tradición...",
     "monuments_place": "Monumentos / Lugares",
 
-    "_comment": "TRADUCCIONES PARA LA PAGINA GASTRONOMÍA",
 
     "search_recipe": "Buscar receta...",
     "filter": "Filtrar",
     "ingredients": "Ingredientes",
     "recipe": "Receta",
     "type": "Tipo",
-    "new_dish": "Nueva Receta"
+    "new_dish": "Crear Receta",
+    "dish_name": "Nombre del Plato",
+    "insert_dish_name": "Introduce el nombre del plato",
+    "category": "Categoría",
+    "quantity": "Cantidad",
+    "units": "Unidades",
+    "add_ingredient": "Agregar Ingrediente",
+    "description": "Descripción",
+    "desc_text": "Describe los pasos para preparar la receta",
+    "recipe_text": "¿Cómo se prepara la receta?",
+    
 
 
+    "account": "Mi Cuenta",
+    "edit_profile": "Editar Perfil",
+    "help": "Ayuda",
+    "frequent_questions": "Preguntas Frecuentes",
+    "contact": "Ponte en contacto con nosotros",
+    "settings": "Ajustes",
+    "language": "Idioma",
+    "news": "Noticias",
+    "more_information": "Más Información",
+    "terms_conditions": "Términos y Condiciones",
+    "privacy_policy": "Política de Privacidad",
+    "version": "Versión"
   }
   
