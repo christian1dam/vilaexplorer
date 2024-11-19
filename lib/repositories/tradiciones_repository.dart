@@ -14,9 +14,20 @@ class FiestaTradicionRepository {
 
   // Obtener todas las fiestas tradicionales
   Future<List<Tradiciones>> getAllFiestas() async {
-    final response = await _apiClient.get('/fiesta_tradicion/todos');
-    final List<dynamic> data = json.decode(response.body);
-    return data.map((json) => Tradiciones.fromMap(json)).toList();
+    try {
+      final response = await _apiClient.get('/fiesta_tradicion/todos');
+      if (response.statusCode == 200) {
+        final List<dynamic> tradicionesList = json.decode(response.body);
+        return tradicionesList
+            .map((tradicion) => Tradiciones.fromMap(tradicion))
+            .toList();
+      } else {
+        throw Exception(
+            'Error al obtener las tradiciones: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error al obtener las tradiciones: $e');
+    }
   }
 
   // Buscar fiestas tradicionales por palabra clave

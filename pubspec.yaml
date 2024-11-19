@@ -20,6 +20,7 @@ dependencies:
   provider: ^6.1.2
   http: ^1.2.2
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -37,6 +38,7 @@ flutter:
     - assets/images_historias/
     - assets/historias.json
     - assets/lang/
+    - assets/no-image.jpg
 
   fonts:
     - family: Poppins

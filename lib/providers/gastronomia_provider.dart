@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:vilaexplorer/models/gastronomia/plato.dart';
 import 'package:vilaexplorer/repositories/gastronomia_repository.dart';
 
-class GastronomiaProvider extends ChangeNotifier {
-  final GastronomiaRepository _repository = GastronomiaRepository();
+class GastronomiaProvider with ChangeNotifier {
+  final GastronomiaRepository platoRepository = GastronomiaRepository();
 
   // Estado local
-  List<Plato>? _todosLosPlatos;
+  List<Plato>? _platos;
   Plato? _platoSeleccionado;
   String? _error;
   bool _isLoading = false;
 
+
   // Getters
-  List<Plato>? get todosLosPlatos => _todosLosPlatos;
+  List<Plato>? get platos => _platos;
   Plato? get platoSeleccionado => _platoSeleccionado;
   String? get error => _error;
   bool get isLoading => _isLoading;
@@ -21,7 +22,7 @@ class GastronomiaProvider extends ChangeNotifier {
   Future<void> fetchAllPlatos() async {
     _setLoading(true);
     try {
-      _todosLosPlatos = await _repository.getAllPlatos();
+      _platos = await platoRepository.getAllPlatos();
       _error = null;
     } catch (e) {
       _error = 'Error al obtener los platos: $e';
@@ -34,7 +35,7 @@ class GastronomiaProvider extends ChangeNotifier {
   Future<void> fetchPlatoById(int id) async {
     _setLoading(true);
     try {
-      _platoSeleccionado = await _repository.getPlatoById(id);
+      _platoSeleccionado = await platoRepository.getPlatoById(id);
       _error = null;
     } catch (e) {
       _error = 'Error al obtener el plato: $e';
