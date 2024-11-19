@@ -13,7 +13,7 @@ void main() {
 
 // Envolver MyApp con MultiProvider para inyectar los Providers
 class AppState extends StatelessWidget {
-  const AppState({Key? key}) : super(key: key);
+  const AppState({super.key});
 
   @override
   Widget build(BuildContext context) {
