@@ -17,40 +17,46 @@ class TradicionesProvider extends ChangeNotifier {
   String? get error => _error;
   bool get isLoading => _isLoading;
 
+  // Métodos públicos para manejar el estado
+
   // Obtener todas las tradiciones
   Future<void> fetchAllTradiciones() async {
-    _setLoading(true);
-    try {
+    await _executeWithLoading(() async {
       _todasLasTradiciones = await _repository.getAllFiestas();
-      _error = null;
-    } catch (e) {
-      _error = 'Error al obtener tradiciones: $e';
-    } finally {
-      _setLoading(false);
-    }
+    }, onError: 'Error al obtener tradiciones');
   }
 
   // Obtener una tradición por ID
   Future<void> fetchTradicionById(int id) async {
-    _setLoading(true);
-    try {
+    await _executeWithLoading(() async {
       _tradicionSeleccionada = await _repository.getFiestaById(id);
-      _error = null;
-    } catch (e) {
-      _error = 'Error al obtener la tradición: $e';
-    } finally {
-      _setLoading(false);
-    }
+    }, onError: 'Error al obtener la tradición');
   }
 
   // Buscar tradiciones por palabra clave
   Future<void> searchTradiciones(String keyword) async {
+    await _executeWithLoading(() async {
+      _todasLasTradiciones = await _repository.searchFiestas(keyword);
+    }, onError: 'Error al buscar tradiciones');
+  }
+
+  // Limpiar errores
+  void limpiarError() {
+    _error = null;
+    notifyListeners();
+  }
+
+  // Métodos privados para el manejo del estado
+
+  // Ejecutar una función con manejo del estado de carga
+  Future<void> _executeWithLoading(Future<void> Function() action,
+      {required String onError}) async {
     _setLoading(true);
     try {
-      _todasLasTradiciones = await _repository.searchFiestas(keyword);
+      await action();
       _error = null;
     } catch (e) {
-      _error = 'Error al buscar tradiciones: $e';
+      _error = '$onError: $e';
     } finally {
       _setLoading(false);
     }
@@ -59,12 +65,6 @@ class TradicionesProvider extends ChangeNotifier {
   // Actualizar el estado de carga
   void _setLoading(bool value) {
     _isLoading = value;
-    notifyListeners();
-  }
-
-  // Limpiar errores
-  void limpiarError() {
-    _error = null;
     notifyListeners();
   }
 }

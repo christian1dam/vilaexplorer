@@ -38,6 +38,7 @@ flutter:
     - assets/images_historias/
     - assets/historias.json
     - assets/lang/
+    - assets/no-image.jpg
 
   fonts:
     - family: Poppins

@@ -4,7 +4,7 @@ import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 class FiestaCard extends StatelessWidget {
   final String nombre;
   final String fecha;
-  final String imagen;
+  final Image imagen;
   final VoidCallback detalleTap; // Callback
 
   const FiestaCard({
@@ -35,7 +35,7 @@ class FiestaCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius:
                         const BorderRadius.vertical(top: Radius.circular(15)),
-                    child: Image.asset(imagen, fit: BoxFit.cover),
+                    child: FadeInImage(placeholder: AssetImage("assets/no-image.jpg"), image: imagen.image),
                   ),
                 ),
                 Container(
