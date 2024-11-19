@@ -212,10 +212,10 @@ class _TradicionesPageState extends State<TradicionesPage> {
                           itemBuilder: (context, index) {
                             final tradicion = tradiciones[index];
                             return FiestaCard(
-                              nombre: tradicion.nombre ?? 'Nombre no disponible',
-                              fecha: tradicion.fecha ?? 'Fecha no disponible',
-                              imagen: tradicion.getImagen(),
-                              detalleTap: () => _toggleContainer(tradicion.nombre ?? ''),
+                              nombre: tradicion.nombre,
+                              fecha: tradicion.fecha,
+                              imagen:  tradicion.getImagen(),
+                              detalleTap: () => _toggleContainer(tradicion.nombre),
                             );
                           },
                         ),
@@ -252,7 +252,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
           texto,
           style: const TextStyle(color: Colors.white),
         ),
-      ),
+      ),  
     );
   }
 }

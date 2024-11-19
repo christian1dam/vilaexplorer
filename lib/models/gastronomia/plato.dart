@@ -10,9 +10,11 @@ class Plato {
   String ingredientes;
   String receta;
   bool estado;
+  String imagen;
+  String imagenBase64;
   TipoPlato tipoPlato;
   Usuario autor;
-  Usuario aprobador;
+  Usuario? aprobador;
 
   Plato({
     required this.platoId,
@@ -21,9 +23,11 @@ class Plato {
     required this.ingredientes,
     required this.receta,
     required this.estado,
+    required this.imagen,
+    required this.imagenBase64,
     required this.tipoPlato,
     required this.autor,
-    required this.aprobador,
+    this.aprobador,
   });
 
   factory Plato.fromJson(String str) => Plato.fromMap(json.decode(str));
@@ -37,9 +41,11 @@ class Plato {
         ingredientes: json["ingredientes"],
         receta: json["receta"],
         estado: json["estado"],
+        imagen: json["imagen"],
+        imagenBase64: json["imagenBase64"],
         tipoPlato: TipoPlato.fromMap(json["tipoPlato"]),
         autor: Usuario.fromMap(json["autor"]),
-        aprobador: Usuario.fromMap(json["aprobador"]),
+        aprobador: json["aprobador"] != null ? Usuario.fromMap(json["aprobador"]) : null,
       );
 
   Map<String, dynamic> toMap() => {
@@ -49,8 +55,10 @@ class Plato {
         "ingredientes": ingredientes,
         "receta": receta,
         "estado": estado,
+        "imagen": imagen,
+        "imagenBase64": imagenBase64,
         "tipoPlato": tipoPlato.toMap(),
         "autor": autor.toMap(),
-        "aprobador": aprobador.toMap(),
+        "aprobador": aprobador?.toMap(),
       };
 }
