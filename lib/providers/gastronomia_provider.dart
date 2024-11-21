@@ -11,17 +11,18 @@ class GastronomiaProvider with ChangeNotifier {
   String? _error;
   bool _isLoading = false;
 
-
   // Getters
   List<Plato>? get platos => _platos;
   Plato? get platoSeleccionado => _platoSeleccionado;
   String? get error => _error;
   bool get isLoading => _isLoading;
 
-  // Obtener todos los platos
+  // Obtener todos los platos con retraso artificial
   Future<void> fetchAllPlatos() async {
     _setLoading(true);
     try {
+      // Simula un retraso de 2 segundos antes de cargar los datos reales
+      await Future.delayed(const Duration(seconds: 2));
       _platos = await platoRepository.getAllPlatos();
       _error = null;
     } catch (e) {
