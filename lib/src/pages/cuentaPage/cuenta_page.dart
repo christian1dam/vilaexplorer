@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/providers/usuarios_provider.dart';
+import 'package:vilaexplorer/src/pages/login_page.dart';
 
 class CuentaPage extends StatefulWidget {
   final Function onClose;
@@ -316,7 +317,29 @@ class _CuentaPageState extends State<CuentaPage> {
                     child: ElevatedButton(
                       onPressed: () {
                         usuarioProvider.cerrarSesion();
-                        widget.onClose();
+                        Navigator.of(context).push(
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      LoginPage(),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                // Cambiar Offset a (-1.0, 0.0) para deslizar hacia la izquierda
+                                const begin = Offset(-0.0, 1.0);
+                                const end = Offset.zero;
+                                const curve = Curves.easeInOut;
+
+                                var tween = Tween(begin: begin, end: end)
+                                    .chain(CurveTween(curve: curve));
+
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                              transitionDuration: const Duration(seconds: 1),
+                            ),
+                          );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,

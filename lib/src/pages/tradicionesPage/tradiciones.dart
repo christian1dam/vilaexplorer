@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
@@ -244,7 +242,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
       child: TextButton(
         onPressed: () {},
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
+          backgroundColor: WidgetStateProperty.all(
             Color.fromRGBO(45, 45, 45, 1),
           ),
         ),

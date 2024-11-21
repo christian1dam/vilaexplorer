@@ -3,7 +3,8 @@
 
   class ApiClient {
     final String _baseUrl =
-        'http://192.168.100.103:8080/api/v0'; // Cambia por tu URL base
+        // 'http://192.168.100.103:8080/api/v0'; Cambia por tu URL base
+        'http://172.20.10.2:8080/api/v0';
 
     // GET request
     Future<http.Response> get(String endpoint) async {
