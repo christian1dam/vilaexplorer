@@ -75,29 +75,29 @@ class _RegisterPageState extends State<RegisterPage>
       return;
     }
 
-    final bool success = await usuarioProvider.registrarUsuarioDesdeFormulario(
-      nombre: name,
-      email: email,
-      password: password,
-      confirmPassword: confirmPassword,
-    );
+    // final bool success = await usuarioProvider.registrarUsuarioDesdeFormulario(
+    //   nombre: name,
+    //   email: email,
+    //   password: password,
+    //   confirmPassword: confirmPassword,
+    // );
 
     // Verifica si el widget sigue montado antes de interactuar con el BuildContext
     if (!mounted) return;
 
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Usuario registrado exitosamente')),
-      );
+    // if (success) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text('Usuario registrado exitosamente')),
+    //   );
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const LoginPage()),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(usuarioProvider.error ?? 'Error desconocido')),
-      );
-    }
+    //   Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(builder: (context) => const LoginPage()),
+    //   );
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text(usuarioProvider.error ?? 'Error desconocido')),
+    //   );
+    // }
   }
 
   @override

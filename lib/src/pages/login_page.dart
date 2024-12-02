@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/providers/usuarios_provider.dart';
+import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
 import 'package:vilaexplorer/src/pages/passwordRecover_page.dart';
 import 'package:vilaexplorer/src/pages/register_page.dart';
@@ -24,8 +25,8 @@ class _LoginPageState extends State<LoginPage>
   late Animation<double> _buttonAnimation;
 
   void _loginUser(BuildContext context) async {
-    final usuarioProvider =
-        Provider.of<UsuarioProvider>(context, listen: false);
+    final usuarioService =
+        Provider.of<UsuarioService>(context, listen: false);
 
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
@@ -37,9 +38,9 @@ class _LoginPageState extends State<LoginPage>
       return;
     }
 
-    await usuarioProvider.autenticarUsuario(email, password);
+    await usuarioService.loginUsuario(email, password);
 
-    if (usuarioProvider.error == null) {
+    if (usuarioService.error == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Inicio de sesión exitoso')),
         
@@ -66,7 +67,7 @@ class _LoginPageState extends State<LoginPage>
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(usuarioProvider.error!)),
+        SnackBar(content: Text(usuarioService.error!)),
       );
     }
   }

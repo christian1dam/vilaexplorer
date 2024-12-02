@@ -4,20 +4,23 @@ import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
 
 class UsuarioService extends ChangeNotifier {
+  late Usuario? usuarioAutenticado;
+  String? _error;
+
   final ApiClient _apiClient = ApiClient();
+
+  String? get error => _error;
 
   // Método para crear un nuevo usuario
   Future<bool> signupUsuario(
       String nombre, String email, String password) async {
     const String endpoint = '/auth/signup?rol=Cliente';
-    final Map<String, String> body = {
-      "nombre": nombre,
-      "email": email,
-      "password": password,
-    };
+
+    Usuario usuario = Usuario(email: email, password: password);
 
     try {
-      final response = await _apiClient.post(endpoint, body: body);
+      final response =
+          await _apiClient.post(endpoint, body: usuario.registerRequest());
       if (response.statusCode == 201) {
         return true; // Usuario creado exitosamente
       } else {
@@ -31,25 +34,33 @@ class UsuarioService extends ChangeNotifier {
   }
 
   // Método para iniciar sesión
-  Future<Usuario?> loginUsuario(String email, String password) async {
+  Future<void> loginUsuario(String email, String password) async {
     const String endpoint = '/auth/signin';
-    final Map<String, String> body = {
-      "email": email,
-      "password": password,
-    };
+    Usuario usuario = Usuario(email: email, password: password);
 
     try {
-      final response = await _apiClient.post(endpoint, body: body);
+      final response =
+          await _apiClient.post(endpoint, body: usuario.loginRequest());
       if (response.statusCode == 200) {
         final Usuario usuario = Usuario.fromMap(jsonDecode(response.body));
-        return usuario; // Retorna el usuario autenticado
+        usuarioAutenticado =
+            usuario; // Guarda en el servicio el usuario autenticado
+        notifyListeners();
       } else {
         debugPrint('Error al iniciar sesión: ${response.body}');
-        return null; // Fallo en el inicio de sesión
+        notifyListeners(); // Fallo en el inicio de sesión
       }
     } catch (e) {
+      _error = 'Error al autenticar al usuario: $e';
       debugPrint('Excepción al iniciar sesión: $e');
-      return null;
+      notifyListeners();
     }
+  }
+
+  // Método para cerrar sesión
+  void cerrarSesion() {
+    usuarioAutenticado = null;
+    _error = null;
+    notifyListeners();
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
-import 'package:vilaexplorer/providers/usuarios_provider.dart';
+import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/login_page.dart';
 
 class CuentaPage extends StatefulWidget {
@@ -96,8 +96,7 @@ class _CuentaPageState extends State<CuentaPage> {
 
   @override
   Widget build(BuildContext context) {
-    final usuarioProvider = Provider.of<UsuarioProvider>(context);
-    final usuario = usuarioProvider.usuarioAutenticado;
+    final usuarioService = Provider.of<UsuarioService>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -158,13 +157,13 @@ class _CuentaPageState extends State<CuentaPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              usuario!.nombre,
+                              usuarioService.usuarioAutenticado!.username!,
                               style: const TextStyle(
                                   fontSize: 20, color: Colors.white),
                             ),
                             const SizedBox(height: 5),
                             Text(
-                              usuario.email,
+                              usuarioService.usuarioAutenticado!.email!,
                               style: const TextStyle(
                                   fontSize: 16, color: Colors.white70),
                             ),
@@ -184,7 +183,7 @@ class _CuentaPageState extends State<CuentaPage> {
                 ),
                 const SizedBox(height: 5),
                 TextFormField(
-                  initialValue: usuario!.password,
+                  initialValue: usuarioService.usuarioAutenticado!.password,
                   obscureText: true,
                   decoration: const InputDecoration(
                     hintText: "******",
@@ -316,30 +315,30 @@ class _CuentaPageState extends State<CuentaPage> {
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () {
-                        usuarioProvider.cerrarSesion();
+                        usuarioService.cerrarSesion();
                         Navigator.of(context).push(
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      LoginPage(),
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                // Cambiar Offset a (-1.0, 0.0) para deslizar hacia la izquierda
-                                const begin = Offset(-0.0, 1.0);
-                                const end = Offset.zero;
-                                const curve = Curves.easeInOut;
+                          PageRouteBuilder(
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    LoginPage(),
+                            transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) {
+                              // Cambiar Offset a (-1.0, 0.0) para deslizar hacia la izquierda
+                              const begin = Offset(-0.0, 1.0);
+                              const end = Offset.zero;
+                              const curve = Curves.easeInOut;
 
-                                var tween = Tween(begin: begin, end: end)
-                                    .chain(CurveTween(curve: curve));
+                              var tween = Tween(begin: begin, end: end)
+                                  .chain(CurveTween(curve: curve));
 
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                              transitionDuration: const Duration(seconds: 1),
-                            ),
-                          );
+                              return SlideTransition(
+                                position: animation.drive(tween),
+                                child: child,
+                              );
+                            },
+                            transitionDuration: const Duration(seconds: 1),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,

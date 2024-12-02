@@ -24,14 +24,14 @@ class _TradicionesPageState extends State<TradicionesPage> {
   bool isSearchActive = false;
   TextEditingController searchController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    // Llamar a fetchAllTradiciones cuando se inicia la página
-    Future.microtask(() {
-      Provider.of<TradicionesProvider>(context, listen: false).fetchAllTradiciones();
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // Llamar a fetchAllTradiciones cuando se inicia la página
+  //   Future.microtask(() {
+  //     Provider.of<TradicionesProvider>(context, listen: false).fetchAllTradiciones();
+  //   });
+  // }
 
   void _toggleContainer(String nombreFiesta) {
     setState(() {
@@ -55,32 +55,32 @@ class _TradicionesPageState extends State<TradicionesPage> {
 
     return Consumer<TradicionesProvider>(
       builder: (context, provider, child) {
-        if (provider.isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+        // if (provider.isLoading) {
+        //   return const Center(
+        //     child: CircularProgressIndicator(),
+        //   );
+        // }
 
-        if (provider.error != null) {
-          return Center(
-            child: Text(
-              provider.error!,
-              style: const TextStyle(color: Colors.red, fontSize: 18),
-              textAlign: TextAlign.center,
-            ),
-          );
-        }
+        // if (provider.error != null) {
+        //   return Center(
+        //     child: Text(
+        //       provider.error!,
+        //       style: const TextStyle(color: Colors.red, fontSize: 18),
+        //       textAlign: TextAlign.center,
+        //     ),
+        //   );
+        // }
 
-        final tradiciones = provider.todasLasTradiciones;
+        // final tradiciones = provider.todasLasTradiciones;
 
-        if (tradiciones == null || tradiciones.isEmpty) {
-          return const Center(
-            child: Text(
-              'No se encontraron tradiciones.',
-              style: TextStyle(fontSize: 18),
-            ),
-          );
-        }
+        // if (tradiciones == null || tradiciones.isEmpty) {
+        //   return const Center(
+        //     child: Text(
+        //       'No se encontraron tradiciones.',
+        //       style: TextStyle(fontSize: 18),
+        //     ),
+        //   );
+        // }
 
         return Stack(
           children: [
@@ -206,15 +206,15 @@ class _TradicionesPageState extends State<TradicionesPage> {
                       Expanded(
                         child: ListView.builder(
                           padding: const EdgeInsets.all(0),
-                          itemCount: tradiciones.length,
+                          // itemCount: tradiciones.length,
                           itemBuilder: (context, index) {
-                            final tradicion = tradiciones[index];
-                            return FiestaCard(
-                              nombre: tradicion.nombre,
-                              fecha: tradicion.fecha,
-                              imagen:  tradicion.getImagen(),
-                              detalleTap: () => _toggleContainer(tradicion.nombre),
-                            );
+                            // final tradicion = tradiciones[index];
+                            // return FiestaCard(
+                            //   // nombre: tradicion.nombre,
+                            //   // fecha: tradicion.fecha,
+                            //   // imagen:  tradicion.getImagen(),
+                            //   // detalleTap: () => _toggleContainer(tradicion.nombre),
+                            // );
                           },
                         ),
                       ),

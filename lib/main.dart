@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/gastronomia_provider.dart';
 import 'package:vilaexplorer/providers/tradiciones_provider.dart';
 import 'package:vilaexplorer/providers/usuarios_provider.dart';
+import 'package:vilaexplorer/service/usuario_service.dart';
 import 'src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
 
@@ -19,7 +20,7 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UsuarioProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => UsuarioService(), lazy: false),
         ChangeNotifierProvider(
             create: (_) => TradicionesProvider(), lazy: false),
         ChangeNotifierProvider(
