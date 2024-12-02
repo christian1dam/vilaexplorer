@@ -2,10 +2,9 @@
   import 'package:http/http.dart' as http;
 
   class ApiClient {
-    final String _baseUrl =
-        // 'http://192.168.100.103:8080/api/v0'; Cambia por tu URL base
+    final String _baseUrl = 'http://172.28.240.1:8080/api/v0';
         // 'http://172.20.10.2:8080/api/v0'; // Wifi Móvil
-        'http://192.168.0.31:8080/api/v0'; // Red
+        // 'http://192.168.0.31:8080/api/v0'; // Red
 
     // GET request
     Future<http.Response> get(String endpoint) async {

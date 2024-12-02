@@ -1,27 +1,20 @@
 import 'dart:convert';
 
-import 'package:vilaexplorer/models/usuario/rol.dart';
-import 'package:vilaexplorer/models/usuario/role.dart';
-
 class Usuario {
-  int? idUsuario;
-  String nombre;
+  int id;
+  String username;
   String email;
-  String password;
-  DateTime fechaCreacion;
-  bool activo;
-  List<Role>? roles;
-  Rol? rolActual;
+  List<String> roles;
+  String token;
+  String type;
 
   Usuario({
-    this.idUsuario,
-    required this.nombre,
+    required this.id,
+    required this.username,
     required this.email,
-    required this.password,
-    required this.fechaCreacion,
-    required this.activo,
-    this.roles,
-    this.rolActual,
+    required this.roles,
+    required this.token,
+    required this.type,
   });
 
   factory Usuario.fromJson(String str) => Usuario.fromMap(json.decode(str));
@@ -29,26 +22,25 @@ class Usuario {
   String toJson() => json.encode(toMap());
 
   factory Usuario.fromMap(Map<String, dynamic> json) => Usuario(
-        idUsuario: json["idUsuario"],
-        nombre: json["nombre"],
+        id: json["id"],
+        username: json["username"],
         email: json["email"],
-        password: json["password"],
-        fechaCreacion: DateTime.parse(json["fechaCreacion"]),
-        activo: json["activo"],
-        roles: json["roles"] != null
-            ? List<Role>.from(json["roles"].map((x) => Role.fromMap(x)))
-            : null,
-        rolActual:
-            json["rolActual"] != null ? Rol.fromMap(json["rolActual"]) : null,
+        roles: List<String>.from(json["roles"].map((x) => x)),
+        token: json["token"],
+        type: json["type"],
       );
 
-  // Este método genera el mapa que se enviará al servidor
   Map<String, dynamic> toMap() => {
-        "nombre": nombre,
+        "id": id,
+        "username": username,
+        "email": email,
+        "roles": List<dynamic>.from(roles.map((x) => x)),
+        "token": token,
+        "type": type,
+      };
+
+  Map<String, dynamic> loginRequest(String email, String password) => {
         "email": email,
         "password": password,
-        "fechaCreacion":
-            "${fechaCreacion.year.toString().padLeft(4, '0')}-${fechaCreacion.month.toString().padLeft(2, '0')}-${fechaCreacion.day.toString().padLeft(2, '0')}",
-        "activo": activo,
       };
 }

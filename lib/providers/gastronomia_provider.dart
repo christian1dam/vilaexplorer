@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/models/gastronomia/plato.dart';
-import 'package:vilaexplorer/repositories/gastronomia_repository.dart';
+import 'package:vilaexplorer/repositories/gastronomia_service.dart';
 
 class GastronomiaProvider with ChangeNotifier {
-  final GastronomiaRepository platoRepository = GastronomiaRepository();
+  final GastronomiaService platoRepository = GastronomiaService();
 
   // Estado local
   List<Plato>? _platos;

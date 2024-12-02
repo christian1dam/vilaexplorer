@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
-import 'package:vilaexplorer/repositories/usuario_repository.dart';
+import 'package:vilaexplorer/repositories/usuario_service.dart';
 
 class UsuarioProvider extends ChangeNotifier {
-  final UsuarioRepository _usuarioRepository = UsuarioRepository();
+  final UsuarioService _usuarioRepository = UsuarioService();
 
   // Estado local
   Usuario? _usuarioAutenticado;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/models/tradiciones/tradiciones.dart';
-import 'package:vilaexplorer/repositories/tradiciones_repository.dart';
+import 'package:vilaexplorer/repositories/tradiciones_service.dart';
 
 class TradicionesProvider extends ChangeNotifier {
-  final FiestaTradicionRepository _repository = FiestaTradicionRepository();
+  final FiestaTradicionService _repository = FiestaTradicionService();
 
   // Estado local
   List<Tradiciones>? _todasLasTradiciones;

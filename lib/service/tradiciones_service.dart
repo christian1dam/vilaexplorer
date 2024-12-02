@@ -1,9 +1,9 @@
 import 'package:vilaexplorer/models/page.dart';
 import 'package:vilaexplorer/models/tradiciones/tradiciones.dart';
-import 'package:vilaexplorer/repositories/tradiciones_repository.dart';
+import 'package:vilaexplorer/repositories/tradiciones_service.dart';
 
 class TradicionesService {
-  final FiestaTradicionRepository _repository = FiestaTradicionRepository();
+  final FiestaTradicionService _repository = FiestaTradicionService();
 
   // Obtener todas las tradiciones
   Future<List<Tradiciones>> getAllTradiciones() async {

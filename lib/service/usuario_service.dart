@@ -1,58 +1,55 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
-import 'package:vilaexplorer/repositories/usuario_repository.dart';
 
-class UsuarioService {
-  final UsuarioRepository _usuarioRepository = UsuarioRepository();
+class UsuarioService extends ChangeNotifier {
+  final ApiClient _apiClient = ApiClient();
 
-  // Obtener un usuario por ID
-  Future<Usuario> obtenerUsuarioPorId(int id) async {
+  // Método para crear un nuevo usuario
+  Future<bool> signupUsuario(
+      String nombre, String email, String password) async {
+    const String endpoint = '/auth/signup?rol=Cliente';
+    final Map<String, String> body = {
+      "nombre": nombre,
+      "email": email,
+      "password": password,
+    };
+
     try {
-      return await _usuarioRepository.getUsuarioById(id);
+      final response = await _apiClient.post(endpoint, body: body);
+      if (response.statusCode == 201) {
+        return true; // Usuario creado exitosamente
+      } else {
+        debugPrint('Error al crear usuario: ${response.body}');
+        return false; // Fallo en la creación del usuario
+      }
     } catch (e) {
-      throw Exception('Error al obtener el usuario por ID: $e');
+      debugPrint('Excepción al crear usuario: $e');
+      return false;
     }
   }
 
-  // Obtener un usuario por nombre y contraseña
-  Future<Usuario> obtenerUsuarioPorNombreYPassword(
-      String nombre, String password) async {
-    try {
-      return await _usuarioRepository.getUsuarioByNombreYPassword(
-          nombre, password);
-    } catch (e) {
-      throw Exception('Error al autenticar al usuario: $e');
-    }
-  }
+  // Método para iniciar sesión
+  Future<Usuario?> loginUsuario(String email, String password) async {
+    const String endpoint = '/auth/signin';
+    final Map<String, String> body = {
+      "email": email,
+      "password": password,
+    };
 
-// Crear un nuevo usuario con un rol
-  Future<Usuario> crearUsuario(Usuario usuario, String rol) async {
     try {
-      print("Se ha entrado en el Service");
-      final usuarioCreado =
-          await _usuarioRepository.createUsuario(usuario, rol);
-      print("Usuario creado en el Service: $usuarioCreado");
-      return usuarioCreado;
+      final response = await _apiClient.post(endpoint, body: body);
+      if (response.statusCode == 200) {
+        final Usuario usuario = Usuario.fromMap(jsonDecode(response.body));
+        return usuario; // Retorna el usuario autenticado
+      } else {
+        debugPrint('Error al iniciar sesión: ${response.body}');
+        return null; // Fallo en el inicio de sesión
+      }
     } catch (e) {
-      print("Error en el Service al crear usuario: $e");
-      throw Exception('Error al crear el usuario: $e');
-    }
-  }
-
-  // Actualizar un usuario existente
-  Future<Usuario> actualizarUsuario(int id, Usuario usuario) async {
-    try {
-      return await _usuarioRepository.updateUsuario(id, usuario);
-    } catch (e) {
-      throw Exception('Error al actualizar el usuario: $e');
-    }
-  }
-
-  // Borrado lógico de un usuario
-  Future<void> desactivarUsuario(int id) async {
-    try {
-      await _usuarioRepository.deleteUsuarioLogico(id);
-    } catch (e) {
-      throw Exception('Error al desactivar el usuario: $e');
+      debugPrint('Excepción al iniciar sesión: $e');
+      return null;
     }
   }
 }
