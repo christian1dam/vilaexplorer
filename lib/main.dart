@@ -5,6 +5,8 @@ import 'package:vilaexplorer/providers/gastronomia_provider.dart';
 import 'package:vilaexplorer/providers/tradiciones_provider.dart';
 import 'package:vilaexplorer/providers/usuarios_provider.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
+import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
+import 'package:vilaexplorer/src/pages/register_page.dart';
 import 'src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
 
@@ -59,7 +61,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Vila Explorer',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const SplashPage(),
+      home: RegisterPage(),
       locale: _locale, // Define el idioma actual
       supportedLocales: const [
         Locale('en'), // Inglés

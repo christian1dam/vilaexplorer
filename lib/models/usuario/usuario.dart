@@ -52,7 +52,7 @@ class Usuario {
 
   Map<String, dynamic> registerRequest() =>
       {
-        "username": username,
+        "nombre": username,
         "email": email,
         "password": password,
       };

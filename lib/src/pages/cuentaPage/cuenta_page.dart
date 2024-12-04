@@ -157,7 +157,7 @@ class _CuentaPageState extends State<CuentaPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              usuarioService.usuarioAutenticado!.username!,
+                              usuarioService.usuarioAutenticado!.nombre!,
                               style: const TextStyle(
                                   fontSize: 20, color: Colors.white),
                             ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/api/api_client.dart';
+import 'package:vilaexplorer/exception/invalid_password_exception.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
 
 class UsuarioService extends ChangeNotifier {
@@ -13,14 +14,15 @@ class UsuarioService extends ChangeNotifier {
 
   // Método para crear un nuevo usuario
   Future<bool> signupUsuario(
-      String nombre, String email, String password) async {
+      String nombre, String email, String password, String assertPassword) async {
     const String endpoint = '/auth/signup?rol=Cliente';
 
-    Usuario usuario = Usuario(email: email, password: password);
+    if(password != assertPassword) throw InvalidPasswordException("Las contraseñas no coinciden");
+    
+    Usuario usuario = Usuario(nombre: nombre, email: email, password: password);
 
     try {
-      final response =
-          await _apiClient.post(endpoint, body: usuario.registerRequest());
+      final response = await _apiClient.post(endpoint, body: usuario.registerRequest());
       if (response.statusCode == 201) {
         return true; // Usuario creado exitosamente
       } else {

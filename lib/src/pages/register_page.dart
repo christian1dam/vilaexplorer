@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/providers/usuarios_provider.dart';
+import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/login_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -59,45 +60,31 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   void _registerUser(BuildContext context) async {
-    final usuarioProvider =
-        Provider.of<UsuarioProvider>(context, listen: false);
+    final usuarioSerivce = Provider.of<UsuarioService>(context, listen: false);
 
     final String name = _nameController.text.trim();
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
     final String confirmPassword = _confirmPasswordController.text.trim();
 
-    if (password != confirmPassword) {
-      if (!mounted) return; // Verifica si el widget sigue montado
+    print(name);
+    try {
+      if (await usuarioSerivce.signupUsuario(
+          name, email, password, confirmPassword)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Usuario registrado exitosamente')),
+        );
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Las contraseñas no coinciden')),
+        SnackBar(content: Text(e.toString())),
       );
       return;
     }
-
-    // final bool success = await usuarioProvider.registrarUsuarioDesdeFormulario(
-    //   nombre: name,
-    //   email: email,
-    //   password: password,
-    //   confirmPassword: confirmPassword,
-    // );
-
-    // Verifica si el widget sigue montado antes de interactuar con el BuildContext
-    if (!mounted) return;
-
-    // if (success) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text('Usuario registrado exitosamente')),
-    //   );
-
-    //   Navigator.of(context).pushReplacement(
-    //     MaterialPageRoute(builder: (context) => const LoginPage()),
-    //   );
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text(usuarioProvider.error ?? 'Error desconocido')),
-    //   );
-    // }
   }
 
   @override
@@ -140,7 +127,7 @@ class _RegisterPageState extends State<RegisterPage>
                     ),
                   ),
                 ),
-               const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
                 // Título
                 Hero(
@@ -302,11 +289,15 @@ class _RegisterPageState extends State<RegisterPage>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildLanguageOption('Español', 'assets/images/BanderaEspañola.png'),
-              _buildLanguageOption( 'English', 'assets/images/BanderaInglaterra.png'),
-              _buildLanguageOption('Valencià', 'assets/images/BanderaComunidadValenciana.png'),
+              _buildLanguageOption(
+                  'Español', 'assets/images/BanderaEspañola.png'),
+              _buildLanguageOption(
+                  'English', 'assets/images/BanderaInglaterra.png'),
+              _buildLanguageOption(
+                  'Valencià', 'assets/images/BanderaComunidadValenciana.png'),
               _buildLanguageOption('Chino', 'assets/images/BanderaChina.png'),
-              _buildLanguageOption('Francés', 'assets/images/BanderaFrancia.png'),
+              _buildLanguageOption(
+                  'Francés', 'assets/images/BanderaFrancia.png'),
             ],
           ),
         );
