@@ -3,9 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/exception/invalid_password_exception.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
+import 'package:vilaexplorer/models/usuario/usuario_auth.dart';
 
 class UsuarioService extends ChangeNotifier {
-  late Usuario? usuarioAutenticado;
+  static final UsuarioService _instance = UsuarioService._internal();
+
+  late UsuarioAuth? usuarioAutenticado;
+
+  late Usuario allUserData;
+
+  UsuarioService._internal();
+
+  factory UsuarioService() {
+    return _instance;
+  }
+
   String? _error;
 
   final ApiClient _apiClient = ApiClient();
@@ -13,40 +25,41 @@ class UsuarioService extends ChangeNotifier {
   String? get error => _error;
 
   // Método para crear un nuevo usuario
-  Future<bool> signupUsuario(
-      String nombre, String email, String password, String assertPassword) async {
+  Future<bool> signupUsuario(String nombre, String email, String password,
+      String assertPassword) async {
     const String endpoint = '/auth/signup?rol=Cliente';
 
-    if(password != assertPassword) throw InvalidPasswordException("Las contraseñas no coinciden");
-    
-    Usuario usuario = Usuario(nombre: nombre, email: email, password: password);
+    if (password != assertPassword) {
+      throw InvalidPasswordException("Las contraseñas no coinciden");
+    }
+
+    UsuarioAuth usuario = UsuarioAuth(email: email, password: password);
 
     try {
-      final response = await _apiClient.post(endpoint, body: usuario.registerRequest());
+      final response =
+          await _apiClient.post(endpoint, body: usuario.registerRequest());
       if (response.statusCode == 201) {
         return true; // Usuario creado exitosamente
-      } else {
-        debugPrint('Error al crear usuario: ${response.body}');
-        return false; // Fallo en la creación del usuario
       }
     } catch (e) {
-      debugPrint('Excepción al crear usuario: $e');
-      return false;
+      debugPrint('Error al crear usuario: ${e.toString()}');
     }
+    return false; // Fallo en la creación del usuario
   }
 
   // Método para iniciar sesión
   Future<void> loginUsuario(String email, String password) async {
     const String endpoint = '/auth/signin';
-    Usuario usuario = Usuario(email: email, password: password);
+    UsuarioAuth usuario = UsuarioAuth(email: email, password: password);
 
     try {
       final response =
           await _apiClient.post(endpoint, body: usuario.loginRequest());
       if (response.statusCode == 200) {
-        final Usuario usuario = Usuario.fromMap(jsonDecode(response.body));
         usuarioAutenticado =
-            usuario; // Guarda en el servicio el usuario autenticado
+            UsuarioAuth.fromMap(jsonDecode(response.body));
+
+        allUserData = await getUsuarioByID(usuarioAutenticado!.id!);
         notifyListeners();
       } else {
         debugPrint('Error al iniciar sesión: ${response.body}');
@@ -64,5 +77,22 @@ class UsuarioService extends ChangeNotifier {
     usuarioAutenticado = null;
     _error = null;
     notifyListeners();
+  }
+
+  Future<Usuario> getUsuarioByID(int id) async {
+    try {
+      final response = await _apiClient.get('/usuario/$id');
+      if (response.statusCode == 200) {
+        Usuario usuario = Usuario.fromMap(jsonDecode(response.body));
+
+        return usuario;
+      } else {
+        throw Exception('Error al obtener el usuario: ${response.body}');
+      }
+    } catch (e) {
+      _error = 'error al obtener el usuario por ID: $e';
+      debugPrint(e.toString());
+      throw Exception('Error al obtener el usuario por ID: $e');
+    }
   }
 }

@@ -67,7 +67,6 @@ class _RegisterPageState extends State<RegisterPage>
     final String password = _passwordController.text.trim();
     final String confirmPassword = _confirmPasswordController.text.trim();
 
-    print(name);
     try {
       if (await usuarioSerivce.signupUsuario(
           name, email, password, confirmPassword)) {

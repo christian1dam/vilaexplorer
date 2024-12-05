@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/providers/tradiciones_provider.dart';
+import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'tarjetaFiestaTradicion.dart';
 
 class TradicionesPage extends StatefulWidget {
@@ -24,14 +25,15 @@ class _TradicionesPageState extends State<TradicionesPage> {
   bool isSearchActive = false;
   TextEditingController searchController = TextEditingController();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // Llamar a fetchAllTradiciones cuando se inicia la página
-  //   Future.microtask(() {
-  //     Provider.of<TradicionesProvider>(context, listen: false).fetchAllTradiciones();
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    // Llamar a fetchAllTradiciones cuando se inicia la página
+    Future.microtask(() {
+      Provider.of<TradicionesService>(context, listen: false)
+          .getAllTradiciones();
+    });
+  }
 
   void _toggleContainer(String nombreFiesta) {
     setState(() {
@@ -53,34 +55,34 @@ class _TradicionesPageState extends State<TradicionesPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Consumer<TradicionesProvider>(
+    return Consumer<TradicionesService>(
       builder: (context, provider, child) {
-        // if (provider.isLoading) {
-        //   return const Center(
-        //     child: CircularProgressIndicator(),
-        //   );
-        // }
+        if (provider.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
 
-        // if (provider.error != null) {
-        //   return Center(
-        //     child: Text(
-        //       provider.error!,
-        //       style: const TextStyle(color: Colors.red, fontSize: 18),
-        //       textAlign: TextAlign.center,
-        //     ),
-        //   );
-        // }
+        if (provider.error != null) {
+          return Center(
+            child: Text(
+              provider.error!,
+              style: const TextStyle(color: Colors.red, fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+          );
+        }
 
-        // final tradiciones = provider.todasLasTradiciones;
+        final tradiciones = provider.todasLasTradiciones;
 
-        // if (tradiciones == null || tradiciones.isEmpty) {
-        //   return const Center(
-        //     child: Text(
-        //       'No se encontraron tradiciones.',
-        //       style: TextStyle(fontSize: 18),
-        //     ),
-        //   );
-        // }
+        if (tradiciones == null || tradiciones.isEmpty) {
+          return const Center(
+            child: Text(
+              'No se encontraron tradiciones.',
+              style: TextStyle(fontSize: 18),
+            ),
+          );
+        }
 
         return Stack(
           children: [
@@ -136,7 +138,8 @@ class _TradicionesPageState extends State<TradicionesPage> {
                             Container(
                               decoration: const BoxDecoration(
                                 color: Color.fromRGBO(30, 30, 30, 1),
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
                               ),
                               margin: const EdgeInsets.only(top: 10, left: 10),
                               width: size.width * 0.7,
@@ -155,7 +158,8 @@ class _TradicionesPageState extends State<TradicionesPage> {
                               ),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.close, color: Colors.white),
+                              icon:
+                                  const Icon(Icons.close, color: Colors.white),
                               onPressed: widget.onClose,
                             ),
                           ],
@@ -174,10 +178,11 @@ class _TradicionesPageState extends State<TradicionesPage> {
                               fillColor: Color.fromARGB(255, 47, 42, 42),
                               filled: true,
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
                               ),
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 10),
                             ),
                           ),
                         ),
@@ -190,7 +195,8 @@ class _TradicionesPageState extends State<TradicionesPage> {
                           height: 40,
                           decoration: const BoxDecoration(
                               color: Color.fromRGBO(36, 36, 36, 1),
-                              borderRadius: BorderRadius.all(Radius.circular(20))),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -206,15 +212,15 @@ class _TradicionesPageState extends State<TradicionesPage> {
                       Expanded(
                         child: ListView.builder(
                           padding: const EdgeInsets.all(0),
-                          // itemCount: tradiciones.length,
+                          itemCount: tradiciones.length,
                           itemBuilder: (context, index) {
-                            // final tradicion = tradiciones[index];
-                            // return FiestaCard(
-                            //   // nombre: tradicion.nombre,
-                            //   // fecha: tradicion.fecha,
-                            //   // imagen:  tradicion.getImagen(),
-                            //   // detalleTap: () => _toggleContainer(tradicion.nombre),
-                            // );
+                            final tradicion = tradiciones[index];
+                            return FiestaCard(
+                              nombre: tradicion.nombre,
+                              fecha: tradicion.fecha,
+                              imagen:  tradicion.getImagen(),
+                              detalleTap: () => _toggleContainer(tradicion.nombre),
+                            );
                           },
                         ),
                       ),
@@ -250,7 +256,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
           texto,
           style: const TextStyle(color: Colors.white),
         ),
-      ),  
+      ),
     );
   }
 }

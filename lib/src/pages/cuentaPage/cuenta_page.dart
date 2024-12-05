@@ -157,13 +157,13 @@ class _CuentaPageState extends State<CuentaPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              usuarioService.usuarioAutenticado!.nombre!,
+                              usuarioService.allUserData.nombre,
                               style: const TextStyle(
                                   fontSize: 20, color: Colors.white),
                             ),
                             const SizedBox(height: 5),
                             Text(
-                              usuarioService.usuarioAutenticado!.email!,
+                              usuarioService.allUserData.email,
                               style: const TextStyle(
                                   fontSize: 16, color: Colors.white70),
                             ),
@@ -183,7 +183,7 @@ class _CuentaPageState extends State<CuentaPage> {
                 ),
                 const SizedBox(height: 5),
                 TextFormField(
-                  initialValue: usuarioService.usuarioAutenticado!.password,
+                  initialValue: usuarioService.allUserData.password,
                   obscureText: true,
                   decoration: const InputDecoration(
                     hintText: "******",

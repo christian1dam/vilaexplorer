@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/gastronomia_provider.dart';
 import 'package:vilaexplorer/providers/tradiciones_provider.dart';
 import 'package:vilaexplorer/providers/usuarios_provider.dart';
+import 'package:vilaexplorer/service/gastronomia_service.dart';
+import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
 import 'package:vilaexplorer/src/pages/register_page.dart';
@@ -17,16 +19,16 @@ void main() {
 // Envolver MyApp con MultiProvider para inyectar los Providers
 class AppState extends StatelessWidget {
   const AppState({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UsuarioService(), lazy: false),
         ChangeNotifierProvider(
-            create: (_) => TradicionesProvider(), lazy: false),
+            create: (_) => TradicionesService(), lazy: false),
         ChangeNotifierProvider(
-            create: (_) => GastronomiaProvider(), lazy: false),
+            create: (_) => GastronomiaService(), lazy: false),
       ],
       child: const MyApp(),
     );
@@ -61,7 +63,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Vila Explorer',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: RegisterPage(),
+      home: SplashPage(),
       locale: _locale, // Define el idioma actual
       supportedLocales: const [
         Locale('en'), // Inglés

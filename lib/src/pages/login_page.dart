@@ -43,8 +43,8 @@ class _LoginPageState extends State<LoginPage>
     if (usuarioService.error == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Inicio de sesión exitoso')),
-        
       );
+
       // Navegar a la pantalla principal si el inicio de sesión fue exitoso
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
@@ -62,7 +62,7 @@ class _LoginPageState extends State<LoginPage>
               child: child, 
             );
           },
-          transitionDuration: const Duration(seconds: 2),
+          transitionDuration: const Duration(milliseconds: 100),
         ),
       );
     } else {
