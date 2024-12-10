@@ -186,27 +186,75 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                         ),
                       const SizedBox(height: 10),
                       Expanded(
-                        child: isGridView
-                            ? GridView.builder(
-                                padding: const EdgeInsets.all(8.0),
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 8.0,
-                                  mainAxisSpacing: 8.0,
+                        child: platos == null
+                            ? const Center(
+                                child: Text(
+                                  "No hay platos disponibles",
+                                  style: TextStyle(color: Colors.white),
                                 ),
-                                itemCount: platos!.length,
-                                itemBuilder: (context, index) {
-                                  final plato = platos[index];
-                                  return Card(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          child: Image.memory(
+                              )
+                            : isGridView
+                                ? GridView.builder(
+                                    padding: const EdgeInsets.all(8.0),
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 8.0,
+                                      mainAxisSpacing: 8.0,
+                                    ),
+                                    itemCount: platos!.length,
+                                    itemBuilder: (context, index) {
+                                      final plato = platos[index];
+                                      return Card(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: Image.memory(
+                                                base64Decode(
+                                                    plato.imagenBase64),
+                                                width: double.infinity,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return const Icon(
+                                                    Icons.broken_image,
+                                                    size: 50,
+                                                    color: Colors.grey,
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                plato.nombre,
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : ListView.builder(
+                                    padding: const EdgeInsets.all(8.0),
+                                    itemCount: platos!.length,
+                                    itemBuilder: (context, index) {
+                                      final plato = platos[index];
+                                      return Card(
+                                        color: const Color.fromARGB(
+                                            255, 47, 42, 42),
+                                        child: ListTile(
+                                          leading: Image.memory(
                                             base64Decode(plato.imagenBase64),
-                                            width: double.infinity,
+                                            width: 50,
+                                            height: 50,
                                             fit: BoxFit.cover,
                                             errorBuilder:
                                                 (context, error, stackTrace) {
@@ -217,54 +265,15 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                               );
                                             },
                                           ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
+                                          title: Text(
                                             plato.nombre,
                                             style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                                color: Colors.white),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              )
-                            : ListView.builder(
-                                padding: const EdgeInsets.all(8.0),
-                                itemCount: platos!.length,
-                                itemBuilder: (context, index) {
-                                  final plato = platos[index];
-                                  return Card(
-                                    color:
-                                        const Color.fromARGB(255, 47, 42, 42),
-                                    child: ListTile(
-                                      leading: Image.memory(
-                                        base64Decode(plato.imagenBase64),
-                                        width: 50,
-                                        height: 50,
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return const Icon(
-                                            Icons.broken_image,
-                                            size: 50,
-                                            color: Colors.grey,
-                                          );
-                                        },
-                                      ),
-                                      title: Text(
-                                        plato.nombre,
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                                      );
+                                    },
+                                  ),
                       ),
                     ],
                   ),

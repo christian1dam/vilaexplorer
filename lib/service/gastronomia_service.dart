@@ -26,10 +26,18 @@ class GastronomiaService extends ChangeNotifier {
 
     try {
       final response = await _apiClient.get('/plato/todos');
-      final List<dynamic> data = json.decode(response.body);
-      _platos = data.map((json) => Plato.fromMap(json)).toList();
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        _platos = data.map((json) => Plato.fromMap(json)).toList();
+      } else {
+        _error = 'Error: ${response.statusCode} - ${response.reasonPhrase}';
+      }
     } catch (e) {
       _error = 'Error al obtener los platos: $e';
+      debugPrint('Exception: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
