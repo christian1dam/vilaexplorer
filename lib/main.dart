@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:vilaexplorer/providers/gastronomia_provider.dart';
-import 'package:vilaexplorer/providers/tradiciones_provider.dart';
-import 'package:vilaexplorer/providers/usuarios_provider.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
-import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
-import 'package:vilaexplorer/src/pages/register_page.dart';
 import 'src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
 
