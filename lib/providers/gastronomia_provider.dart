@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vilaexplorer/models/gastronomia/plato.dart';
 
 class GastronomiaProvider with ChangeNotifier {
   // final GastronomiaService platoRepository = GastronomiaService();

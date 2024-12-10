@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../models/gastronomia/categoria_plato.dart';
 
 class CategoriaPlatoProvider extends ChangeNotifier {
   // final CategoriaPlatoService _repository = CategoriaPlatoService();

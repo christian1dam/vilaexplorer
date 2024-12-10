@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vilaexplorer/models/tradiciones/tradiciones.dart';
 
 class TradicionesProvider extends ChangeNotifier {
   // final FiestaTradicionService _repository = FiestaTradicionService();
