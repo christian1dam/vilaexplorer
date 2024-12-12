@@ -23,6 +23,7 @@ class UsuarioService extends ChangeNotifier {
   final ApiClient _apiClient = ApiClient();
 
   String? get error => _error;
+  Usuario getUsuario() => allUserData;
 
   // Método para crear un nuevo usuario
   Future<bool> signupUsuario(String nombre, String email, String password,
@@ -81,7 +82,7 @@ class UsuarioService extends ChangeNotifier {
 
   Future<Usuario> getUsuarioByID(int id) async {
     try {
-      final response = await _apiClient.get('/usuario/$id');
+      final response = await _apiClient.get('/usuario/por-id/$id');
       if (response.statusCode == 200) {
         Usuario usuario = Usuario.fromMap(jsonDecode(response.body));
 

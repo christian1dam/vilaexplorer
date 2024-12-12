@@ -213,7 +213,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                             Expanded(
                                               child: Image.memory(
                                                 base64Decode(
-                                                    plato.imagenBase64),
+                                                    plato.imagenBase64!),
                                                 width: double.infinity,
                                                 fit: BoxFit.cover,
                                                 errorBuilder: (context, error,
@@ -252,7 +252,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                             255, 47, 42, 42),
                                         child: ListTile(
                                           leading: Image.memory(
-                                            base64Decode(plato.imagenBase64),
+                                            base64Decode(plato.imagenBase64!),
                                             width: 50,
                                             height: 50,
                                             fit: BoxFit.cover,

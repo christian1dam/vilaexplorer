@@ -7,7 +7,10 @@ class Tradiciones {
   String nombre;
   String fecha;
   String descripcion;
-  String imagenBase64; // Actualización del campo para almacenar la imagen en base64
+  double puntuacionMediaTradicion;
+  String imagen;
+  String imagenBase64;
+  bool activo;
   Usuario autor;
 
   Tradiciones({
@@ -15,7 +18,10 @@ class Tradiciones {
     required this.nombre,
     required this.fecha,
     required this.descripcion,
+    required this.puntuacionMediaTradicion,
+    required this.imagen,
     required this.imagenBase64,
+    required this.activo,
     required this.autor,
   });
 
@@ -29,7 +35,10 @@ class Tradiciones {
         nombre: json["nombre"],
         fecha: json["fecha"],
         descripcion: json["descripcion"],
-        imagenBase64: json["imagenBase64"], // Mapear la imagen base64 desde el JSON
+        puntuacionMediaTradicion: json["puntuacionMediaTradicion"],
+        imagen: json["imagen"],
+        imagenBase64: json["imagenBase64"],
+        activo: json["activo"],
         autor: Usuario.fromMap(json["autor"]),
       );
 
@@ -38,7 +47,10 @@ class Tradiciones {
         "nombre": nombre,
         "fecha": fecha,
         "descripcion": descripcion,
-        "imagenBase64": imagenBase64, // Incluir la imagen base64 en el mapa
+        "puntuacionMediaTradicion": puntuacionMediaTradicion,
+        "imagen": imagen,
+        "imagenBase64": imagenBase64,
+        "activo": activo,
         "autor": autor.toMap(),
       };
 

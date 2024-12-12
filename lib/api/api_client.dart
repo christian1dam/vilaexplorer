@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:vilaexplorer/service/usuario_service.dart';
 
 class ApiClient {
-  final String _baseUrl = 'http://192.168.100.103:8080/api/v0';
+  final String _baseUrl = 'http://172.20.10.6:8080/api/v0';
   // 'http://172.20.10.2:8080/api/v0'; // Wifi Móvil
   // 'http://192.168.0.31:8080/api/v0'; // Red
 
@@ -30,6 +30,25 @@ class ApiClient {
       final response = await http.post(
         url,
         headers: _defaultHeaders(),
+        body: jsonEncode(body),
+      );
+      print("POST request to $url with body: $body");
+      print("Response status: ${response.statusCode}, body: ${response.body}");
+      _handleResponse(response);
+      return response;
+    } catch (e) {
+      throw Exception('Error en POST: $e');
+    }
+  }
+
+    // POST request
+  Future<http.Response> postAuth(String endpoint,
+      {Map<String, dynamic>? body}) async {
+    final url = Uri.parse('$_baseUrl$endpoint');
+    try {
+      final response = await http.post(
+        url,
+        headers: _authHeader(),
         body: jsonEncode(body),
       );
       print("POST request to $url with body: $body");
@@ -112,8 +131,7 @@ class ApiClient {
     return {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization':
-          '${usuarioAutenticado.type} ${usuarioAutenticado.token}',
+      'Authorization': '${usuarioAutenticado.type} ${usuarioAutenticado.token}',
     };
   }
 }

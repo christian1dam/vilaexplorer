@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
+import 'package:vilaexplorer/models/gastronomia/tipoPlato.dart';
+import 'package:vilaexplorer/service/gastronomia_service.dart';
+import 'package:vilaexplorer/service/tipo_plato_service.dart';
 
 class AddPlato extends StatefulWidget {
   const AddPlato({super.key});
@@ -9,28 +13,24 @@ class AddPlato extends StatefulWidget {
 }
 
 class _AddPlatoState extends State<AddPlato> {
-  String? selectedCategory;
   String? selectedType;
   String? nombrePlato;
   String? descripcion;
   String? receta;
 
-  List<String> categories = ['Entrante', 'Principal', 'Postre'];
-  Map<String, List<String>> typesByCategory = {
-    'Entrante': ['Ensalada', 'Sopa', 'Otros'],
-    'Principal': ['Carne', 'Pescado', 'Vegetariano'],
-    'Postre': ['Helado', 'Pastel', 'Fruta']
-  };
+  List<TipoPlato> types = [];
 
   List<Map<String, dynamic>> ingredientControllers = [];
   List<String> unitOptions = ['Tazas', 'Gramos', 'Litros', 'Piezas'];
 
-  bool _isFormSubmitted = false; // Para controlar si se ha intentado enviar el formulario
+  bool _isFormSubmitted =
+      false; // Para controlar si se ha intentado enviar el formulario
 
   @override
   void initState() {
     super.initState();
     _addIngredientRow();
+    Provider.of<TipoPlatoService>(context, listen: false).fetchTiposPlatoActivos();
   }
 
   void _addIngredientRow() {
@@ -60,7 +60,6 @@ class _AddPlatoState extends State<AddPlato> {
 
     return nombrePlato != null &&
         nombrePlato!.isNotEmpty &&
-        selectedCategory != null &&
         selectedType != null &&
         descripcion != null &&
         descripcion!.isNotEmpty &&
@@ -70,65 +69,69 @@ class _AddPlatoState extends State<AddPlato> {
   }
 
   void _showSuccessDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    barrierDismissible: false, // Impide que el pop-up se cierre al tocar fuera de él
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (context, setState) {
-          return AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500), // Duración de la animación
-            child: Align(
-              alignment: Alignment.center,
-              child: Container(
-                width: 350,
-                height: 350, // Aumenta el alto del contenedor para evitar overflow
-                decoration: BoxDecoration(
-                  color: const Color.fromRGBO(32, 29, 29, 1),
-                  borderRadius: BorderRadius.circular(20),
+    showDialog(
+      context: context,
+      barrierDismissible:
+          false, // Impide que el pop-up se cierre al tocar fuera de él
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AnimatedSwitcher(
+              duration:
+                  const Duration(milliseconds: 500), // Duración de la animación
+              child: Align(
+                alignment: Alignment.center,
+                child: Container(
+                  width: 350,
+                  height:
+                      350, // Aumenta el alto del contenedor para evitar overflow
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(32, 29, 29, 1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/sending.gif',
+                        width: 250,
+                        height: 250,
+                      ),
+                      const SizedBox(height: 20),
+                      Flexible(
+                        child: Text(
+                          AppLocalizations.of(context)!.translate('sending'),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Column(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    Image.asset(
-      'assets/images/sending.gif',
-      width: 250,
-      height: 250,
-    ),
-    const SizedBox(height: 20),
-    Flexible(
-      child: Text(
-        AppLocalizations.of(context)!.translate('sending'),
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-          fontFamily: 'Poppins',
-        ),
-      ),
-    ),
-  ],
-),
-
               ),
-            ),
-          );
-        },
-      );
-    },
-  );
+            );
+          },
+        );
+      },
+    );
 
-  // Cierra el diálogo después de 3 segundos (simula que el proceso se completó)
-  Future.delayed(const Duration(seconds: 3), () {
-    Navigator.of(context).pop(); // Cierra el diálogo después de 3 segundos
-  });
-}
-
-
-
+    // Cierra el diálogo después de 3 segundos (simula que el proceso se completó)
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.of(context).pop(); // Cierra el diálogo después de 3 segundos
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final tipoPlatoService = Provider.of<TipoPlatoService>(context);
+    final platoService = Provider.of<GastronomiaService>(context);
+
+    types = tipoPlatoService.tiposPlato!;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(32, 29, 29, 1),
@@ -174,9 +177,9 @@ class _AddPlatoState extends State<AddPlato> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 5), // Ajusta el valor según necesites
+                padding: const EdgeInsets.only(bottom: 5),
                 child: SizedBox(
-                  width: 150, // Ancho fijo para el divider
+                  width: 150,
                   child: const Divider(color: Colors.white),
                 ),
               ),
@@ -188,14 +191,16 @@ class _AddPlatoState extends State<AddPlato> {
                 },
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)!.translate('insert_dish_name'),
+                  hintText: AppLocalizations.of(context)!
+                      .translate('insert_dish_name'),
                   hintStyle: const TextStyle(color: Colors.white54),
                   fillColor: const Color.fromARGB(255, 47, 42, 42),
                   filled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  errorText: _isFormSubmitted && (nombrePlato == null || nombrePlato!.isEmpty)
+                  errorText: _isFormSubmitted &&
+                          (nombrePlato == null || nombrePlato!.isEmpty)
                       ? "*Campo obligatorio"
                       : null,
                 ),
@@ -203,58 +208,26 @@ class _AddPlatoState extends State<AddPlato> {
               const SizedBox(height: 20),
               Row(
                 children: [
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: selectedCategory,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedCategory = value;
-                          selectedType = null; // Reseteamos el tipo
-                        });
-                      },
-                      items: categories
-                          .map((category) => DropdownMenuItem<String>(
-                                value: category,
-                                child: Text(category, style: const TextStyle(color: Colors.white)),
-                              ))
-                          .toList(),
-                      decoration: InputDecoration(
-                        hintText: AppLocalizations.of(context)!.translate('category'),
-                        hintStyle: const TextStyle(color: Colors.white54),
-                        fillColor: const Color.fromARGB(255, 47, 42, 42),
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        errorText: _isFormSubmitted && selectedCategory == null
-                            ? "*Campo obligatorio"
-                            : null,
-                      ),
-                      dropdownColor: const Color.fromRGBO(47, 42, 42, 1),
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: DropdownButtonFormField<String>(
                       value: selectedType,
-                      onChanged: selectedCategory == null
-                          ? null
-                          : (value) {
-                              setState(() {
-                                selectedType = value;
-                              });
-                            },
-                      items: (selectedCategory != null
-                              ? typesByCategory[selectedCategory]!
-                              : [])
+                      onChanged: (value) {
+                        setState(() {
+                          selectedType = value;
+                        });
+                      },
+                      items: types
                           .map((type) => DropdownMenuItem<String>(
-                                value: type,
-                                child: Text(type, style: const TextStyle(color: Colors.white)),
+                                value: type.nombreTipo,
+                                child: Text(type.nombreTipo,
+                                    style:
+                                        const TextStyle(color: Colors.white)),
                               ))
                           .toList(),
                       decoration: InputDecoration(
-                        hintText: AppLocalizations.of(context)!.translate('type'),
+                        hintText:
+                            AppLocalizations.of(context)!.translate('type'),
                         hintStyle: const TextStyle(color: Colors.white54),
                         fillColor: const Color.fromARGB(255, 47, 42, 42),
                         filled: true,
@@ -281,103 +254,119 @@ class _AddPlatoState extends State<AddPlato> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 5), // Ajusta el valor según necesites
+                padding: const EdgeInsets.only(bottom: 5),
                 child: SizedBox(
-                  width: 150, // Ancho fijo para el divider
+                  width: 150,
                   child: const Divider(color: Colors.white),
                 ),
               ),
               Column(
                 children: [
-                  // Mostrar los ingredientes ya añadidos
                   ...ingredientControllers.asMap().entries.map(
-                        (entry) {
-                          final index = entry.key;
-                          final controllers = entry.value;
-                          return Column(
+                    (entry) {
+                      final index = entry.key;
+                      final controllers = entry.value;
+                      return Column(
+                        children: [
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      controller: controllers['quantity'],
-                                      style: const TextStyle(color: Colors.white),
-                                      decoration: InputDecoration(
-                                        hintText: AppLocalizations.of(context)!.translate('quantity'),
-                                        hintStyle: const TextStyle(color: Colors.white54),
-                                        fillColor: const Color.fromARGB(255, 47, 42, 42),
-                                        filled: true,
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                        errorText: _isFormSubmitted && controllers['quantity']!.text.isEmpty
-                                            ? "*Campo obligatorio"
-                                            : null,
-                                      ),
+                              Expanded(
+                                child: TextField(
+                                  controller: controllers['quantity'],
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    hintText: AppLocalizations.of(context)!
+                                        .translate('quantity'),
+                                    hintStyle:
+                                        const TextStyle(color: Colors.white54),
+                                    fillColor:
+                                        const Color.fromARGB(255, 47, 42, 42),
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
+                                    errorText: _isFormSubmitted &&
+                                            controllers['quantity']!
+                                                .text
+                                                .isEmpty
+                                        ? "*Campo obligatorio"
+                                        : null,
                                   ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: DropdownButtonFormField<String>(
-                                      value: controllers['unit'],
-                                      onChanged: (value) {
-                                        setState(() {
-                                          controllers['unit'] = value;
-                                        });
-                                      },
-                                      items: unitOptions
-                                          .map((unit) => DropdownMenuItem<String>(
-                                                value: unit,
-                                                child: Text(unit, style: const TextStyle(color: Colors.white)),
-                                              ))
-                                          .toList(),
-                                      decoration: InputDecoration(
-                                        hintText: AppLocalizations.of(context)!.translate('units'),
-                                        hintStyle: const TextStyle(color: Colors.white54),
-                                        fillColor: const Color.fromARGB(255, 47, 42, 42),
-                                        filled: true,
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                        errorText: _isFormSubmitted && controllers['name']!.text.isEmpty
-                                            ? "*Campo obligatorio"
-                                            : null,
-                                      ),
-                                      dropdownColor: const Color.fromRGBO(47, 42, 42, 1),
-                                      style: const TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: TextField(
-                                      controller: controllers['name'],
-                                      style: const TextStyle(color: Colors.white),
-                                      decoration: InputDecoration(
-                                        hintText: AppLocalizations.of(context)!.translate('ingredients'),
-                                        hintStyle: const TextStyle(color: Colors.white54),
-                                        fillColor: const Color.fromARGB(255, 47, 42, 42),
-                                        filled: true,
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                        errorText: _isFormSubmitted && controllers['name']!.text.isEmpty
-                                            ? "*Campo obligatorio"
-                                            : null,
-                                      ),
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.remove_circle, color: Colors.red),
-                                    onPressed: () => _removeIngredientRow(index),
-                                  ),
-                                ],
+                                ),
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: DropdownButtonFormField<String>(
+                                  value: controllers['unit'],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      controllers['unit'] = value;
+                                    });
+                                  },
+                                  items: unitOptions
+                                      .map((unit) => DropdownMenuItem<String>(
+                                            value: unit,
+                                            child: Text(unit,
+                                                style: const TextStyle(
+                                                    color: Colors.white)),
+                                          ))
+                                      .toList(),
+                                  decoration: InputDecoration(
+                                    hintText: AppLocalizations.of(context)!
+                                        .translate('units'),
+                                    hintStyle:
+                                        const TextStyle(color: Colors.white54),
+                                    fillColor:
+                                        const Color.fromARGB(255, 47, 42, 42),
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    errorText: _isFormSubmitted &&
+                                            controllers['name']!.text.isEmpty
+                                        ? "*Campo obligatorio"
+                                        : null,
+                                  ),
+                                  dropdownColor:
+                                      const Color.fromRGBO(47, 42, 42, 1),
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: TextField(
+                                  controller: controllers['name'],
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    hintText: AppLocalizations.of(context)!
+                                        .translate('ingredients'),
+                                    hintStyle:
+                                        const TextStyle(color: Colors.white54),
+                                    fillColor:
+                                        const Color.fromARGB(255, 47, 42, 42),
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    errorText: _isFormSubmitted &&
+                                            controllers['name']!.text.isEmpty
+                                        ? "*Campo obligatorio"
+                                        : null,
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.remove_circle,
+                                    color: Colors.red),
+                                onPressed: () => _removeIngredientRow(index),
+                              ),
                             ],
-                          );
-                        },
-                      ),
-                  // Agregar el botón "+" solo si hay menos de 10 ingredientes
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      );
+                    },
+                  ),
                   if (ingredientControllers.length < 15)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -386,7 +375,8 @@ class _AddPlatoState extends State<AddPlato> {
                         child: ElevatedButton(
                           onPressed: _addIngredientRow,
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 12),
                             backgroundColor: Colors.green,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
@@ -411,9 +401,9 @@ class _AddPlatoState extends State<AddPlato> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 5), // Ajusta el valor según necesites
+                padding: const EdgeInsets.only(bottom: 5),
                 child: SizedBox(
-                  width: 150, // Ancho fijo para el divider
+                  width: 150,
                   child: const Divider(color: Colors.white),
                 ),
               ),
@@ -426,14 +416,16 @@ class _AddPlatoState extends State<AddPlato> {
                 maxLines: 6,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)!.translate('desc_text'),
+                  hintText:
+                      AppLocalizations.of(context)!.translate('desc_text'),
                   hintStyle: const TextStyle(color: Colors.white54),
                   fillColor: const Color.fromARGB(255, 47, 42, 42),
                   filled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  errorText: _isFormSubmitted && (descripcion == null || descripcion!.isEmpty)
+                  errorText: _isFormSubmitted &&
+                          (descripcion == null || descripcion!.isEmpty)
                       ? "*Campo obligatorio"
                       : null,
                 ),
@@ -448,9 +440,9 @@ class _AddPlatoState extends State<AddPlato> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 5), // Ajusta el valor según necesites
+                padding: const EdgeInsets.only(bottom: 5),
                 child: SizedBox(
-                  width: 150, // Ancho fijo para el divider
+                  width: 150,
                   child: const Divider(color: Colors.white),
                 ),
               ),
@@ -463,33 +455,55 @@ class _AddPlatoState extends State<AddPlato> {
                 maxLines: ingredientControllers.isEmpty ? 12 : 6,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)!.translate('recipe_text'),
+                  hintText:
+                      AppLocalizations.of(context)!.translate('recipe_text'),
                   hintStyle: const TextStyle(color: Colors.white54),
                   fillColor: const Color.fromARGB(255, 47, 42, 42),
                   filled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  errorText: _isFormSubmitted && (receta == null || receta!.isEmpty)
-                      ? "Campo obligatorio"
-                      : null,
+                  errorText:
+                      _isFormSubmitted && (receta == null || receta!.isEmpty)
+                          ? "Campo obligatorio"
+                          : null,
                 ),
               ),
               const SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     setState(() {
                       _isFormSubmitted = true;
                     });
 
-                    if (_isFormValid()) {
-                      // Mostrar el pop-up de éxito
-                      _showSuccessDialog(context);
+                    if (!_isFormValid()) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text(
+                                "Por favor, rellena todos los campos obligatorios.")),
+                      );
+                      return;
                     }
+
+                    final ingredientesString = ingredientControllers.map((ing) {
+                      final quantity = ing['quantity']!.text;
+                      final unit = ing['unit'];
+                      final name = ing['name']!.text;
+                      return "$quantity-$unit-$name";
+                    }).join(';');
+
+                    late int tipoPlato;
+
+                    for (var t in types) {
+                      if(t.nombreTipo == selectedType) tipoPlato = t.idTipoPlato;
+                    }
+
+                    platoService.createPlato(nombrePlato!, tipoPlato, ingredientesString, descripcion!, receta!);
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 50),
                     backgroundColor: const Color.fromRGBO(45, 45, 45, 1),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -503,10 +517,14 @@ class _AddPlatoState extends State<AddPlato> {
               ),
               const SizedBox(height: 20),
             ],
-            
           ),
         ),
       ),
     );
   }
+
+  // Plato _plato(String? nombrePlato, String? selectedType, String? descripcion, String? receta, String ingredientesString) {
+  //   final º
+  // }
 }
+  

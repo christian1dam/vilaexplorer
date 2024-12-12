@@ -214,7 +214,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
                           itemCount: tradiciones.length,
                           itemBuilder: (context, index) {
                             final tradicion = tradiciones[index];
-                            return FiestaCard(
+                            return FiestaCard(  
                               nombre: tradicion.nombre,
                               fecha: tradicion.fecha,
                               imagen:  tradicion.getImagen(),

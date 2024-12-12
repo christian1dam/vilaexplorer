@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/api/api_client.dart';
+import 'package:vilaexplorer/models/gastronomia/post_plato.dart';
+import 'package:vilaexplorer/service/usuario_service.dart';
 import '../models/gastronomia/plato.dart';
 
 class GastronomiaService extends ChangeNotifier {
@@ -25,7 +27,7 @@ class GastronomiaService extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await _apiClient.get('/plato/todos');
+      final response = await _apiClient.get('/plato/aprobados');
       debugPrint('Response status: ${response.statusCode}');
       debugPrint('Response body: ${response.body}');
 
@@ -62,21 +64,25 @@ class GastronomiaService extends ChangeNotifier {
   }
 
   // Método para crear un nuevo plato con manejo de estado
-  Future<void> createPlato(Plato plato) async {
+  Future<void> createPlato(String nombrePlato, int idTipo,
+      String ingredientes, String descripcion, String receta) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
+   final usuarioAutenticado = UsuarioService().getUsuario().idUsuario;
+    PostPlato postPlato = PostPlato(nombre: nombrePlato, descripcion: descripcion, ingredientes: ingredientes, receta: receta, estado: false, puntuacionMediaPlato: 0.0, eliminado: false);
+
     try {
-      final response = await _apiClient.post(
-        '/plato/crear',
-        body: plato.toMap(),
+      final response = await _apiClient.postAuth(
+        '/plato/crearFlutter?autorID=$usuarioAutenticado&tipoPlatoID=$idTipo',
+        body: postPlato.toMap(),
       );
       final newPlato = Plato.fromMap(json.decode(response.body));
       _platos = [...?_platos, newPlato];
     } catch (e) {
       _error = 'Error al crear el plato: $e';
-    } finally {
+    } finally {   
       _isLoading = false;
       notifyListeners();
     }

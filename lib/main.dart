@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
+import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
+import 'package:vilaexplorer/src/pages/gastronomia/addPlato.dart';
+import 'package:vilaexplorer/src/pages/login_page.dart';
 import 'src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
 
@@ -20,10 +23,9 @@ class AppState extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UsuarioService(), lazy: false),
-        ChangeNotifierProvider(
-            create: (_) => TradicionesService(), lazy: false),
-        ChangeNotifierProvider(
-            create: (_) => GastronomiaService(), lazy: false),
+        ChangeNotifierProvider(create: (_) => TradicionesService(), lazy: false),
+        ChangeNotifierProvider(create: (_) => GastronomiaService(), lazy: false),
+        ChangeNotifierProvider(create: (_) => TipoPlatoService(), lazy: false),
       ],
       child: const MyApp(),
     );
@@ -54,11 +56,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp( 
       debugShowCheckedModeBanner: false,
       title: 'Vila Explorer',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: SplashPage(),
+      home: LoginPage(),
       locale: _locale, // Define el idioma actual
       supportedLocales: const [
         Locale('en'), // Inglés

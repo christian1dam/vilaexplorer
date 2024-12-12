@@ -24,7 +24,7 @@ class TradicionesService extends ChangeNotifier {
   // Obtener todas las tradiciones
   Future<void> getAllTradiciones() async {
     await _executeWithLoading(() async {
-      final response = await _apiClient.get('/fiesta_tradicion/todos');
+      final response = await _apiClient.get('/fiesta_tradicion/activas');
       if (response.statusCode == 200) {
         final List<dynamic> tradicionesList = json.decode(response.body);
         _todasLasTradiciones = tradicionesList

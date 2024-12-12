@@ -4,30 +4,30 @@ import 'package:vilaexplorer/models/gastronomia/tipoPlato.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
 
 class Plato {
-  int platoId;
+  int? platoId;
   String nombre;
   String descripcion;
   String ingredientes;
   String receta;
   bool estado;
   double puntuacionMediaPlato;
-  String imagen;
-  String imagenBase64;
+  String? imagen;
+  String? imagenBase64;
   TipoPlato tipoPlato;
   Usuario autor;
   Usuario? aprobador;
   bool eliminado;
 
   Plato({
-    required this.platoId,
+    this.platoId,
     required this.nombre,
     required this.descripcion,
     required this.ingredientes,
     required this.receta,
     required this.estado,
     required this.puntuacionMediaPlato,
-    required this.imagen,
-    required this.imagenBase64,
+    this.imagen,
+    this.imagenBase64,
     required this.tipoPlato,
     required this.autor,
     this.aprobador,
