@@ -3,6 +3,7 @@ import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'dart:async';
 
 import 'package:vilaexplorer/main.dart'; // Importar para el temporizador
+import 'dart:ui'; // Necesario para el BackdropFilter
 
 class PasswordRecoverPage extends StatefulWidget {
   const PasswordRecoverPage({super.key});
@@ -47,17 +48,25 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black54, // Fondo semitransparente
-      body: Center(
-        child: GestureDetector(
-          onTap: () {
-            // Cerrar la página si se toca fuera del cuadro
-            Navigator.of(context).pop();
-          },
-          child: Stack(
-            alignment: Alignment.topRight, // Alinear contenido en la parte superior derecha
-            children: [
-              Container(
+      backgroundColor: Colors.transparent, // Fondo transparente
+      body: GestureDetector(
+        onTap: () {
+          // Cerrar la página si se toca fuera del cuadro
+          Navigator.of(context).pop();
+        },
+        child: Stack(
+          children: [
+            // Fondo difuminado
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0), // Efecto de difuminado
+                child: Container(
+                  color: Colors.black.withOpacity(0.1), // Fondo ligeramente oscuro
+                ),
+              ),
+            ),
+            Center(
+              child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 30),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 28, 28, 28),
@@ -88,7 +97,6 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
                           ),
                         ),
                       ),
-                      
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: _isButtonEnabled
@@ -113,16 +121,13 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
                               ),
                             ),
                             const SizedBox(height: 10), 
-                            
                             Divider(
                               color: Colors.white, 
                               thickness: 1, 
                               indent: 0, 
                               endIndent: 0, 
                             ),
-
-                            const SizedBox(height: 10), 
-
+                            const SizedBox(height: 10),
                             Text(
                               AppLocalizations.of(context)!.translate('resend_in1') + _counter.toString() + AppLocalizations.of(context)!.translate('resend_in2'),
                               style: const TextStyle(
@@ -136,18 +141,18 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
                   ),
                 ),
               ),
-              Positioned(
-                right: 40,
-                top: 10,
-                child: IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Cerrar la página
-                  },
-                ),
+            ),
+            Positioned(
+              right: 40,
+              top: 10,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Cerrar la página
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

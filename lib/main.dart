@@ -4,8 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/gastronomia_provider.dart';
 import 'package:vilaexplorer/providers/tradiciones_provider.dart';
 import 'package:vilaexplorer/providers/usuarios_provider.dart';
-import 'src/pages/splash_page.dart';
-import 'l10n/app_localizations.dart';
+import 'package:vilaexplorer/src/pages/splash_page.dart';
+import 'package:vilaexplorer/providers/login_form_provider.dart'; // Importa el provider
+import 'package:vilaexplorer/l10n/app_localizations.dart';
 
 void main() {
   runApp(const AppState());
@@ -20,10 +21,9 @@ class AppState extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UsuarioProvider(), lazy: false),
-        ChangeNotifierProvider(
-            create: (_) => TradicionesProvider(), lazy: false),
-        ChangeNotifierProvider(
-            create: (_) => GastronomiaProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => TradicionesProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => GastronomiaProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => LoginFormProvider()), // Agregar el LoginFormProvider aquí
       ],
       child: const MyApp(),
     );
@@ -58,7 +58,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Vila Explorer',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const SplashPage(),
+      home: 
+      const SplashPage(), 
       locale: _locale, // Define el idioma actual
       supportedLocales: const [
         Locale('en'), // Inglés
