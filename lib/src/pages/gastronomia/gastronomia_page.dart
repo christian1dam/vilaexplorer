@@ -205,24 +205,57 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                     itemCount: platos!.length,
                                     itemBuilder: (context, index) {
                                       final plato = platos[index];
+                                      final gastronomiaService =
+                                          Provider.of<GastronomiaService>(
+                                              context,
+                                              listen: false);
+
                                       return Card(
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
-                                              child: Image.memory(
-                                                base64Decode(
-                                                    plato.imagenBase64!),
-                                                width: double.infinity,
-                                                fit: BoxFit.cover,
-                                                errorBuilder: (context, error,
-                                                    stackTrace) {
-                                                  return const Icon(
-                                                    Icons.broken_image,
-                                                    size: 50,
-                                                    color: Colors.grey,
-                                                  );
+                                              child: FutureBuilder<Widget>(
+                                                future: gastronomiaService
+                                                    .getImageForPlato(
+                                                  plato.imagenBase64,
+                                                  plato.imagen,
+                                                ),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return const Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    );
+                                                  } else if (snapshot
+                                                      .hasError) {
+                                                    return const Icon(
+                                                      Icons.broken_image,
+                                                      size: 50,
+                                                      color: Colors.grey,
+                                                    );
+                                                  } else if (snapshot.hasData) {
+                                                    return Container(
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                          image: (snapshot.data
+                                                                  as Image)
+                                                              .image,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    return const Icon(
+                                                      Icons.image_not_supported,
+                                                      size: 50,
+                                                      color: Colors.grey,
+                                                    );
+                                                  }
                                                 },
                                               ),
                                             ),
@@ -244,25 +277,47 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                   )
                                 : ListView.builder(
                                     padding: const EdgeInsets.all(8.0),
-                                    itemCount: platos!.length,
+                                    itemCount: platos.length,
                                     itemBuilder: (context, index) {
                                       final plato = platos[index];
+                                      final gastronomiaService =
+                                          Provider.of<GastronomiaService>(
+                                              context,
+                                              listen: false);
+
                                       return Card(
                                         color: const Color.fromARGB(
                                             255, 47, 42, 42),
                                         child: ListTile(
-                                          leading: Image.memory(
-                                            base64Decode(plato.imagenBase64!),
-                                            width: 50,
-                                            height: 50,
-                                            fit: BoxFit.cover,
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return const Icon(
-                                                Icons.broken_image,
-                                                size: 50,
-                                                color: Colors.grey,
-                                              );
+                                          leading: FutureBuilder<Widget>(
+                                            future: gastronomiaService
+                                                .getImageForPlato(
+                                                    plato.imagenBase64,
+                                                    plato.imagen),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return const SizedBox(
+                                                  width: 50,
+                                                  height: 50,
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                );
+                                              } else if (snapshot.hasError) {
+                                                return const Icon(
+                                                  Icons.broken_image,
+                                                  size: 50,
+                                                  color: Colors.grey,
+                                                );
+                                              } else if (snapshot.hasData) {
+                                                return snapshot.data!;
+                                              } else {
+                                                return const Icon(
+                                                  Icons.image_not_supported,
+                                                  size: 50,
+                                                  color: Colors.grey,
+                                                );
+                                              }
                                             },
                                           ),
                                           title: Text(

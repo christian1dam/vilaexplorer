@@ -1,9 +1,15 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/models/gastronomia/tipoPlato.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/service/tipo_plato_service.dart';
+import 'package:vilaexplorer/src/widgets/product_image.dart';
+import 'package:http/http.dart' as http;
 
 class AddPlato extends StatefulWidget {
   const AddPlato({super.key});
@@ -17,6 +23,7 @@ class _AddPlatoState extends State<AddPlato> {
   String? nombrePlato;
   String? descripcion;
   String? receta;
+  String? image;
 
   List<TipoPlato> types = [];
 
@@ -30,7 +37,8 @@ class _AddPlatoState extends State<AddPlato> {
   void initState() {
     super.initState();
     _addIngredientRow();
-    Provider.of<TipoPlatoService>(context, listen: false).fetchTiposPlatoActivos();
+    Provider.of<TipoPlatoService>(context, listen: false)
+        .fetchTiposPlatoActivos();
   }
 
   void _addIngredientRow() {
@@ -167,6 +175,28 @@ class _AddPlatoState extends State<AddPlato> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Stack(
+                children: [
+                  ProductImage(
+                    url: image,
+                  ),
+                  const SizedBox(height: 20),
+                  Positioned(
+                    top: 20,
+                    right: 20,
+                    child: IconButton(
+                      onPressed: () async {
+                        await _pickImage(context);
+                      },
+                      icon: Icon(
+                        Icons.camera_alt_outlined,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 20),
               Text(
                 AppLocalizations.of(context)!.translate('dish_name'),
@@ -496,10 +526,13 @@ class _AddPlatoState extends State<AddPlato> {
                     late int tipoPlato;
 
                     for (var t in types) {
-                      if(t.nombreTipo == selectedType) tipoPlato = t.idTipoPlato;
+                      if (t.nombreTipo == selectedType) {
+                        tipoPlato = t.idTipoPlato;
+                      }
                     }
 
-                    platoService.createPlato(nombrePlato!, tipoPlato, ingredientesString, descripcion!, receta!);
+                    platoService.createPlato(nombrePlato!, tipoPlato,
+                        ingredientesString, descripcion!, receta!, image!);
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
@@ -523,8 +556,46 @@ class _AddPlatoState extends State<AddPlato> {
     );
   }
 
-  // Plato _plato(String? nombrePlato, String? selectedType, String? descripcion, String? receta, String ingredientesString) {
-  //   final º
-  // }
+  Future<void> _pickImage(BuildContext context) async {
+    final picker = ImagePicker();
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Tomar una foto'),
+                onTap: () async {
+                  final XFile? photo =
+                      await picker.pickImage(source: ImageSource.camera);
+                  if (photo != null) {
+                    setState(() {
+                      image = photo.path; // Guardar la ruta local de la foto
+                    });
+                  }
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Seleccionar desde la galería'),
+                onTap: () async {
+                  final XFile? selectedImage =
+                      await picker.pickImage(source: ImageSource.gallery);
+                  if (selectedImage != null) {
+                    setState(() {
+                      image = selectedImage.path; // Guardar la ruta local
+                    });
+                  }
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
-  

@@ -19,7 +19,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   provider: ^6.1.2
   http: ^1.2.2
-
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
