@@ -34,7 +34,7 @@ class UsuarioService extends ChangeNotifier {
       throw InvalidPasswordException("Las contraseñas no coinciden");
     }
 
-    UsuarioAuth usuario = UsuarioAuth(email: email, password: password);
+    UsuarioAuth usuario = UsuarioAuth(username: nombre, email: email, password: password);
 
     try {
       final response =
