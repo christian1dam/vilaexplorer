@@ -97,66 +97,65 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Row(
+                        child: Column(
                           children: [
-                            IconButton(
-                              icon:
-                                  const Icon(Icons.search, color: Colors.white),
-                              onPressed: _toggleSearch,
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                isGridView ? Icons.list : Icons.grid_on,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  isGridView = !isGridView;
-                                });
-                              },
-                            ),
-                            const SizedBox(width: 20),
-                            Container(
-                              decoration: const BoxDecoration(
-                                color: Color.fromRGBO(30, 30, 30, 1),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                              ),
-                              margin: const EdgeInsets.only(top: 10, left: 10),
-                              width: size.width * 0.4,
-                              height: 35,
-                              child: Center(
-                                child: Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('gastronomy'),
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontFamily: 'Poppins',
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Spacer(),
                             Row(
                               children: [
                                 IconButton(
-                                  icon: const Icon(Icons.add,
-                                      color: Colors.white),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const AddPlato(),
-                                      ),
-                                    );
-                                  },
+                                  icon: const Icon(Icons.search, color: Colors.white),
+                                  onPressed: _toggleSearch,
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.close,
-                                      color: Colors.white),
-                                  onPressed: widget.onClose,
+                                  icon: Icon(
+                                    isGridView ? Icons.list : Icons.grid_on,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      isGridView = !isGridView;
+                                    });
+                                  },
+                                ),
+                                const SizedBox(width: 20),
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(30, 30, 30, 1),
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                  ),
+                                  margin: const EdgeInsets.only(top: 10, left: 10),
+                                  width: size.width * 0.4,
+                                  height: 35,
+                                  child: Center(
+                                    child: Text(
+                                      AppLocalizations.of(context)!.translate('gastronomy'),
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.add, color: Colors.white),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const AddPlato(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.close, color: Colors.white),
+                                      onPressed: widget.onClose,
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -170,21 +169,44 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                             controller: searchController,
                             style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
-                              hintText: AppLocalizations.of(context)!
-                                  .translate('search_recipe'),
+                              hintText: AppLocalizations.of(context)!.translate('search_recipe'),
                               hintStyle: const TextStyle(color: Colors.white54),
                               fillColor: const Color.fromARGB(255, 47, 42, 42),
                               filled: true,
                               border: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                borderRadius: BorderRadius.all(Radius.circular(20)),
                               ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 10),
+                              contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             ),
                           ),
                         ),
-                      const SizedBox(height: 10),
+
+                        // New button spans entire width
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    // Handle button press
+                                    print("New Button Pressed");
+                                  },
+                                  child: Text(
+                                    AppLocalizations.of(context)!.translate('new_button'),
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color.fromARGB(150, 107, 107, 107), // Button color
+                                    foregroundColor: Colors.black, // Text color
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                      // Reduced space below button
+                      const SizedBox(height: 5),
                       Expanded(
                         child: platos == null
                             ? const Center(
@@ -196,8 +218,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                             : isGridView
                                 ? GridView.builder(
                                     padding: const EdgeInsets.all(8.0),
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2,
                                       crossAxisSpacing: 8.0,
                                       mainAxisSpacing: 8.0,
@@ -205,33 +226,24 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                     itemCount: platos.length,
                                     itemBuilder: (context, index) {
                                       final plato = platos[index];
-                                      final gastronomiaService =
-                                          Provider.of<GastronomiaService>(
-                                              context,
-                                              listen: false);
+                                      final gastronomiaService = Provider.of<GastronomiaService>(context, listen: false);
 
                                       return Card(
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                               child: FutureBuilder<Widget>(
-                                                future: gastronomiaService
-                                                    .getImageForPlato(
+                                                future: gastronomiaService.getImageForPlato(
                                                   plato.imagenBase64,
                                                   plato.imagen,
                                                 ),
                                                 builder: (context, snapshot) {
-                                                  if (snapshot
-                                                          .connectionState ==
-                                                      ConnectionState.waiting) {
+                                                  if (snapshot.connectionState == ConnectionState.waiting) {
                                                     return const Center(
-                                                      child:
-                                                          CircularProgressIndicator(),
+                                                      child: CircularProgressIndicator(),
                                                     );
-                                                  } else if (snapshot
-                                                      .hasError) {
+                                                  } else if (snapshot.hasError) {
                                                     return const Icon(
                                                       Icons.broken_image,
                                                       size: 50,
@@ -242,9 +254,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                                       width: double.infinity,
                                                       decoration: BoxDecoration(
                                                         image: DecorationImage(
-                                                          image: (snapshot.data
-                                                                  as Image)
-                                                              .image,
+                                                          image: (snapshot.data as Image).image,
                                                           fit: BoxFit.cover,
                                                         ),
                                                       ),
@@ -260,8 +270,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                               ),
                                             ),
                                             Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
+                                              padding: const EdgeInsets.all(8.0),
                                               child: Text(
                                                 plato.nombre,
                                                 style: const TextStyle(
@@ -280,28 +289,21 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                     itemCount: platos.length,
                                     itemBuilder: (context, index) {
                                       final plato = platos[index];
-                                      final gastronomiaService =
-                                          Provider.of<GastronomiaService>(
-                                              context,
-                                              listen: false);
+                                      final gastronomiaService = Provider.of<GastronomiaService>(context, listen: false);
 
                                       return Card(
-                                        color: const Color.fromARGB(
-                                            255, 47, 42, 42),
+                                        color: const Color.fromARGB(255, 47, 42, 42),
                                         child: ListTile(
                                           leading: FutureBuilder<Widget>(
-                                            future: gastronomiaService
-                                                .getImageForPlato(
-                                                    plato.imagenBase64,
-                                                    plato.imagen),
+                                            future: gastronomiaService.getImageForPlato(
+                                                plato.imagenBase64,
+                                                plato.imagen),
                                             builder: (context, snapshot) {
-                                              if (snapshot.connectionState ==
-                                                  ConnectionState.waiting) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
                                                 return const SizedBox(
                                                   width: 50,
                                                   height: 50,
-                                                  child:
-                                                      CircularProgressIndicator(),
+                                                  child: CircularProgressIndicator(),
                                                 );
                                               } else if (snapshot.hasError) {
                                                 return const Icon(
@@ -322,8 +324,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                           ),
                                           title: Text(
                                             plato.nombre,
-                                            style: const TextStyle(
-                                                color: Colors.white),
+                                            style: const TextStyle(color: Colors.white),
                                           ),
                                         ),
                                       );
