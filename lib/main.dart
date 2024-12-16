@@ -5,8 +5,6 @@ import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
-import 'package:vilaexplorer/src/pages/gastronomia/addPlato.dart';
-import 'package:vilaexplorer/src/pages/login_page.dart';
 import 'src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
 
@@ -56,11 +54,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp( 
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Vila Explorer',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: LoginPage(),
+      home: SplashPage(),
       locale: _locale, // Define el idioma actual
       supportedLocales: const [
         Locale('en'), // Inglés

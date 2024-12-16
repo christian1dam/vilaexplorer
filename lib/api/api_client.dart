@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:vilaexplorer/service/usuario_service.dart';
 
 class ApiClient {
-  final String _baseUrl = 'http://192.168.100.103:8080/api/v0';
+  final String _baseUrl = 'http://172.20.10.6:8080/api/v0';
   // 'http://172.20.10.2:8080/api/v0'; // Wifi Móvil
   // 'http://192.168.0.31:8080/api/v0'; // Red
 

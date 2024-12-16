@@ -202,7 +202,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                       crossAxisSpacing: 8.0,
                                       mainAxisSpacing: 8.0,
                                     ),
-                                    itemCount: platos!.length,
+                                    itemCount: platos.length,
                                     itemBuilder: (context, index) {
                                       final plato = platos[index];
                                       final gastronomiaService =
