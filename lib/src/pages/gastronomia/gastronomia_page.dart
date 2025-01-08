@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/addPlato.dart';
+import 'package:vilaexplorer/src/pages/gastronomia/myRecipesPage.dart';
 
 class GastronomiaPage extends StatefulWidget {
   final Function(String) onCategoriaPlatoSelected;
@@ -188,19 +189,23 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                 width: double.infinity,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    // Handle button press
-                                    print("New Button Pressed");
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const MyRecipesPage(),
+                                      ),
+                                    );
                                   },
-                                  child: Text(
-                                    AppLocalizations.of(context)!.translate('new_button'),
-                                    style: const TextStyle(color: Colors.black),
-                                  ),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(150, 107, 107, 107), // Button color
-                                    foregroundColor: Colors.black, // Text color
+                                    backgroundColor: const Color.fromARGB(255, 47, 42, 42), // Button color
+                                    foregroundColor: const Color.fromARGB(255, 255, 255, 255), // Text color
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
                                     ),
+                                  ),
+                                  child: Text(
+                                    AppLocalizations.of(context)!.translate('own_recipe'),
+                                    style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                                   ),
                                 ),
                               ),
