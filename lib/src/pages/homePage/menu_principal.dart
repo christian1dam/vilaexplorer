@@ -75,6 +75,9 @@ class MenuPrincipal extends StatelessWidget {
                   _buildSearchBar(AppLocalizations.of(context)!.translate('mp_search')),
 
                   const Divider(height: 5, color: Colors.transparent),
+                  
+
+                  const Divider(height: 5, color: Colors.transparent),
 
                   // Botones principales
                   Row(
