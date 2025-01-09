@@ -4,7 +4,7 @@ import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/models/gastronomia/plato.dart';  // Importa el modelo de Plato
 
 class MyRecipesPage extends StatefulWidget {
-  const MyRecipesPage({Key? key}) : super(key: key);
+  const MyRecipesPage({super.key});
 
   @override
   State<MyRecipesPage> createState() => _MyRecipesPageState();
