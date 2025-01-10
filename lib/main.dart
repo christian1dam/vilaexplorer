@@ -5,6 +5,7 @@ import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
+import 'package:vilaexplorer/providers/monumentos_provider.dart'; // Asegúrate de importar el MonumentosProvider
 import 'src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
 
@@ -24,6 +25,7 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TradicionesService(), lazy: false),
         ChangeNotifierProvider(create: (_) => GastronomiaService(), lazy: false),
         ChangeNotifierProvider(create: (_) => TipoPlatoService(), lazy: false),
+        ChangeNotifierProvider(create: (_) => MonumentosProvider(), lazy: false), // Agrega MonumentosProvider aquí
       ],
       child: const MyApp(),
     );

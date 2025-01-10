@@ -39,8 +39,8 @@ class _MapViewState extends State<MapView> {
           opacity: _isMapLoaded ? 1 : 0, // Mostrar el mapa solo cuando _isMapLoaded es true
           child: FlutterMap(
             options: const MapOptions(
-              initialCenter: LatLng(38.6493700, -0.0982400),
-              initialZoom: 11,
+              initialCenter: LatLng(38.50994005947137, -0.22868221040381242),
+              initialZoom: 14,
               interactionOptions: InteractionOptions(
                 flags: ~InteractiveFlag.doubleTapZoom,
               ),
