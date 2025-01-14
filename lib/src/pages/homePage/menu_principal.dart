@@ -25,7 +25,6 @@ class MenuPrincipal extends StatelessWidget {
     this.onShowCuentaPressed,
     this.onShowGastronomiaPressed,
     this.onShowMonumentosPressed,
-
     this.onCloseMenu,
   });
 
