@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'login_page.dart'; // Adjust the path to where LoginPage is defined
 
@@ -15,11 +16,11 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
 
     // Espera 3 segundos y luego redirige a la LoginPage
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(milliseconds: 1000), () {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          transitionDuration: Duration(seconds: 2), // Duración de la transición
+          transitionDuration: Duration(milliseconds: 1500), // Duración de la transición
           pageBuilder: (_, __, ___) => const LoginPage(),
         ),
       );
@@ -55,12 +56,12 @@ class _SplashPageState extends State<SplashPage> {
                 Hero(
                   tag: 'logoHero', // El tag debe coincidir en ambas páginas
                   child: CircleAvatar(
-                    radius: 100, // Tamaño de la imagen circular
+                    radius: 100.r,
                     backgroundColor: Colors.transparent,
-                    backgroundImage: AssetImage('assets/images/VilaExplorer.png'), // La imagen circular del logo
+                    backgroundImage: AssetImage('assets/images/VilaExplorer.png'),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
               ],
             ),
           ),

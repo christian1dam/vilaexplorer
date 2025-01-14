@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
-import 'package:vilaexplorer/models/gastronomia/plato.dart';  // Importa el modelo de Plato
+import 'package:vilaexplorer/models/gastronomia/plato.dart'; 
 
 class MyRecipesPage extends StatefulWidget {
   const MyRecipesPage({super.key});
