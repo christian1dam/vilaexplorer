@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/addPlato.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/myRecipesPage.dart';
+import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class GastronomiaPage extends StatefulWidget {
   final Function(String) onCategoriaPlatoSelected;
@@ -53,6 +55,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
     final platos = gastronomiaService.platos;
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         if (isSearchActive) {
           setState(() {
@@ -67,11 +70,11 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
         alignment: Alignment.bottomCenter,
         child: Container(
           height: size.height * 0.65,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: Color.fromRGBO(32, 29, 29, 0.9),
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
+              topLeft: Radius.circular(20.r),
+              topRight: Radius.circular(20.r),
             ),
           ),
           child: GestureDetector(
@@ -85,24 +88,20 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                 : Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Container(
-                          width: 100,
-                          height: 5,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[400],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
+                        padding: EdgeInsets.symmetric(vertical: 10.0.h),
+                        child: BarraDeslizamiento()
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 8.w, vertical: 8.h),
                         child: Column(
                           children: [
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 IconButton(
-                                  icon: const Icon(Icons.search, color: Colors.white),
+                                  icon: const Icon(Icons.search,
+                                      color: Colors.white),
                                   onPressed: _toggleSearch,
                                 ),
                                 IconButton(
@@ -116,101 +115,107 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                     });
                                   },
                                 ),
-                                const SizedBox(width: 20),
+                                SizedBox(width: 17.w),
                                 Container(
-                                  decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(30, 30, 30, 1),
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  ),
-                                  margin: const EdgeInsets.only(top: 10, left: 10),
-                                  width: size.width * 0.4,
-                                  height: 35,
-                                  child: Center(
-                                    child: Text(
-                                      AppLocalizations.of(context)!.translate('gastronomy'),
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                        fontFamily: 'Poppins',
-                                      ),
+                                  width: size.width * 0.38,
+                                  height: 35.h,
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .translate('gastronomy'),
+                                    style: TextStyle(
+                                      fontSize: 23.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
                                 const Spacer(),
                                 Row(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButton(
-                                      icon: const Icon(Icons.add, color: Colors.white),
+                                      icon: const Icon(Icons.add,
+                                          color: Colors.white),
                                       onPressed: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => const AddPlato(),
+                                            builder: (context) =>
+                                                const AddPlato(),
                                           ),
                                         );
                                       },
                                     ),
                                     IconButton(
-                                      icon: const Icon(Icons.close, color: Colors.white),
+                                      icon: const Icon(Icons.close,
+                                          color: Colors.white),
                                       onPressed: widget.onClose,
                                     ),
                                   ],
                                 ),
                               ],
-                            ),
+                            )
                           ],
                         ),
                       ),
                       if (isSearchActive)
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
                           child: TextField(
                             controller: searchController,
                             style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
-                              hintText: AppLocalizations.of(context)!.translate('search_recipe'),
+                              hintText: AppLocalizations.of(context)!
+                                  .translate('search_recipe'),
                               hintStyle: const TextStyle(color: Colors.white54),
                               fillColor: const Color.fromARGB(255, 47, 42, 42),
                               filled: true,
                               border: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
                               ),
-                              contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 5.h, horizontal: 10.w),
                             ),
                           ),
                         ),
 
-                        // New button spans entire width
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const MyRecipesPage(),
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(255, 47, 42, 42), // Button color
-                                    foregroundColor: const Color.fromARGB(255, 255, 255, 255), // Text color
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    AppLocalizations.of(context)!.translate('own_recipe'),
-                                    style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                                  ),
+                      // New button spans entire width
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 8.h, horizontal: 16.w),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MyRecipesPage(),
                                 ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color.fromARGB(
+                                  255, 47, 42, 42), // Button color
+                              foregroundColor: const Color.fromARGB(
+                                  255, 255, 255, 255), // Text color
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.r),
                               ),
                             ),
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('own_recipe'),
+                              style: const TextStyle(
+                                  color: Color.fromARGB(255, 255, 255, 255)),
+                            ),
+                          ),
+                        ),
+                      ),
                       // Reduced space below button
-                      const SizedBox(height: 5),
+                      SizedBox(height: 5.h),
                       Expanded(
                         child: platos == null
                             ? const Center(
@@ -221,8 +226,9 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                               )
                             : isGridView
                                 ? GridView.builder(
-                                    padding: const EdgeInsets.all(8.0),
-                                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                    padding: EdgeInsets.all(8.0.h),
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2,
                                       crossAxisSpacing: 8.0,
                                       mainAxisSpacing: 8.0,
@@ -230,27 +236,36 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                     itemCount: platos.length,
                                     itemBuilder: (context, index) {
                                       final plato = platos[index];
-                                      final gastronomiaService = Provider.of<GastronomiaService>(context, listen: false);
+                                      final gastronomiaService =
+                                          Provider.of<GastronomiaService>(
+                                              context,
+                                              listen: false);
 
                                       return Card(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                               child: FutureBuilder<Widget>(
-                                                future: gastronomiaService.getImageForPlato(
+                                                future: gastronomiaService
+                                                    .getImageForPlato(
                                                   plato.imagenBase64,
                                                   plato.imagen,
                                                 ),
                                                 builder: (context, snapshot) {
-                                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
                                                     return const Center(
-                                                      child: CircularProgressIndicator(),
+                                                      child:
+                                                          CircularProgressIndicator(),
                                                     );
-                                                  } else if (snapshot.hasError) {
-                                                    return const Icon(
+                                                  } else if (snapshot
+                                                      .hasError) {
+                                                    return Icon(
                                                       Icons.broken_image,
-                                                      size: 50,
+                                                      size: 50.r,
                                                       color: Colors.grey,
                                                     );
                                                   } else if (snapshot.hasData) {
@@ -258,15 +273,17 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                                       width: double.infinity,
                                                       decoration: BoxDecoration(
                                                         image: DecorationImage(
-                                                          image: (snapshot.data as Image).image,
+                                                          image: (snapshot.data
+                                                                  as Image)
+                                                              .image,
                                                           fit: BoxFit.cover,
                                                         ),
                                                       ),
                                                     );
                                                   } else {
-                                                    return const Icon(
+                                                    return Icon(
                                                       Icons.image_not_supported,
-                                                      size: 50,
+                                                      size: 50.r,
                                                       color: Colors.grey,
                                                     );
                                                   }
@@ -274,11 +291,13 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                               ),
                                             ),
                                             Padding(
-                                              padding: const EdgeInsets.all(8.0),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 8.w,
+                                                  vertical: 8.h),
                                               child: Text(
                                                 plato.nombre,
-                                                style: const TextStyle(
-                                                  fontSize: 16,
+                                                style: TextStyle(
+                                                  fontSize: 16.sp,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -289,38 +308,46 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                     },
                                   )
                                 : ListView.builder(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8.w, vertical: 8.h),
                                     itemCount: platos.length,
                                     itemBuilder: (context, index) {
                                       final plato = platos[index];
-                                      final gastronomiaService = Provider.of<GastronomiaService>(context, listen: false);
+                                      final gastronomiaService =
+                                          Provider.of<GastronomiaService>(
+                                              context,
+                                              listen: false);
 
                                       return Card(
-                                        color: const Color.fromARGB(255, 47, 42, 42),
+                                        color: const Color.fromARGB(
+                                            255, 47, 42, 42),
                                         child: ListTile(
                                           leading: FutureBuilder<Widget>(
-                                            future: gastronomiaService.getImageForPlato(
-                                                plato.imagenBase64,
-                                                plato.imagen),
+                                            future: gastronomiaService
+                                                .getImageForPlato(
+                                                    plato.imagenBase64,
+                                                    plato.imagen),
                                             builder: (context, snapshot) {
-                                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                                return const SizedBox(
-                                                  width: 50,
-                                                  height: 50,
-                                                  child: CircularProgressIndicator(),
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return SizedBox(
+                                                  width: 50.w,
+                                                  height: 50.h,
+                                                  child:
+                                                      CircularProgressIndicator(),
                                                 );
                                               } else if (snapshot.hasError) {
-                                                return const Icon(
+                                                return Icon(
                                                   Icons.broken_image,
-                                                  size: 50,
+                                                  size: 50.r,
                                                   color: Colors.grey,
                                                 );
                                               } else if (snapshot.hasData) {
                                                 return snapshot.data!;
                                               } else {
-                                                return const Icon(
+                                                return Icon(
                                                   Icons.image_not_supported,
-                                                  size: 50,
+                                                  size: 50.r,
                                                   color: Colors.grey,
                                                 );
                                               }
@@ -328,7 +355,9 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                           ),
                                           title: Text(
                                             plato.nombre,
-                                            style: const TextStyle(color: Colors.white),
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18.sp),
                                           ),
                                         ),
                                       );

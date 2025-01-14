@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
+import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'tarjetaFiestaTradicion.dart';
 
 class TradicionesPage extends StatefulWidget {
@@ -99,74 +101,75 @@ class _TradicionesPageState extends State<TradicionesPage> {
                   }
                 },
                 child: Container(
-                  height: size.height * 0.65,
+                  height: 600.h,
                   width: size.width,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Color.fromRGBO(32, 29, 29, 0.9),
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(20.r),
+                      topRight: Radius.circular(20.r),
                     ),
                   ),
                   child: Column(
                     children: [
                       // Barra de estilo iOS
+                      BarraDeslizamiento(),
+
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Container(
-                          width: 100,
-                          height: 5,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[400],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 8.h, horizontal: 8.w),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment
+                              .center, // Alinea todos los elementos verticalmente
                           children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.search,
-                                color: Colors.white,
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: 4.h), // Baja un poco la lupa
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.search,
+                                  color: Colors.white,
+                                ),
+                                onPressed: _toggleSearch,
                               ),
-                              onPressed: _toggleSearch,
                             ),
-                            Container(
-                              decoration: const BoxDecoration(
-                                color: Color.fromRGBO(30, 30, 30, 1),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                              ),
-                              margin: const EdgeInsets.only(top: 10, left: 10),
-                              width: size.width * 0.7,
-                              height: 35,
-                              child: Center(
+                            Expanded(
+                              child: Container(
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: 10.w,
+                                ), // Margen uniforme
+                                height: 35.h,
+                                alignment: Alignment
+                                    .center, // Centra el contenido verticalmente
+
                                 child: Text(
                                   AppLocalizations.of(context)!
                                       .translate('holidays_traditions'),
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: 21.sp,
+                                    fontWeight: FontWeight.w600,
                                     color: Colors.white,
-                                    fontFamily: 'Poppins',
                                   ),
                                 ),
                               ),
                             ),
-                            IconButton(
-                              icon:
-                                  const Icon(Icons.close, color: Colors.white),
-                              onPressed: widget.onClose,
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: 4.h), // Baja un poco el botón de salir
+                              child: IconButton(
+                                icon: const Icon(Icons.close,
+                                    color: Colors.white),
+                                onPressed: widget.onClose,
+                              ),
                             ),
                           ],
                         ),
                       ),
                       if (isSearchActive)
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
                           child: TextField(
                             controller: searchController,
                             style: const TextStyle(color: Colors.white),
@@ -178,47 +181,49 @@ class _TradicionesPageState extends State<TradicionesPage> {
                               filled: true,
                               border: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20.r)),
                               ),
                               contentPadding: EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 10),
+                                  vertical: 5.h, horizontal: 10.w),
                             ),
                           ),
                         ),
-                      if (isSearchActive) const SizedBox(height: 10),
+                      if (isSearchActive) SizedBox(height: 10.h),
                       if (!isSearchActive)
                         Container(
-                          padding: const EdgeInsets.only(top: 2, bottom: 2),
-                          margin: const EdgeInsets.only(bottom: 10),
-                          width: size.width - 40,
-                          height: 40,
-                          decoration: const BoxDecoration(
+                          padding: EdgeInsets.only(top: 2.h, bottom: 2.h),
+                          margin: EdgeInsets.only(bottom: 10.h),
+                          width: size.width - 40.w,
+                          height: 40.h,
+                          decoration: BoxDecoration(
                               color: Color.fromRGBO(36, 36, 36, 1),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(20))),
+                                  BorderRadius.all(Radius.circular(20.r))),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              MyBotonText(AppLocalizations.of(context)!
+                              myBotonText(AppLocalizations.of(context)!
                                   .translate('all')),
-                              MyBotonText(AppLocalizations.of(context)!
+                              myBotonText(AppLocalizations.of(context)!
                                   .translate('popular')),
-                              MyBotonText(AppLocalizations.of(context)!
+                              myBotonText(AppLocalizations.of(context)!
                                   .translate('nearby')),
                             ],
                           ),
                         ),
                       Expanded(
                         child: ListView.builder(
-                          padding: const EdgeInsets.all(0),
+                          padding: EdgeInsets.all(0),
                           itemCount: tradiciones.length,
                           itemBuilder: (context, index) {
                             final tradicion = tradiciones[index];
-                            return FiestaCard(  
+                            return FiestaCard(
                               nombre: tradicion.nombre,
                               fecha: tradicion.fecha,
-                              imagen: provider.getImageForTradicion(tradicion.imagen),
-                              detalleTap: () => _toggleContainer(tradicion.nombre),
+                              imagen: provider
+                                  .getImageForTradicion(tradicion.imagen),
+                              detalleTap: () =>
+                                  _toggleContainer(tradicion.nombre),
                             );
                           },
                         ),
@@ -241,9 +246,9 @@ class _TradicionesPageState extends State<TradicionesPage> {
     });
   }
 
-  SizedBox MyBotonText(String texto) {
+  SizedBox myBotonText(String texto) {
     return SizedBox(
-      width: 117,
+      width: 110.w,
       child: TextButton(
         onPressed: () {},
         style: ButtonStyle(
@@ -253,7 +258,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
         ),
         child: Text(
           texto,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontSize: 13.sp),
         ),
       ),
     );
