@@ -5,6 +5,7 @@ import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
+import 'package:vilaexplorer/providers/monumentos_provider.dart'; // Asegúrate de importar el MonumentosProvider
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // Importa ScreenUtil
 import 'src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
@@ -25,6 +26,7 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TradicionesService(), lazy: false),
         ChangeNotifierProvider(create: (_) => GastronomiaService(), lazy: false),
         ChangeNotifierProvider(create: (_) => TipoPlatoService(), lazy: false),
+        ChangeNotifierProvider(create: (_) => MonumentosProvider(), lazy: false), // Agrega MonumentosProvider aquí
       ],
       child: const MyApp(),
     );
@@ -57,7 +59,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     // Inicializa ScreenUtil
     return ScreenUtilInit(
-      designSize: const Size(384, 857), // Tamaño base del diseño (ej. iPhone X)
+      designSize: const Size(384, 857), 
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {

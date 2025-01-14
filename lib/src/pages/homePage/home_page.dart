@@ -5,6 +5,7 @@ import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/categoria_platos.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/detalle_platillo.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
+import 'package:vilaexplorer/src/pages/homePage/filter_button.dart';
 import 'package:vilaexplorer/src/pages/monumentosPage/monumentos_page.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/detalleFiestaTradicion.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
@@ -40,6 +41,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String? selectedPlatillo;
   String? selectedIngredientes;
   String? selectedReceta;
+  String? activeFilter; // Almacena el filtro activo
+
 
   @override
   void initState() {
@@ -72,6 +75,67 @@ class _MyHomePageState extends State<MyHomePage> {
                   right: 0,
                   child: AppBarCustom(onMenuPressed: _toggleMenuPrincipal),
                 ),
+                
+                if (!showMenuPrincipal)
+                  Positioned(
+                  bottom: 20,
+                  left: 20,
+                  right: 20,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        SizedBox(width: 10),
+                        FilterButton(
+                          label: "Todo",
+                          isActive: activeFilter == "Todo",
+                          onPressed: () {
+                            setState(() {
+                              activeFilter = activeFilter == "Todo" ? null : "Todo";
+                              _clearScreen();
+                            });
+                          },
+                        ),
+                        SizedBox(width: 5),
+                        FilterButton(
+                          label: "Favoritos",
+                          isActive: activeFilter == "Favoritos",
+                          onPressed: () {
+                            setState(() {
+                              activeFilter = activeFilter == "Favoritos" ? null : "Favoritos";
+                              _clearScreen();
+                            });
+                          },
+                        ),
+                        SizedBox(width: 5),
+                        FilterButton(
+                          label: "Gastronomía",
+                          isActive: activeFilter == "Gastronomía",
+                          onPressed: () {
+                            setState(() {
+                              activeFilter = activeFilter == "Gastronomía" ? null : "Gastronomía";
+                              _toggleGastronomiaPage();
+                            });
+                          },
+                        ),
+                        SizedBox(width: 5),
+                        FilterButton(
+                          label: "Monumentos",
+                          isActive: activeFilter == "Monumentos",
+                          onPressed: () {
+                            setState(() {
+                              activeFilter = activeFilter == "Monumentos" ? null : "Monumentos";
+                              _toggleMonumentosPage();
+                            });
+                          },
+                        ),
+                        SizedBox(width: 10),
+                      ],
+                    ),
+                  ),
+                ),
+
+
 
                 // Menú Principal con barra de iOS y deslizamiento para cerrar
                 if (showMenuPrincipal)
