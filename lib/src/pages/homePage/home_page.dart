@@ -401,7 +401,7 @@ void _toggleCuentaPage() {
       showDetallePlatillo = false;
       showFavoritosPage = false;
       showCuentaPage = false;
-      showMonumentosPage = false;
+      showMonumentosPage = false; 
     }
     // Alternar la visibilidad del menú
     showMenuPrincipal = !showMenuPrincipal;

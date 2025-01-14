@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
@@ -14,7 +15,6 @@ void main() {
   runApp(const AppState());
 }
 
-// Envolver MyApp con MultiProvider para inyectar los Providers
 class AppState extends StatelessWidget {
   const AppState({super.key});
 
@@ -27,6 +27,7 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => GastronomiaService(), lazy: false),
         ChangeNotifierProvider(create: (_) => TipoPlatoService(), lazy: false),
         ChangeNotifierProvider(create: (_) => MonumentosProvider(), lazy: false), // Agrega MonumentosProvider aquí
+        ChangeNotifierProvider(create: (_) => PageProvider(), lazy: false),
       ],
       child: const MyApp(),
     );

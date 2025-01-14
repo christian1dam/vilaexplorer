@@ -63,7 +63,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
             searchController.clear();
           });
         } else {
-          widget.onClose();
+          // widget.onClose();
         }
       },
       child: Align(
@@ -150,7 +150,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                     IconButton(
                                       icon: const Icon(Icons.close,
                                           color: Colors.white),
-                                      onPressed: widget.onClose,
+                                        onPressed: () {},
                                     ),
                                   ],
                                 ),
