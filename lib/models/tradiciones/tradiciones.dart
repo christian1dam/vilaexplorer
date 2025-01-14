@@ -9,7 +9,6 @@ class Tradiciones {
   String descripcion;
   double puntuacionMediaTradicion;
   String imagen;
-  String imagenBase64;
   bool activo;
   Usuario autor;
 
@@ -20,7 +19,6 @@ class Tradiciones {
     required this.descripcion,
     required this.puntuacionMediaTradicion,
     required this.imagen,
-    required this.imagenBase64,
     required this.activo,
     required this.autor,
   });
@@ -37,7 +35,6 @@ class Tradiciones {
         descripcion: json["descripcion"],
         puntuacionMediaTradicion: json["puntuacionMediaTradicion"],
         imagen: json["imagen"],
-        imagenBase64: json["imagenBase64"],
         activo: json["activo"],
         autor: Usuario.fromMap(json["autor"]),
       );
@@ -49,13 +46,7 @@ class Tradiciones {
         "descripcion": descripcion,
         "puntuacionMediaTradicion": puntuacionMediaTradicion,
         "imagen": imagen,
-        "imagenBase64": imagenBase64,
         "activo": activo,
         "autor": autor.toMap(),
       };
-
-  // Método para convertir la imagen base64 a un widget de imagen en Flutter
-  Image getImagen() {
-    return Image.memory(base64Decode(imagenBase64));
-  }
 }

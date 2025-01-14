@@ -217,7 +217,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
                             return FiestaCard(  
                               nombre: tradicion.nombre,
                               fecha: tradicion.fecha,
-                              imagen:  tradicion.getImagen(),
+                              imagen: provider.getImageForTradicion(tradicion.imagen),
                               detalleTap: () => _toggleContainer(tradicion.nombre),
                             );
                           },

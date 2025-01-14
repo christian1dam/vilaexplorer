@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:vilaexplorer/service/usuario_service.dart';
 
 class ApiClient {
-  final String _baseUrl = 'http://172.20.10.6:8080/api/v0';
+  final String _baseUrl = 'http://172.26.80.1:8080/api/v0';
   // 'http://172.20.10.2:8080/api/v0'; // Wifi Móvil
   // 'http://192.168.0.31:8080/api/v0'; // Red
 
@@ -23,9 +23,10 @@ class ApiClient {
   }
 
   // POST request
-  Future<http.Response> post(String endpoint,
-      {Map<String, dynamic>? body}) async {
+  Future<http.Response> post(String endpoint,{Map<String, dynamic>? body}) async {
+    
     final url = Uri.parse('$_baseUrl$endpoint');
+    
     try {
       final response = await http.post(
         url,

@@ -5,6 +5,7 @@ import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Importa ScreenUtil
 import 'src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
 
@@ -54,33 +55,41 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Vila Explorer',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: SplashPage(),
-      locale: _locale, // Define el idioma actual
-      supportedLocales: const [
-        Locale('en'), // Inglés
-        Locale('es'), // Español
-        Locale('ca'), // Valenciano
-        Locale('zh'), // Chino
-        Locale('fr'), // Francés
-      ],
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      localeResolutionCallback: (locale, supportedLocales) {
-        // Verifica si el idioma del sistema está soportado
-        for (var supportedLocale in supportedLocales) {
-          if (supportedLocale.languageCode == locale?.languageCode) {
-            return supportedLocale;
-          }
-        }
-        return supportedLocales.first; // Por defecto, selecciona el primero
+    // Inicializa ScreenUtil
+    return ScreenUtilInit(
+      designSize: const Size(384, 857), // Tamaño base del diseño (ej. iPhone X)
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Vila Explorer',
+          theme: ThemeData(primarySwatch: Colors.blue),
+          home: SplashPage(),
+          locale: _locale, // Define el idioma actual
+          supportedLocales: const [
+            Locale('en'), // Inglés
+            Locale('es'), // Español
+            Locale('ca'), // Valenciano
+            Locale('zh'), // Chino
+            Locale('fr'), // Francés
+          ],
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          localeResolutionCallback: (locale, supportedLocales) {
+            // Verifica si el idioma del sistema está soportado
+            for (var supportedLocale in supportedLocales) {
+              if (supportedLocale.languageCode == locale?.languageCode) {
+                return supportedLocale;
+              }
+            }
+            return supportedLocales.first; // Por defecto, selecciona el primero
+          },
+        );
       },
     );
   }

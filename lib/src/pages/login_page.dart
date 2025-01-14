@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage>
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.18),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.08),
                 Hero(
                   tag: 'logoHero',
                   child: RotationTransition(
@@ -205,7 +205,7 @@ class _LoginPageState extends State<LoginPage>
                     ),
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.20),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.10),
                 SlideTransition(
                   position: Tween<Offset>(
                     begin: Offset(0.0, 0.10),

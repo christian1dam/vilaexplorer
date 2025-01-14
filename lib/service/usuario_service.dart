@@ -51,12 +51,15 @@ class UsuarioService extends ChangeNotifier {
   // Método para iniciar sesión
   Future<void> loginUsuario(String email, String password) async {
     const String endpoint = '/auth/signin';
+
     UsuarioAuth usuario = UsuarioAuth(email: email, password: password);
 
     try {
-      final response =
-          await _apiClient.post(endpoint, body: usuario.loginRequest());
+      final response = await _apiClient.post(endpoint, body: usuario.loginRequest());
+
       if (response.statusCode == 200) {
+
+        
         usuarioAutenticado =
             UsuarioAuth.fromMap(jsonDecode(response.body));
 
