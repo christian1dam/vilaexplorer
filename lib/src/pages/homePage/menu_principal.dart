@@ -80,21 +80,21 @@ class MenuPrincipal extends StatelessWidget {
                           AppLocalizations.of(context)!.translate('traditions'),
                           "Tradiciones",
                           "lib/icon/tradiciones.svg",
-                          0.95,
+                          1,
                           context),
                       _crearBoton(
                           120.w,
                           AppLocalizations.of(context)!.translate('favorites'),
                           "Favoritos",
                           "lib/icon/favorite.svg",
-                          0.95,
+                          1,
                           context),
                       _crearBoton(
                           120.w,
                           AppLocalizations.of(context)!.translate('my_account'),
                           "Cuenta",
                           "lib/icon/user_icon.svg",
-                          0.95,
+                          1,
                           context),
                     ],
                   ),
@@ -111,14 +111,14 @@ class MenuPrincipal extends StatelessWidget {
                           AppLocalizations.of(context)!.translate('gastronomy'),
                           "Gastronomia",
                           "lib/icon/gastronomia.svg",
-                          0.95,
+                          1,
                           context),
                       _crearBoton(
                           180.w,
                           AppLocalizations.of(context)!.translate('sights'),
                           "Monumentos",
                           "lib/icon/monumentos.svg",
-                          0.95,
+                          1,
                           context),
                     ],
                   ),
@@ -141,18 +141,33 @@ class MenuPrincipal extends StatelessWidget {
       String imagePath, double tamanoTexto, BuildContext context) {
     return SizedBox(
       width: mywidth,
-      height: 110.h,
+      height: 100.h,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          // padding: EdgeInsets.all(15),
-          padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 15.w),
+          padding: EdgeInsets.only(left: 12.w, top: 15.h),
           foregroundColor: Colors.white,
           backgroundColor: const Color.fromRGBO(39, 39, 39, 0.92),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(30.0.r),
           ),
           splashFactory: InkRipple.splashFactory,
           shadowColor: Colors.white.withOpacity(0.3),
+        ),
+        child: SizedBox(
+          width: double.infinity,
+          height: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MySvgWidget(path: imagePath, width: 40.w, height: 40.h),
+              SizedBox(height: 5.h),
+              Text(
+                texto,
+                style: TextStyle(fontSize: tamanoTexto * 17.sp),
+              ),
+            ],
+          ),
         ),
         onPressed: () {
           if (redirector == "Favoritos" && onShowFavoritosPressed != null) {
@@ -170,18 +185,6 @@ class MenuPrincipal extends StatelessWidget {
             onShowMonumentosPressed!();
           }
         },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            MySvgWidget(path: imagePath, width: 50.w, height: 50.w),
-            SizedBox(height: 5.h),
-            Text(
-              texto,
-              style: TextStyle(fontSize: tamanoTexto * 16.sp),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -240,7 +243,7 @@ class MenuPrincipal extends StatelessWidget {
       BuildContext context, Map<String, Map<String, String>> historiasMap) {
     return Container(
       width: MediaQuery.of(context).size.width.w,
-      height: MediaQuery.of(context).size.height * 0.17.h,
+      height: MediaQuery.of(context).size.height * 0.15.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(13.r)),
         color: Color.fromRGBO(39, 39, 39, 1),
