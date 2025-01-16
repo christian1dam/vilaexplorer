@@ -22,7 +22,7 @@ dependencies:
   http: ^1.2.2
   image_picker: ^1.1.2
   flutter_screenutil: ^5.9.3
-
+  geolocator: ^13.0.2
 
 dev_dependencies:
   flutter_test:

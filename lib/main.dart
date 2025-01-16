@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
+import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
@@ -26,8 +27,9 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TradicionesService(), lazy: false),
         ChangeNotifierProvider(create: (_) => GastronomiaService(), lazy: false),
         ChangeNotifierProvider(create: (_) => TipoPlatoService(), lazy: false),
-        ChangeNotifierProvider(create: (_) => MonumentosProvider(), lazy: false), // Agrega MonumentosProvider aquí
+        ChangeNotifierProvider(create: (_) => MonumentosProvider(), lazy: false),
         ChangeNotifierProvider(create: (_) => PageProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => LugarDeInteresService(), lazy: false),
       ],
       child: const MyApp(),
     );

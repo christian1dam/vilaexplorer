@@ -141,7 +141,7 @@ class MenuPrincipal extends StatelessWidget {
       String imagePath, double tamanoTexto, BuildContext context) {
     return SizedBox(
       width: mywidth,
-      height: 100.h,
+      height: 105.h,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.only(left: 12.w, top: 15.h),
@@ -205,7 +205,7 @@ class MenuPrincipal extends StatelessWidget {
   }
 
   // Método para crear los ítems de historia
-  Widget _buildHistoriaItem(
+  Widget _buildHistoriaItem( 
       BuildContext context,
       String imageUrl,
       Map<String, String> historia,
