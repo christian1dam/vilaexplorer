@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PageProvider extends ChangeNotifier {
-  String currentPage = 'map'; // Página inicial
+  String currentPage = 'map';
 
   String? selectedFiesta;
   String? selectedCategory;
