@@ -120,49 +120,29 @@ class _TradicionesPageState extends State<TradicionesPage> {
                             vertical: 8.h, horizontal: 8.w),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment
-                              .center, // Alinea todos los elementos verticalmente
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 4.h), // Baja un poco la lupa
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.search,
+                            Expanded(
+                              child: Text(
+                                AppLocalizations.of(context)!.translate('holidays_traditions'),
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 21.sp,
+                                  fontWeight: FontWeight.w600,
                                   color: Colors.white,
                                 ),
-                                onPressed: _toggleSearch,
                               ),
                             ),
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.symmetric(
-                                  horizontal: 10.w,
-                                ), // Margen uniforme
-                                height: 35.h,
-                                alignment: Alignment
-                                    .center, // Centra el contenido verticalmente
-
-                                child: Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('holidays_traditions'),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 21.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                            IconButton(
+                              icon: Icon(
+                                isSearchActive ? Icons.arrow_back : Icons.search,
+                                color: Colors.white,
                               ),
+                              onPressed: _toggleSearch,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 4.h), // Baja un poco el botón de salir
-                              child: IconButton(
-                                icon: const Icon(Icons.close,
-                                    color: Colors.white),
-                                onPressed: widget.onClose,
-                              ),
+                            IconButton(
+                              icon: const Icon(Icons.close, color: Colors.white),
+                              onPressed: widget.onClose,
                             ),
                           ],
                         ),
