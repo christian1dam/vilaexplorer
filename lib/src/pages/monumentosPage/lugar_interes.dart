@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:provider/provider.dart';
-import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/src/pages/monumentosPage/detalle_monumento.dart';
 import 'monumento_card.dart';
 
-class MonumentosPage extends StatefulWidget {
+class LugarDeInteresPage extends StatefulWidget {
+  final Function(String) onLugarInteresSelected;
   final VoidCallback onClose;
 
-  const MonumentosPage({Key? key, required this.onClose}) : super(key: key);
+  const LugarDeInteresPage({Key? key, required this.onClose, required this.onLugarInteresSelected}) : super(key: key);
 
   @override
-  _MonumentosPageState createState() => _MonumentosPageState();
+  _LugarDeInteresPageState createState() => _LugarDeInteresPageState();
 }
 
-class _MonumentosPageState extends State<MonumentosPage> {
+class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
+  String? selectedLugarInteres;
   bool isSearchActive = false;
   TextEditingController searchController = TextEditingController();
   int selectedFilter = 0; // Índice del botón seleccionado, 0 para 'Todo' por defecto
@@ -36,6 +37,13 @@ class _MonumentosPageState extends State<MonumentosPage> {
         searchController.clear();
         // Aquí podrías agregar lógica para resetear el filtro a 'Todo' si es necesario
       }
+    });
+  }
+
+  void _toggleContainer(String nombreLugarInteres) {
+    setState(() {
+      selectedLugarInteres = nombreLugarInteres;
+      widget.onLugarInteresSelected(nombreLugarInteres);
     });
   }
 
@@ -179,21 +187,16 @@ class _MonumentosPageState extends State<MonumentosPage> {
                               : lugarDeInteresService.lugaresDeInteres.isEmpty
                                   ? const Center(child: Text("No se encontraron monumentos", style: TextStyle(color: Colors.white)))
                                   : ListView.builder(
-  itemCount: lugarDeInteresService.lugaresDeInteres.length,
-  itemBuilder: (context, index) {
-    final monumento = lugarDeInteresService.lugaresDeInteres[index];
-    return MonumentoCard(
-      lugarDeInteres: monumento,
-      detalleTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => DetalleMonumentoPage(lugarDeInteres: monumento),
-          ),
-        );
-      },
-    );
-  },
-),
+                            itemCount: lugarDeInteresService.lugaresDeInteres.length,
+                            itemBuilder: (context, index) {
+                            final monumento = lugarDeInteresService.lugaresDeInteres[index];
+                            return MonumentoCard(
+                            lugarDeInteres: monumento,
+                            detalleTap: () =>
+                              _toggleContainer(monumento.nombreLugar!),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
