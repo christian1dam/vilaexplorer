@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart'; // Asegúrate de importar LugarDeInteres
+import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
+import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart'; // Asegúrate de importar LugarDeInteres
 
 class MonumentoCard extends StatelessWidget {
   final LugarDeInteres lugarDeInteres; // Modelo lugarDeInteres
@@ -84,11 +85,9 @@ class MonumentoCard extends StatelessWidget {
                           color: Color.fromRGBO(224, 120, 62, 1), fontSize: 16),
                     ),
                     GestureDetector(
-                      child: const Icon(
-                        Icons.favorite_border, // Icono para guardar
-                        color: Colors.white,
-                      ),
-                      onTap: () => {}, // Acción de guardar
+                      child:
+                          const MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
+                      onTap: () => {},
                     )
                   ],
                 ),
