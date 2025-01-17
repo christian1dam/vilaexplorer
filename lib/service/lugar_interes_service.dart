@@ -18,24 +18,33 @@ class LugarDeInteresService with ChangeNotifier {
 
   /// Obtiene todos los lugares de interés desde la API
   Future<void> fetchLugaresDeInteres() async {
-    _isLoading = true;
-    _errorMessage = null;
+  _isLoading = true;
+  _errorMessage = null;
+
+  // Usamos el post-frame callback
+  WidgetsBinding.instance.addPostFrameCallback((_) {
     notifyListeners();
+  });
 
-    try {
-      final response = await _apiClient.get('/lugar_interes/todos');
-      final List<dynamic> data = jsonDecode(response.body);
+  try {
+    final response = await _apiClient.get('/lugar_interes/todos');
+    final List<dynamic> data = jsonDecode(response.body);
 
-      _lugaresDeInteres = data
-          .map((json) => LugarDeInteres.fromMap(json))
-          .toList();
-    } catch (error) {
-      _errorMessage = 'Error al cargar los lugares de interés: $error';
-    } finally {
-      _isLoading = false;
+    _lugaresDeInteres = data
+        .map((json) => LugarDeInteres.fromMap(json))
+        .toList();
+  } catch (error) {
+    _errorMessage = 'Error al cargar los lugares de interés: $error';
+  } finally {
+    _isLoading = false;
+
+    // Usamos el post-frame callback nuevamente para llamar a notifyListeners
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
-    }
+    });
   }
+}
+
 
   /// Obtiene todos los lugares de interés activos desde la API
   Future<void> fetchLugaresDeInteresActivos() async {
