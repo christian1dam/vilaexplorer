@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:vilaexplorer/models/monumentos/monumento.dart'; // Importa la clase Monumentos
+import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart'; // Importa tu widget SVG si es necesario
 
-class MonumentoCard extends StatelessWidget {
-  final Monumentos monumento; // Cambiar para usar el modelo Monumento
+class lugarDeInteresCard extends StatelessWidget {
+  final LugarDeInteres
+      lugarDeInteres; // Cambiar para usar el modelo lugarDeInteres
   final VoidCallback detalleTap; // Callback
 
-  const MonumentoCard({
+  const lugarDeInteresCard({
     super.key,
-    required this.monumento,
+    required this.lugarDeInteres,
     required this.detalleTap,
   });
 
@@ -30,10 +31,12 @@ class MonumentoCard extends StatelessWidget {
                   height: 200,
                   width: double.infinity,
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(15)),
                     child: FadeInImage(
                       placeholder: AssetImage("assets/no-image.jpg"),
-                      image: NetworkImage(monumento.imagen!), // Usar la URL de la imagen del monumento
+                      image: NetworkImage(lugarDeInteres
+                          .imagen!), // Usar la URL de la imagen del lugarDeInteres
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -44,9 +47,8 @@ class MonumentoCard extends StatelessWidget {
                   height: 50,
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15)
-                    ),
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15)),
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -57,7 +59,8 @@ class MonumentoCard extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    monumento.nombreLugar!, // Usar el nombre del monumento
+                    lugarDeInteres
+                        .nombreLugar!, // Usar el nombre del lugarDeInteres
                     style: const TextStyle(
                         fontSize: 25,
                         color: Colors.white,
@@ -79,13 +82,14 @@ class MonumentoCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      monumento.fechaAlta as String, // Usar la fecha del monumento
+                      lugarDeInteres.fechaAlta
+                          as String, // Usar la fecha del lugarDeInteres
                       style: const TextStyle(
-                          color: Color.fromRGBO(224, 120, 62, 1),
-                          fontSize: 16),
+                          color: Color.fromRGBO(224, 120, 62, 1), fontSize: 16),
                     ),
                     GestureDetector(
-                      child: const MySvgWidget(path: 'lib/icon/guardar_icon.svg'), // Tu widget SVG
+                      child: const MySvgWidget(
+                          path: 'lib/icon/guardar_icon.svg'), // Tu widget SVG
                       onTap: () => {},
                     )
                   ],

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 
@@ -71,9 +72,69 @@ class LugarDeInteresService with ChangeNotifier {
     }
   }
 
+  // Buscar monumentos por palabra clave
+  Future<void> searchLugarDeInteres(String keyword) async {
+    await _executeWithLoading(() async {
+      final response = await _apiClient.get('/lugar_interes/buscar?keyword=$keyword');
+      if (response.statusCode == 200) {
+        final List<dynamic> lugaresDeInteresList = json.decode(response.body);
+        _lugaresDeInteres = lugaresDeInteresList
+            .map((lugarInteres) => LugarDeInteres.fromMap(lugarInteres))
+            .toList();
+      }
+    }, onError: 'Error al buscar lugares de interés');
+  }
+
+    // Ejecutar una función con manejo del estado de carga
+  Future<void> _executeWithLoading(Future<void> Function() action,
+      {required String onError}) async {
+    _setLoading(true);
+    try {
+      await action();
+      _errorMessage = null;
+    } catch (e) {
+      _errorMessage = '$onError: $e';
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+
+  // Actualizar el estado de carga
+  void _setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
   /// Limpia la lista de lugares de interés
   void clearLugaresDeInteres() {
     _lugaresDeInteres = [];
     notifyListeners();
+  }
+
+   // Método para obtener la imagen de un monumento desde Cloudinary
+  Image getImageForMonumento(String? imagenUrl) {
+    if (imagenUrl != null && imagenUrl.isNotEmpty) {
+      return Image.network(
+        imagenUrl,
+        width: double.infinity,
+        height: 200.h,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Icon(
+            Icons.broken_image,
+            size: 50.r,
+            color: Colors.grey,
+          );
+        },
+      );
+    }
+
+    return Image(
+      image: AssetImage("assets/no-image.jpg"),
+      width: double.infinity,
+      height: 200.h,
+      fit: BoxFit.cover,
+    );
   }
 }

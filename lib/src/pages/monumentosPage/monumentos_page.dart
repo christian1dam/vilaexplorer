@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vilaexplorer/service/monumentos_service.dart';
+import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:provider/provider.dart';
 
 class MonumentosPage extends StatefulWidget {
@@ -20,7 +20,7 @@ class _MonumentosPageState extends State<MonumentosPage> {
     super.initState();
     // Llamar a getAllMonumentos para cargar los monumentos inicialmente
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MonumentosService>().getAllMonumentos();
+      context.read<LugarDeInteresService>().fetchLugaresDeInteresActivos();
     });
   }
 
@@ -32,7 +32,8 @@ class _MonumentosPageState extends State<MonumentosPage> {
 
   @override
   Widget build(BuildContext context) {
-    final monumentosService = context.watch<MonumentosService>(); // Usamos el servicio directamente
+    final LugarDeInteresService lugarDeInteresService = context
+        .watch<LugarDeInteresService>(); // Usamos el servicio directamente
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -82,7 +83,8 @@ class _MonumentosPageState extends State<MonumentosPage> {
                               child: Container(
                                 decoration: const BoxDecoration(
                                   color: Color.fromRGBO(30, 30, 30, 1),
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
                                 ),
                                 margin: const EdgeInsets.only(top: 10),
                                 width: MediaQuery.of(context).size.width * 0.4,
@@ -116,12 +118,13 @@ class _MonumentosPageState extends State<MonumentosPage> {
                     ),
                     if (isSearchActive)
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
                         child: TextField(
                           controller: searchController,
                           style: const TextStyle(color: Colors.white),
                           onChanged: (query) {
-                            monumentosService.searchMonumentos(query);
+                            lugarDeInteresService.searchLugarDeInteres(query);
                           },
                           decoration: InputDecoration(
                             hintText: 'Buscar monumentos...',
@@ -129,19 +132,24 @@ class _MonumentosPageState extends State<MonumentosPage> {
                             fillColor: const Color.fromARGB(255, 47, 42, 42),
                             filled: true,
                             border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
                             ),
-                            contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 10),
                           ),
                         ),
                       ),
                     Expanded(
-                      child: monumentosService.isLoading
+                      child: lugarDeInteresService.isLoading
                           ? const Center(child: CircularProgressIndicator())
-                          : monumentosService.error != null
-                              ? Center(child: Text(monumentosService.error!, style: const TextStyle(color: Colors.white)))
-                              : monumentosService.todosLosMonumentos == null ||
-                                      monumentosService.todosLosMonumentos!.isEmpty
+                          : lugarDeInteresService.errorMessage != null
+                              ? Center(
+                                  child: Text(
+                                      lugarDeInteresService.errorMessage!,
+                                      style:
+                                          const TextStyle(color: Colors.white)))
+                              : lugarDeInteresService.lugaresDeInteres.isEmpty
                                   ? const Center(
                                       child: Text(
                                         "No se encontraron monumentos",
@@ -149,13 +157,16 @@ class _MonumentosPageState extends State<MonumentosPage> {
                                       ),
                                     )
                                   : ListView.builder(
-                                      itemCount: monumentosService.todosLosMonumentos?.length ?? 0,
+                                      itemCount: lugarDeInteresService
+                                          .lugaresDeInteres.length,
                                       itemBuilder: (context, index) {
-                                        final monumento = monumentosService.todosLosMonumentos?[index];
+                                        final monumento = lugarDeInteresService
+                                            .lugaresDeInteres[index];
                                         return ListTile(
                                           title: Text(
-                                            monumento?.nombreLugar ?? '',
-                                            style: const TextStyle(color: Colors.white),
+                                            monumento.nombreLugar ?? '',
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                           ),
                                           onTap: () {
                                             // Aquí puedes agregar la lógica para ver los detalles de un monumento si lo deseas
