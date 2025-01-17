@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
-import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart'; // Importa tu widget SVG si es necesario
+import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart'; // Asegúrate de importar LugarDeInteres
 
-class lugarDeInteresCard extends StatelessWidget {
-  final LugarDeInteres
-      lugarDeInteres; // Cambiar para usar el modelo lugarDeInteres
-  final VoidCallback detalleTap; // Callback
+class MonumentoCard extends StatelessWidget {
+  final LugarDeInteres lugarDeInteres; // Modelo lugarDeInteres
+  final VoidCallback detalleTap; // Callback para manejar la acción de tap
 
-  const lugarDeInteresCard({
+  const MonumentoCard({
     super.key,
     required this.lugarDeInteres,
     required this.detalleTap,
@@ -31,12 +30,10 @@ class lugarDeInteresCard extends StatelessWidget {
                   height: 200,
                   width: double.infinity,
                   child: ClipRRect(
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(15)),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
                     child: FadeInImage(
                       placeholder: AssetImage("assets/no-image.jpg"),
-                      image: NetworkImage(lugarDeInteres
-                          .imagen!), // Usar la URL de la imagen del lugarDeInteres
+                      image: NetworkImage(lugarDeInteres.imagen ?? ''), // Asegúrate de que la imagen no sea nula
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -59,8 +56,7 @@ class lugarDeInteresCard extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    lugarDeInteres
-                        .nombreLugar!, // Usar el nombre del lugarDeInteres
+                    lugarDeInteres.nombreLugar ?? 'Nombre no disponible', // Nombre del lugar
                     style: const TextStyle(
                         fontSize: 25,
                         color: Colors.white,
@@ -82,14 +78,15 @@ class lugarDeInteresCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      lugarDeInteres.fechaAlta
-                          as String, // Usar la fecha del lugarDeInteres
+                      lugarDeInteres.fechaAlta != null
+                          ? lugarDeInteres.fechaAlta.toString()
+                          : 'Fecha no disponible', // Fecha de alta del lugar
                       style: const TextStyle(
                           color: Color.fromRGBO(224, 120, 62, 1), fontSize: 16),
                     ),
                     GestureDetector(
-                      child: const MySvgWidget(
-                          path: 'lib/icon/guardar_icon.svg'), // Tu widget SVG
+                      child:
+                          const MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
                       onTap: () => {},
                     )
                   ],
