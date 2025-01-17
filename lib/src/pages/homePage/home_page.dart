@@ -9,7 +9,7 @@ import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'package:vilaexplorer/src/pages/homePage/map_view.dart';
-import 'package:vilaexplorer/src/pages/monumentosPage/monumentos_page.dart';
+import 'package:vilaexplorer/src/pages/monumentosPage/lugar_interes.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
 
 class MyHomePage extends StatelessWidget {
@@ -83,14 +83,15 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
 
-          if (pageProvider.currentPage == 'monumentos')
+          if (pageProvider.currentPage == 'Lugar de interes')
             Positioned(
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
-              child: MonumentosPage(
+              child: LugarDeInteresPage(
                 onClose: () => pageProvider.changePage('map'),
+                onLugarInteresSelected: (String) {},
               ),
             ),
 
