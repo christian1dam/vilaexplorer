@@ -19,19 +19,21 @@ class _LoginPageState extends State<LoginPage>
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
+
   late AnimationController _rotationController;
   late Animation<double> _rotationAnimation;
   late Animation<double> _buttonAnimation;
 
   void _loginUser(BuildContext context) async {
-    final usuarioService =
-        Provider.of<UsuarioService>(context, listen: false);
+    final usuarioService = Provider.of<UsuarioService>(context, listen: false);
 
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      _scaffoldMessengerKey.currentState?.showSnackBar(
         const SnackBar(content: Text('Por favor, ingrese todos los campos')),
       );
       return;
@@ -40,7 +42,7 @@ class _LoginPageState extends State<LoginPage>
     await usuarioService.loginUsuario(email, password);
 
     if (usuarioService.error == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      _scaffoldMessengerKey.currentState?.showSnackBar(
         const SnackBar(content: Text('Inicio de sesión exitoso')),
       );
 
@@ -58,14 +60,14 @@ class _LoginPageState extends State<LoginPage>
 
             return SlideTransition(
               position: animation.drive(tween),
-              child: child, 
+              child: child,
             );
           },
           transitionDuration: const Duration(milliseconds: 100),
         ),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
+      _scaffoldMessengerKey.currentState?.showSnackBar(
         SnackBar(content: Text(usuarioService.error!)),
       );
     }
@@ -104,6 +106,7 @@ class _LoginPageState extends State<LoginPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldMessengerKey,
       backgroundColor: const Color.fromARGB(255, 28, 28, 28),
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -138,7 +141,6 @@ class _LoginPageState extends State<LoginPage>
                     ),
                   ),
                 ),
-                // const SizedBox(height: 20),
                 Hero(
                   tag: 'textHero',
                   child: RichText(
@@ -194,7 +196,7 @@ class _LoginPageState extends State<LoginPage>
                         isScrollControlled: true,
                         backgroundColor: Colors.transparent,
                         builder: (BuildContext context) {
-                          return const PasswordRecoverPage(); // Llamar a la nueva página
+                          return const PasswordRecoverPage();
                         },
                       );
                     },
@@ -249,7 +251,6 @@ class _LoginPageState extends State<LoginPage>
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
-                      // Botón de idioma
                       IconButton(
                         icon: const Icon(Icons.language, color: Colors.white),
                         iconSize: 40,
@@ -283,7 +284,6 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  // Función para mostrar las opciones de idioma
   void _showLanguageOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -321,7 +321,6 @@ class _LoginPageState extends State<LoginPage>
     });
   }
 
-  // Widget para mostrar una opción de idioma con la bandera
   Widget _buildLanguageOption(String language, String flagPath) {
     return ListTile(
       onTap: () {

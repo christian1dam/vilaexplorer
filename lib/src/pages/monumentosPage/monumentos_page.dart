@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
+import 'package:vilaexplorer/src/pages/monumentosPage/detalle_monumento.dart';
 import 'monumento_card.dart';
 
 class MonumentosPage extends StatefulWidget {
@@ -178,17 +179,21 @@ class _MonumentosPageState extends State<MonumentosPage> {
                               : lugarDeInteresService.lugaresDeInteres.isEmpty
                                   ? const Center(child: Text("No se encontraron monumentos", style: TextStyle(color: Colors.white)))
                                   : ListView.builder(
-                                      itemCount: lugarDeInteresService.lugaresDeInteres.length,
-                                      itemBuilder: (context, index) {
-                                        final monumento = lugarDeInteresService.lugaresDeInteres[index];
-                                        return MonumentoCard(
-                                          lugarDeInteres: monumento,
-                                          detalleTap: () {
-                                            // Aquí puedes agregar la lógica para ver los detalles de un monumento si lo deseas
-                                          },
-                                        );
-                                      },
-                                    ),
+  itemCount: lugarDeInteresService.lugaresDeInteres.length,
+  itemBuilder: (context, index) {
+    final monumento = lugarDeInteresService.lugaresDeInteres[index];
+    return MonumentoCard(
+      lugarDeInteres: monumento,
+      detalleTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => DetalleMonumentoPage(lugarDeInteres: monumento),
+          ),
+        );
+      },
+    );
+  },
+),
                     ),
                   ],
                 ),
