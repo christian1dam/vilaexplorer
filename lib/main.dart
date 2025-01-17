@@ -4,10 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
+import 'package:vilaexplorer/service/monumentos_service.dart';
 import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
-import 'package:vilaexplorer/providers/monumentos_provider.dart'; // Asegúrate de importar el MonumentosProvider
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // Importa ScreenUtil
 import 'src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
@@ -27,7 +27,7 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TradicionesService(), lazy: false),
         ChangeNotifierProvider(create: (_) => GastronomiaService(), lazy: false),
         ChangeNotifierProvider(create: (_) => TipoPlatoService(), lazy: false),
-        ChangeNotifierProvider(create: (_) => MonumentosProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => MonumentosService(), lazy: false),
         ChangeNotifierProvider(create: (_) => PageProvider(), lazy: false),
         ChangeNotifierProvider(create: (_) => LugarDeInteresService(), lazy: false),
       ],

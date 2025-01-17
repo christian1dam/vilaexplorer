@@ -1,61 +1,57 @@
+
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:vilaexplorer/models/usuario/usuario.dart';
+
+import 'package:vilaexplorer/models/lugarDeInteres/Coordenadas.dart';
+import 'package:vilaexplorer/models/lugarDeInteres/TipoLugar.dart';
 
 class Monumentos {
-  int idLugarInteres;
-  String nombreLugar;
-  String fechaAlta;
-  String descripcion;
-  int idTipoLugar;
-  String imagen;
-  String imagenBase64;
-  bool activo;
-  Usuario autor;
+    int? idLugarInteres;
+    String? nombreLugar;
+    String? descripcion;
+    DateTime? fechaAlta;
+    double? puntuacionMediaLugar;
+    String? imagen;
+    bool? activo;
+    TipoLugar? tipoLugar;
+    List<Coordenada>? coordenadas;
 
-  Monumentos({
-    required this.idLugarInteres,
-    required this.nombreLugar,
-    required this.fechaAlta,
-    required this.descripcion,
-    required this.idTipoLugar,
-    required this.imagen,
-    required this.imagenBase64,
-    required this.activo,
-    required this.autor,
-  });
+    Monumentos({
+        this.idLugarInteres,
+        this.nombreLugar,
+        this.descripcion,
+        this.fechaAlta,
+        this.puntuacionMediaLugar,
+        this.imagen,
+        this.activo,
+        this.tipoLugar,
+        this.coordenadas,
+    });
 
-  factory Monumentos.fromJson(String str) =>
-      Monumentos.fromMap(json.decode(str));
+    factory Monumentos.fromJson(String str) => Monumentos.fromMap(json.decode(str));
 
-  String toJson() => json.encode(toMap());
+    String toJson() => json.encode(toMap());
 
-  factory Monumentos.fromMap(Map<String, dynamic> json) => Monumentos(
+    factory Monumentos.fromMap(Map<String, dynamic> json) => Monumentos(
         idLugarInteres: json["idLugarInteres"],
         nombreLugar: json["nombreLugar"],
-        fechaAlta: json["fechaAlta"],
         descripcion: json["descripcion"],
-        idTipoLugar: json["idTipoLugar"],
+        fechaAlta: json["fechaAlta"] == null ? null : DateTime.parse(json["fechaAlta"]),
+        puntuacionMediaLugar: json["puntuacionMediaLugar"]?.toDouble(),
         imagen: json["imagen"],
-        imagenBase64: json["imagenBase64"],
         activo: json["activo"],
-        autor: Usuario.fromMap(json["autor"]),
-      );
+        tipoLugar: json["tipoLugar"] == null ? null : TipoLugar.fromMap(json["tipoLugar"]),
+        coordenadas: json["coordenadas"] == null ? [] : List<Coordenada>.from(json["coordenadas"]!.map((x) => Coordenada.fromMap(x))),
+    );
 
-  Map<String, dynamic> toMap() => {
+    Map<String, dynamic> toMap() => {
         "idLugarInteres": idLugarInteres,
         "nombreLugar": nombreLugar,
-        "fechaAlta": fechaAlta,
         "descripcion": descripcion,
-        "idTipoLugar": idTipoLugar,
+        "fechaAlta": "${fechaAlta!.year.toString().padLeft(4, '0')}-${fechaAlta!.month.toString().padLeft(2, '0')}-${fechaAlta!.day.toString().padLeft(2, '0')}",
+        "puntuacionMediaLugar": puntuacionMediaLugar,
         "imagen": imagen,
-        "imagenBase64": imagenBase64,
         "activo": activo,
-        "autor": autor.toMap(),
-      };
-
-  // Método para convertir la imagen base64 a un widget de imagen en Flutter
-  Image getImagen() {
-    return Image.memory(base64Decode(imagenBase64));
-  }
+        "tipoLugar": tipoLugar?.toMap(),
+        "coordenadas": coordenadas == null ? [] : List<dynamic>.from(coordenadas!.map((x) => x.toMap())),
+    };
 }

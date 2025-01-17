@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vilaexplorer/service/monumentos_service.dart';
 import 'package:provider/provider.dart';
-import 'package:vilaexplorer/providers/monumentos_provider.dart';
 
 class MonumentosPage extends StatefulWidget {
   final VoidCallback onClose;
@@ -18,9 +18,9 @@ class _MonumentosPageState extends State<MonumentosPage> {
   @override
   void initState() {
     super.initState();
-    // Aquí puedes llamar a fetchAllMonumentos para cargar los monumentos inicialmente
+    // Llamar a getAllMonumentos para cargar los monumentos inicialmente
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MonumentosProvider>().fetchAllMonumentos();
+      context.read<MonumentosService>().getAllMonumentos();
     });
   }
 
@@ -32,7 +32,7 @@ class _MonumentosPageState extends State<MonumentosPage> {
 
   @override
   Widget build(BuildContext context) {
-    final monumentosProvider = context.watch<MonumentosProvider>(); // Usar context.watch para obtener el estado del provider
+    final monumentosService = context.watch<MonumentosService>(); // Usamos el servicio directamente
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -121,7 +121,7 @@ class _MonumentosPageState extends State<MonumentosPage> {
                           controller: searchController,
                           style: const TextStyle(color: Colors.white),
                           onChanged: (query) {
-                            monumentosProvider.searchMonumentos(query);
+                            monumentosService.searchMonumentos(query);
                           },
                           decoration: InputDecoration(
                             hintText: 'Buscar monumentos...',
@@ -136,27 +136,33 @@ class _MonumentosPageState extends State<MonumentosPage> {
                         ),
                       ),
                     Expanded(
-                      child: monumentosProvider.isLoading
+                      child: monumentosService.isLoading
                           ? const Center(child: CircularProgressIndicator())
-                          : monumentosProvider.todosLosMonumentos?.isEmpty ?? true
-                              ? const Center(
-                                  child: Text(
-                                    "No se encontraron monumentos",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                )
-                              : ListView.builder(
-                                  itemCount: monumentosProvider.todosLosMonumentos?.length,
-                                  itemBuilder: (context, index) {
-                                    final monumento = monumentosProvider.todosLosMonumentos?[index];
-                                    return ListTile(
-                                      title: Text(
-                                        monumento?.nombreLugar ?? '',
-                                        style: const TextStyle(color: Colors.white),
+                          : monumentosService.error != null
+                              ? Center(child: Text(monumentosService.error!, style: const TextStyle(color: Colors.white)))
+                              : monumentosService.todosLosMonumentos == null ||
+                                      monumentosService.todosLosMonumentos!.isEmpty
+                                  ? const Center(
+                                      child: Text(
+                                        "No se encontraron monumentos",
+                                        style: TextStyle(color: Colors.white),
                                       ),
-                                    );
-                                  },
-                                ),
+                                    )
+                                  : ListView.builder(
+                                      itemCount: monumentosService.todosLosMonumentos?.length ?? 0,
+                                      itemBuilder: (context, index) {
+                                        final monumento = monumentosService.todosLosMonumentos?[index];
+                                        return ListTile(
+                                          title: Text(
+                                            monumento?.nombreLugar ?? '',
+                                            style: const TextStyle(color: Colors.white),
+                                          ),
+                                          onTap: () {
+                                            // Aquí puedes agregar la lógica para ver los detalles de un monumento si lo deseas
+                                          },
+                                        );
+                                      },
+                                    ),
                     ),
                   ],
                 ),

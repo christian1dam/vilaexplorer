@@ -33,7 +33,7 @@ class MonumentoCard extends StatelessWidget {
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
                     child: FadeInImage(
                       placeholder: AssetImage("assets/no-image.jpg"),
-                      image: NetworkImage(monumento.imagenBase64), // Usar la URL de la imagen del monumento
+                      image: NetworkImage(monumento.imagen!), // Usar la URL de la imagen del monumento
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -57,7 +57,7 @@ class MonumentoCard extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    monumento.nombreLugar , // Usar el nombre del monumento
+                    monumento.nombreLugar!, // Usar el nombre del monumento
                     style: const TextStyle(
                         fontSize: 25,
                         color: Colors.white,
@@ -79,7 +79,7 @@ class MonumentoCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      monumento.fechaAlta, // Usar la fecha del monumento
+                      monumento.fechaAlta as String, // Usar la fecha del monumento
                       style: const TextStyle(
                           color: Color.fromRGBO(224, 120, 62, 1),
                           fontSize: 16),
