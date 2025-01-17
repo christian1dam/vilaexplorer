@@ -48,7 +48,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale _locale = const Locale('es'); // Idioma por defecto
+  Locale _locale = const Locale('es');
 
   void setLocale(Locale locale) {
     setState(() {
@@ -71,11 +71,11 @@ class _MyAppState extends State<MyApp> {
           home: SplashPage(),
           locale: _locale, // Define el idioma actual
           supportedLocales: const [
-            Locale('en'), // Inglés
-            Locale('es'), // Español
-            Locale('ca'), // Valenciano
-            Locale('zh'), // Chino
-            Locale('fr'), // Francés
+            Locale('en'),
+            Locale('es'),
+            Locale('ca'),
+            Locale('zh'),
+            Locale('fr'),
           ],
           localizationsDelegates: const [
             AppLocalizations.delegate,
