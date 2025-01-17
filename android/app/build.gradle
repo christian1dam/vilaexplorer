@@ -30,6 +30,10 @@ android {
         versionName = flutter.versionName
     }
 
+    dependencies {
+        implementation 'com.mapbox.maps:android:11.9.0'
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.

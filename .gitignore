@@ -1,5 +1,8 @@
 .vscode/
 
+#ENV
+.env
+
 # Miscellaneous
 *.class
 *.log

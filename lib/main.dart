@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
@@ -7,11 +8,12 @@ import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Importa ScreenUtil
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const AppState());
 }
 
@@ -90,7 +92,7 @@ class _MyAppState extends State<MyApp> {
                 return supportedLocale;
               }
             }
-            return supportedLocales.first; // Por defecto, selecciona el primero
+            return supportedLocales.first;
           },
         );
       },

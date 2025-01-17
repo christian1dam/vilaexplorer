@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class PageProvider extends ChangeNotifier {
   String currentPage = 'map';
+  String currentMapStyle = 'mapbox/streets-v11';
 
   String? selectedFiesta;
   String? selectedCategory;
@@ -38,6 +39,15 @@ class PageProvider extends ChangeNotifier {
     selectedPlatillo = null;
     selectedIngredientes = null;
     selectedReceta = null;
+    notifyListeners();
+  }
+
+  // Cambiar el estilo del mapa
+  void toggleMapStyle() {
+    print("SE HA CAMBIADO EL MAPA DE COLOR");
+    currentMapStyle = currentMapStyle == 'mapbox/streets-v11'
+        ? 'mapbox/dark-v10'
+        : 'mapbox/streets-v11';
     notifyListeners();
   }
 }

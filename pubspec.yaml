@@ -23,6 +23,7 @@ dependencies:
   image_picker: ^1.1.2
   flutter_screenutil: ^5.9.3
   geolocator: ^13.0.2
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +43,7 @@ flutter:
     - assets/historias.json
     - assets/lang/
     - assets/no-image.jpg
+    - .env
 
   fonts:
     - family: Poppins
