@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
+import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class DetalleMonumentoPage extends StatelessWidget {
@@ -10,21 +13,23 @@ class DetalleMonumentoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final pageProvider = Provider.of<PageProvider>(context, listen: false);
 
     return Stack(
       children: [
-        Align(
-          alignment: Alignment.bottomCenter,
+        Positioned(
+          bottom: 60.r,
+          left: 17.w,
           child: Container(
-            width: size.width,
-            height:
-                size.height * 0.50, // Cortamos el recuadro antes de los botones
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            decoration: const BoxDecoration(
-              color: Color.fromRGBO(32, 29, 29, 0.9),
+            width: size.width * 0.81.r,
+            height: size.height * 0.42.r,
+            decoration: BoxDecoration(
+              color: Color.fromARGB(250, 66, 66, 66),
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+                topLeft: Radius.circular(20.r),
+                topRight: Radius.circular(20.r),
+                bottomLeft: Radius.circular(20.r),
+                bottomRight: Radius.circular(20.r),
               ),
             ),
             child: Column(
@@ -35,16 +40,16 @@ class DetalleMonumentoPage extends StatelessWidget {
                   children: [
                     // Imagen del monumento
                     ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.r),
+                        topRight: Radius.circular(20.r),
                       ),
                       child: Image.network(
                         lugarDeInteres.imagen ??
                             '', // Asegúrate de que la imagen no sea nula
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        height: 180,
+                        height: 180.h,
                         errorBuilder: (BuildContext context, Object exception,
                             StackTrace? stackTrace) {
                           // Imagen de placeholder en caso de error
@@ -55,20 +60,26 @@ class DetalleMonumentoPage extends StatelessWidget {
                     ),
                     // Gradiente y superposición para título y botón
                     Container(
-                      height: 180, // Misma altura que la imagen
+                      height: 180.h, // Misma altura que la imagen
                       decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20.r),
+                          topRight: Radius.circular(20.r),
+                        ),
                         gradient: LinearGradient(
                           colors: [
-                            Colors.black.withOpacity(0.6),
+                            Colors.black.withOpacity(0.6.r),
                             Colors.transparent
                           ],
                           begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
+                          end: Alignment.center,
                         ),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 15.h,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -79,8 +90,8 @@ class DetalleMonumentoPage extends StatelessWidget {
                                 child: Text(
                                   lugarDeInteres.nombreLugar ??
                                       'Nombre no disponible',
-                                  style: const TextStyle(
-                                    fontSize: 20,
+                                  style: TextStyle(
+                                    fontSize: 19.sp,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                     fontFamily: 'Poppins',
@@ -94,13 +105,20 @@ class DetalleMonumentoPage extends StatelessWidget {
                               alignment: Alignment.topRight,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.8),
-                                  shape: BoxShape.circle,
+                                  color: Colors.grey.withOpacity(0.8.r),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.r),
+                                  ),
                                 ),
                                 child: IconButton(
-                                  icon: const Icon(Icons.close,
-                                      color: Colors.white),
-                                  onPressed: () => Navigator.of(context).pop(),
+                                  icon: Icon(
+                                    Icons.close_outlined,
+                                    color: Colors.white,
+                                    weight: 9999,
+                                    size: 30,
+                                  ),
+                                  highlightColor: Color.fromARGB(200, 200, 18, 18),
+                                  onPressed: () => pageProvider.clearScreen(),
                                 ),
                               ),
                             ),
