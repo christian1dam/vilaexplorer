@@ -4,7 +4,7 @@ import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
-import 'monumento_card.dart';
+import 'lugar_interes_tarjeta.dart';
 
 class LugarDeInteresPage extends StatefulWidget {
   const LugarDeInteresPage({Key? key}) : super(key: key);
@@ -41,8 +41,10 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
 
   @override
   Widget build(BuildContext context) {
-    final lugarDeInteresService = Provider.of<LugarDeInteresService>(context, listen: false);
+    final lugarDeInteresService =
+        Provider.of<LugarDeInteresService>(context, listen: false);
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
+    final lugaresDeInteres = lugarDeInteresService.lugaresDeInteres;
 
     return Stack(
       children: [
@@ -182,22 +184,21 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                                 child: Text(lugarDeInteresService.errorMessage!,
                                     style:
                                         const TextStyle(color: Colors.white)))
-                            : lugarDeInteresService.lugaresDeInteres.isEmpty
+                            : lugaresDeInteres.isEmpty
                                 ? const Center(
                                     child: Text("No se encontraron monumentos",
                                         style: TextStyle(color: Colors.white)))
                                 : ListView.builder(
                                     padding: EdgeInsets.all(0),
-                                    itemCount: lugarDeInteresService
-                                        .lugaresDeInteres.length,
+                                    itemCount: lugaresDeInteres.length,
                                     itemBuilder: (context, index) {
-                                      final monumento = lugarDeInteresService
-                                          .lugaresDeInteres[index];
-                                      return MonumentoCard(
-                                          lugarDeInteres: monumento,
-                                          detalleTap: () =>
+                                      final lugarDeInteres =
+                                          lugaresDeInteres[index];
+                                      return LugarDeInteresTarjeta(
+                                          lugarDeInteres: lugarDeInteres,
+                                          abrirTarjeta: () =>
                                               pageProvider.setLugarDeInteres(
-                                                  monumento.nombreLugar!));
+                                                  lugarDeInteres.nombreLugar!));
                                     }),
                   ),
                 ],

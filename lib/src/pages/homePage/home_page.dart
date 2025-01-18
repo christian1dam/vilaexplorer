@@ -93,7 +93,6 @@ class MyHomePage extends StatelessWidget {
             ),
           ),
 
-          // Página de lugares de interés superpuesta al mapa
           Positioned.fill(
             child: Offstage(
               offstage: pageProvider.currentPage != 'lugares de interés',

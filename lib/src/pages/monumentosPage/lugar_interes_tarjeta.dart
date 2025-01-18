@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart'; // Asegúrate de importar LugarDeInteres
 
-class MonumentoCard extends StatelessWidget {
-  final LugarDeInteres lugarDeInteres; // Modelo lugarDeInteres
-  final VoidCallback detalleTap; // Callback para manejar la acción de tap
+class LugarDeInteresTarjeta extends StatelessWidget {
+  final LugarDeInteres lugarDeInteres;
+  final VoidCallback abrirTarjeta; // Funcion vacia que sirve para abrir la tarjeta desde la pantalla anterior
 
-  const MonumentoCard({
+  const LugarDeInteresTarjeta({
     super.key,
     required this.lugarDeInteres,
-    required this.detalleTap,
+    required this.abrirTarjeta,
   });
 
   @override
@@ -23,7 +23,7 @@ class MonumentoCard extends StatelessWidget {
       child: Column(
         children: [
           GestureDetector(
-            onTap: detalleTap,
+            onTap: abrirTarjeta,
             child: Stack(
               children: [
                 SizedBox(
