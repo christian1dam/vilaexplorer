@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,12 +22,10 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Mapa en el fondo
           MapView(
             clearScreen: pageProvider.clearScreen,
           ),
 
-          // AppBar en la parte superior
           Positioned(
             top: 0,
             left: 0,
@@ -42,11 +38,12 @@ class MyHomePage extends StatelessWidget {
             ),
           ),
 
-          if (pageProvider.currentPage == 'menu')
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Offstage(
+              offstage: pageProvider.currentPage != 'menu',
               child: MenuPrincipal(
                 onShowTradicionesPressed: () =>
                     pageProvider.changePage('tradiciones'),
@@ -60,91 +57,87 @@ class MyHomePage extends StatelessWidget {
                 onCloseMenu: () => pageProvider.changePage('map'),
               ),
             ),
+          ),
 
-          if (pageProvider.currentPage == 'tradiciones')
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
+          // Página de tradiciones superpuesta al mapa
+          Positioned.fill(
+            child: Offstage(
+              offstage: pageProvider.currentPage != 'tradiciones',
               child: TradicionesPage(
                 onFiestaSelected: (fiestaName) =>
                     pageProvider.setFiesta(fiestaName),
               ),
             ),
+          ),
 
-          // Detalle de una Fiesta o Tradición seleccionada
-          if (pageProvider.selectedFiesta!=null)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
+          // Detalle de Fiesta o Tradición seleccionada
+          Positioned.fill(
+            child: Offstage(
+              offstage: pageProvider.selectedFiesta == null,
               child: DetalleFiestaTradicion(
-                fiestaName: pageProvider.selectedFiesta!,
+                fiestaName: pageProvider.selectedFiesta ?? '',
               ),
             ),
+          ),
 
-          if (pageProvider.currentPage == 'favoritos')
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
+          // Página de favoritos superpuesta al mapa
+          Positioned.fill(
+            child: Offstage(
+              offstage: pageProvider.currentPage != 'favoritos',
               child: FavoritosPage(
                 onClose: () => pageProvider.changePage('map'),
               ),
             ),
+          ),
 
-          if (pageProvider.currentPage == 'lugares de interés')
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
+          // Página de lugares de interés superpuesta al mapa
+          Positioned.fill(
+            child: Offstage(
+              offstage: pageProvider.currentPage != 'lugares de interés',
               child: LugarDeInteresPage(
                 onClose: () => pageProvider.changePage('map'),
-                onLugarInteresSelected: (String) {},
+                onLugarInteresSelected: (lugar) {},
               ),
             ),
+          ),
 
-          if (pageProvider.currentPage == 'cuenta')
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
+          // Página de cuenta superpuesta al mapa
+          Positioned.fill(
+            child: Offstage(
+              offstage: pageProvider.currentPage != 'cuenta',
               child: CuentaPage(
                 onClose: () => pageProvider.changePage('map'),
               ),
             ),
+          ),
 
-          if (pageProvider.currentPage == 'gastronomia')
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
+          // Página de gastronomía superpuesta al mapa
+          Positioned.fill(
+            child: Offstage(
+              offstage: pageProvider.currentPage != 'gastronomia',
               child: GastronomiaPage(
                 onCategoriaPlatoSelected: (plato) {},
               ),
             ),
+          ),
 
-          Positioned(
-            bottom: 75.h,
-            right: 20.w,
-            child: FloatingActionButton(
-              backgroundColor: const Color.fromARGB(230, 50, 50, 50),
-              onPressed: () {
-                pageProvider.toggleMapStyle();
-              },
-              tooltip: "Cambiar estilo del mapa",
-              child: const Icon(
-                Icons.map,
-                color: Colors.white,
+          // FloatingActionButton para cambiar el estilo del mapa
+          if (pageProvider.currentPage == 'map')
+            Positioned(
+              bottom: 75.h,
+              right: 20.w,
+              child: FloatingActionButton(
+                backgroundColor: const Color.fromARGB(230, 50, 50, 50),
+                onPressed: () {
+                  pageProvider.toggleMapStyle();
+                },
+                tooltip: "Cambiar estilo del mapa",
+                child: const Icon(
+                  Icons.map,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

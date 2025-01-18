@@ -15,8 +15,8 @@ class DetalleFiestaTradicion extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
     final tradicionesService = Provider.of<TradicionesService>(context, listen: false);
-    final Tradiciones tradicion = tradicionesService.todasLasTradiciones!.firstWhere((element) => element.nombre == fiestaName,);
-    
+    final Tradiciones tradicion = tradicionesService.todasLasTradiciones!.firstWhere((element) => element.nombre == fiestaName);
+
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -48,8 +48,7 @@ class DetalleFiestaTradicion extends StatelessWidget {
                 Positioned(
                   top: 0,
                   left: 0,
-                  right:
-                      0, // Aseguramos que el contenedor ocupe toda la anchura
+                  right: 0,
                   child: Container(
                     padding: const EdgeInsets.all(15),
                     decoration: const BoxDecoration(
@@ -89,7 +88,9 @@ class DetalleFiestaTradicion extends StatelessWidget {
                     child: IconButton(
                       icon: const Icon(Icons.arrow_back,
                           color: Colors.white), // Flecha hacia atrás
-                      onPressed: () => pageProvider.clearScreen(),
+                      onPressed: () {
+                        pageProvider.changePage('tradiciones');
+                      }
                     ),
                   ),
                 ),
