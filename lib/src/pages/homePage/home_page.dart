@@ -70,15 +70,15 @@ class MyHomePage extends StatelessWidget {
             ),
           ),
 
-          // Detalle de Fiesta o Tradición seleccionada
-          Positioned.fill(
-            child: Offstage(
-              offstage: pageProvider.selectedFiesta == null,
-              child: DetalleFiestaTradicion(
-                fiestaName: pageProvider.selectedFiesta ?? '',
+          if (pageProvider.selectedFiesta != null)
+            Positioned.fill(
+              child: Offstage(
+                offstage: pageProvider.selectedFiesta == null,
+                child: DetalleFiestaTradicion(
+                  fiestaName: pageProvider.selectedFiesta ?? '',
+                ),
               ),
             ),
-          ),
 
           // Página de favoritos superpuesta al mapa
           Positioned.fill(
