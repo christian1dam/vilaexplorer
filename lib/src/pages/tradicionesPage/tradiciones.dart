@@ -3,18 +3,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
+import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'tarjetaFiestaTradicion.dart';
 
 class TradicionesPage extends StatefulWidget {
   final Function(String) onFiestaSelected;
-  final VoidCallback onClose;
 
   const TradicionesPage({
     super.key,
     required this.onFiestaSelected,
-    required this.onClose,
   });
 
   @override
@@ -31,8 +30,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
     super.initState();
     // Llamar a fetchAllTradiciones cuando se inicia la página
     Future.microtask(() {
-      Provider.of<TradicionesService>(context, listen: false)
-          .getAllTradiciones();
+      Provider.of<TradicionesService>(context, listen: false).getAllTradiciones();
     });
   }
 
@@ -55,6 +53,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final pageProvider = Provider.of<PageProvider>(context, listen: false);
 
     return Consumer<TradicionesService>(
       builder: (context, provider, child) {
@@ -112,9 +111,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
                   ),
                   child: Column(
                     children: [
-                      // Barra de estilo iOS
                       BarraDeslizamiento(),
-
                       Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: 8.h, horizontal: 8.w),
@@ -124,7 +121,8 @@ class _TradicionesPageState extends State<TradicionesPage> {
                           children: [
                             Expanded(
                               child: Text(
-                                AppLocalizations.of(context)!.translate('holidays_traditions'),
+                                AppLocalizations.of(context)!
+                                    .translate('holidays_traditions'),
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontSize: 21.sp,
@@ -135,14 +133,17 @@ class _TradicionesPageState extends State<TradicionesPage> {
                             ),
                             IconButton(
                               icon: Icon(
-                                isSearchActive ? Icons.arrow_back : Icons.search,
+                                isSearchActive
+                                    ? Icons.arrow_back
+                                    : Icons.search,
                                 color: Colors.white,
                               ),
                               onPressed: _toggleSearch,
                             ),
                             IconButton(
-                              icon: const Icon(Icons.close, color: Colors.white),
-                              onPressed: widget.onClose,
+                              icon:
+                                  const Icon(Icons.close, color: Colors.white),
+                              onPressed: () => pageProvider.changePage('map'),
                             ),
                           ],
                         ),

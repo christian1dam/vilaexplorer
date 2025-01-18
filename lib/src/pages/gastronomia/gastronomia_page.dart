@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
+import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/addPlato.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/myRecipesPage.dart';
@@ -9,12 +10,10 @@ import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class GastronomiaPage extends StatefulWidget {
   final Function(String) onCategoriaPlatoSelected;
-  final VoidCallback onClose;
 
   const GastronomiaPage({
     super.key,
     required this.onCategoriaPlatoSelected,
-    required this.onClose,
   });
 
   @override
@@ -48,6 +47,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
   @override
   Widget build(BuildContext context) {
     final gastronomiaService = Provider.of<GastronomiaService>(context);
+    final pageProvider = Provider.of<PageProvider>(context);
     final size = MediaQuery.of(context).size;
 
     // Lógica para mostrar la pantalla de carga o los datos
@@ -55,15 +55,12 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
     final platos = gastronomiaService.platos;
 
     return GestureDetector(
-      behavior: HitTestBehavior.opaque,
       onTap: () {
         if (isSearchActive) {
           setState(() {
             isSearchActive = false;
             searchController.clear();
           });
-        } else {
-          // widget.onClose();
         }
       },
       child: Align(
@@ -150,7 +147,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                     IconButton(
                                       icon: const Icon(Icons.close,
                                           color: Colors.white),
-                                        onPressed: () {},
+                                        onPressed: () {pageProvider.changePage('map');},
                                     ),
                                   ],
                                 ),

@@ -17,6 +17,7 @@ class PageProvider extends ChangeNotifier {
 
   void setFiesta(String fiesta) {
     selectedFiesta = fiesta;
+    currentPage = 'map';
     notifyListeners();
   }
 
@@ -34,6 +35,7 @@ class PageProvider extends ChangeNotifier {
 
   void clearScreen() {
     currentPage = 'map';
+    print("se ha limpiado la pantalla");
     selectedFiesta = null;
     selectedCategory = null;
     selectedPlatillo = null;

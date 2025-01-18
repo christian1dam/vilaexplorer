@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:provider/provider.dart';
-import 'package:vilaexplorer/src/pages/monumentosPage/detalle_monumento.dart';
+import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'monumento_card.dart';
 
 class LugarDeInteresPage extends StatefulWidget {
   final Function(String) onLugarInteresSelected;
   final VoidCallback onClose;
 
-  const LugarDeInteresPage({Key? key, required this.onClose, required this.onLugarInteresSelected}) : super(key: key);
+  const LugarDeInteresPage(
+      {Key? key, required this.onClose, required this.onLugarInteresSelected})
+      : super(key: key);
 
   @override
   _LugarDeInteresPageState createState() => _LugarDeInteresPageState();
@@ -19,7 +21,8 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
   String? selectedLugarInteres;
   bool isSearchActive = false;
   TextEditingController searchController = TextEditingController();
-  int selectedFilter = 0; // Índice del botón seleccionado, 0 para 'Todo' por defecto
+  int selectedFilter =
+      0; // Índice del botón seleccionado, 0 para 'Todo' por defecto
 
   @override
   void initState() {
@@ -49,7 +52,8 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
 
   @override
   Widget build(BuildContext context) {
-    final LugarDeInteresService lugarDeInteresService = context.watch<LugarDeInteresService>();
+    final LugarDeInteresService lugarDeInteresService =
+        context.watch<LugarDeInteresService>();
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -73,18 +77,8 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                 ),
                 child: Column(
                   children: [
-                    // Barra de estilo iOS
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Container(
-                        width: 100.w,
-                        height: 5.h,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[400],
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                      ),
-                    ),
+                    BarraDeslizamiento(),
+
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
@@ -96,7 +90,8 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Color.fromRGBO(30, 30, 30, 1),
-                                  borderRadius: BorderRadius.all(Radius.circular(10.r)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.r)),
                                 ),
                                 margin: const EdgeInsets.only(top: 10),
                                 width: MediaQuery.of(context).size.width * 0.5,
@@ -124,79 +119,103 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                     ),
                     // Botones para filtros y barra de búsqueda
                     Padding(
-  padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            icon: Icon(isSearchActive ? Icons.arrow_back : Icons.search, color: Colors.white),
-            onPressed: _toggleSearch,
-          ),
-          if (!isSearchActive) ...[
-            // Envolvemos los botones en un Container para el estilo de fondo
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 2.h), // Reducimos el padding vertical
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 55, 55, 55), // Fondo oscuro similar al de la imagen
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildFilterButton('Todo', 0),
-                    _buildFilterButton('Populares', 1),
-                    _buildFilterButton('Cercanos', 2),
-                  ],
-                ),
-              ),
-            ),
-          ] else
-            Expanded(
-              child: TextField(
-                controller: searchController,
-                style: const TextStyle(color: Colors.white),
-                onChanged: (query) {
-                  lugarDeInteresService.searchLugarDeInteres(query);
-                },
-                decoration: InputDecoration(
-                  hintText: 'Buscar lugares de interés...',
-                  hintStyle: const TextStyle(color: Colors.white54),
-                  fillColor: const Color.fromARGB(255, 47, 42, 42),
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20.r)),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
-                ),
-              ),
-            ),
-        ],
-      ),
-    ],
-  ),
-),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                    isSearchActive
+                                        ? Icons.arrow_back
+                                        : Icons.search,
+                                    color: Colors.white),
+                                onPressed: _toggleSearch,
+                              ),
+                              if (!isSearchActive) ...[
+                                // Envolvemos los botones en un Container para el estilo de fondo
+                                Expanded(
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 2
+                                            .h), // Reducimos el padding vertical
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 55, 55,
+                                          55), // Fondo oscuro similar al de la imagen
+                                      borderRadius: BorderRadius.circular(20.r),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        _buildFilterButton('Todo', 0),
+                                        _buildFilterButton('Populares', 1),
+                                        _buildFilterButton('Cercanos', 2),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ] else
+                                Expanded(
+                                  child: TextField(
+                                    controller: searchController,
+                                    style: const TextStyle(color: Colors.white),
+                                    onChanged: (query) {
+                                      lugarDeInteresService
+                                          .searchLugarDeInteres(query);
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: 'Buscar lugares de interés...',
+                                      hintStyle: const TextStyle(
+                                          color: Colors.white54),
+                                      fillColor:
+                                          const Color.fromARGB(255, 47, 42, 42),
+                                      filled: true,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20.r)),
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 5.h, horizontal: 10.w),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                     Expanded(
                       child: lugarDeInteresService.isLoading
                           ? const Center(child: CircularProgressIndicator())
                           : lugarDeInteresService.errorMessage != null
-                              ? Center(child: Text(lugarDeInteresService.errorMessage!, style: const TextStyle(color: Colors.white)))
+                              ? Center(
+                                  child: Text(
+                                      lugarDeInteresService.errorMessage!,
+                                      style:
+                                          const TextStyle(color: Colors.white)))
                               : lugarDeInteresService.lugaresDeInteres.isEmpty
-                                  ? const Center(child: Text("No se encontraron monumentos", style: TextStyle(color: Colors.white)))
+                                  ? const Center(
+                                      child: Text(
+                                          "No se encontraron monumentos",
+                                          style:
+                                              TextStyle(color: Colors.white)))
                                   : ListView.builder(
-                            itemCount: lugarDeInteresService.lugaresDeInteres.length,
-                            itemBuilder: (context, index) {
-                            final monumento = lugarDeInteresService.lugaresDeInteres[index];
-                            return MonumentoCard(
-                            lugarDeInteres: monumento,
-                            detalleTap: () =>
-                              _toggleContainer(monumento.nombreLugar!),
-                          );
-                        },
-                      ),
+                                      itemCount: lugarDeInteresService
+                                          .lugaresDeInteres.length,
+                                      itemBuilder: (context, index) {
+                                        final monumento = lugarDeInteresService
+                                            .lugaresDeInteres[index];
+                                        return MonumentoCard(
+                                          lugarDeInteres: monumento,
+                                          detalleTap: () => _toggleContainer(
+                                              monumento.nombreLugar!),
+                                        );
+                                      },
+                                    ),
                     ),
                   ],
                 ),
@@ -219,7 +238,9 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         decoration: BoxDecoration(
-          color: selectedFilter == index ? Colors.grey[700] : const Color.fromARGB(255, 55, 55, 55),
+          color: selectedFilter == index
+              ? Colors.grey[700]
+              : const Color.fromARGB(255, 55, 55, 55),
           borderRadius: BorderRadius.circular(20.r),
         ),
         child: Text(

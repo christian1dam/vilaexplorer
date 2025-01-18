@@ -87,7 +87,7 @@ class UsuarioService extends ChangeNotifier {
     try {
       final response = await _apiClient.get('/usuario/por-id/$id');
       if (response.statusCode == 200) {
-        Usuario usuario = Usuario.fromMap(jsonDecode(response.body));
+        Usuario usuario = Usuario.fromMap(jsonDecode(utf8.decode(response.bodyBytes)));
 
         return usuario;
       } else {

@@ -18,33 +18,31 @@ class LugarDeInteresService with ChangeNotifier {
 
   /// Obtiene todos los lugares de interés desde la API
   Future<void> fetchLugaresDeInteres() async {
-  _isLoading = true;
-  _errorMessage = null;
+    _isLoading = true;
+    _errorMessage = null;
 
-  // Usamos el post-frame callback
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    notifyListeners();
-  });
-
-  try {
-    final response = await _apiClient.get('/lugar_interes/todos');
-    final List<dynamic> data = jsonDecode(response.body);
-
-    _lugaresDeInteres = data
-        .map((json) => LugarDeInteres.fromMap(json))
-        .toList();
-  } catch (error) {
-    _errorMessage = 'Error al cargar los lugares de interés: $error';
-  } finally {
-    _isLoading = false;
-
-    // Usamos el post-frame callback nuevamente para llamar a notifyListeners
+    // Usamos el post-frame callback
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
-  }
-}
 
+    try {
+      final response = await _apiClient.get('/lugar_interes/todos');
+      final List<dynamic> data = jsonDecode(response.body);
+
+      _lugaresDeInteres =
+          data.map((json) => LugarDeInteres.fromMap(json)).toList();
+    } catch (error) {
+      _errorMessage = 'Error al cargar los lugares de interés: $error';
+    } finally {
+      _isLoading = false;
+
+      // Usamos el post-frame callback nuevamente para llamar a notifyListeners
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        notifyListeners();
+      });
+    }
+  }
 
   /// Obtiene todos los lugares de interés activos desde la API
   Future<void> fetchLugaresDeInteresActivos() async {
@@ -54,11 +52,11 @@ class LugarDeInteresService with ChangeNotifier {
 
     try {
       final response = await _apiClient.get('/lugar_interes/activos');
-      final List<dynamic> data = jsonDecode(response.body);
+      final String responseBody = utf8.decode(response.bodyBytes);
+      final List<dynamic> data = jsonDecode(responseBody);
 
-      _lugaresDeInteres = data
-          .map((json) => LugarDeInteres.fromMap(json))
-          .toList();
+      _lugaresDeInteres = data.map((json) => LugarDeInteres.fromMap(json)).toList();
+
     } catch (error) {
       _errorMessage = 'Error al cargar los lugares de interés activos: $error';
     } finally {
@@ -84,7 +82,8 @@ class LugarDeInteresService with ChangeNotifier {
   // Buscar monumentos por palabra clave
   Future<void> searchLugarDeInteres(String keyword) async {
     await _executeWithLoading(() async {
-      final response = await _apiClient.get('/lugar_interes/buscar?keyword=$keyword');
+      final response =
+          await _apiClient.get('/lugar_interes/buscar?keyword=$keyword');
       if (response.statusCode == 200) {
         final List<dynamic> lugaresDeInteresList = json.decode(response.body);
         _lugaresDeInteres = lugaresDeInteresList
@@ -94,7 +93,7 @@ class LugarDeInteresService with ChangeNotifier {
     }, onError: 'Error al buscar lugares de interés');
   }
 
-    // Ejecutar una función con manejo del estado de carga
+  // Ejecutar una función con manejo del estado de carga
   Future<void> _executeWithLoading(Future<void> Function() action,
       {required String onError}) async {
     _setLoading(true);
@@ -108,7 +107,6 @@ class LugarDeInteresService with ChangeNotifier {
     }
   }
 
-
   // Actualizar el estado de carga
   void _setLoading(bool value) {
     _isLoading = value;
@@ -121,7 +119,7 @@ class LugarDeInteresService with ChangeNotifier {
     notifyListeners();
   }
 
-   // Método para obtener la imagen de un monumento desde Cloudinary
+  // Método para obtener la imagen de un monumento desde Cloudinary
   Image getImageForMonumento(String? imagenUrl) {
     if (imagenUrl != null && imagenUrl.isNotEmpty) {
       return Image.network(

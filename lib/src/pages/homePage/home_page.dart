@@ -6,10 +6,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/cuenta_page.dart';
 import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
+import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'package:vilaexplorer/src/pages/homePage/map_view.dart';
 import 'package:vilaexplorer/src/pages/monumentosPage/lugar_interes.dart';
+import 'package:vilaexplorer/src/pages/tradicionesPage/detalle_fiesta_tradicion.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
 
 class MyHomePage extends StatelessWidget {
@@ -54,7 +56,7 @@ class MyHomePage extends StatelessWidget {
                     pageProvider.changePage('favoritos'),
                 onShowCuentaPressed: () => pageProvider.changePage('cuenta'),
                 onShowMonumentosPressed: () =>
-                    pageProvider.changePage('monumentos'),
+                    pageProvider.changePage('lugares de interés'),
                 onCloseMenu: () => pageProvider.changePage('map'),
               ),
             ),
@@ -68,7 +70,18 @@ class MyHomePage extends StatelessWidget {
               child: TradicionesPage(
                 onFiestaSelected: (fiestaName) =>
                     pageProvider.setFiesta(fiestaName),
-                onClose: () => pageProvider.changePage('map'),
+              ),
+            ),
+
+          // Detalle de una Fiesta o Tradición seleccionada
+          if (pageProvider.selectedFiesta!=null)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: DetalleFiestaTradicion(
+                fiestaName: pageProvider.selectedFiesta!,
               ),
             ),
 
@@ -83,7 +96,7 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
 
-          if (pageProvider.currentPage == 'Lugar de interes')
+          if (pageProvider.currentPage == 'lugares de interés')
             Positioned(
               top: 0,
               left: 0,
@@ -103,6 +116,17 @@ class MyHomePage extends StatelessWidget {
               bottom: 0,
               child: CuentaPage(
                 onClose: () => pageProvider.changePage('map'),
+              ),
+            ),
+
+          if (pageProvider.currentPage == 'gastronomia')
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: GastronomiaPage(
+                onCategoriaPlatoSelected: (plato) {},
               ),
             ),
 

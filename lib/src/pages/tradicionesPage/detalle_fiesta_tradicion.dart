@@ -1,48 +1,22 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:vilaexplorer/models/tradiciones/tradiciones.dart';
+import 'package:vilaexplorer/providers/page_provider.dart';
+import 'package:vilaexplorer/service/tradiciones_service.dart';
 
-class DetalleFiestaTradicion extends StatefulWidget {
+class DetalleFiestaTradicion extends StatelessWidget {
   final String fiestaName;
-  final VoidCallback onClose;
 
-  const DetalleFiestaTradicion(
-      {super.key, required this.fiestaName, required this.onClose});
-
-  @override
-  _DetalleFiestaTradicionState createState() => _DetalleFiestaTradicionState();
-}
-
-class _DetalleFiestaTradicionState extends State<DetalleFiestaTradicion> {
-  List<Map<String, String>> detalleTradiciones = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadDetallesTradiciones();
-  }
-
-  Future<void> _loadDetallesTradiciones() async {
-    final String response =
-        await rootBundle.loadString('assets/detalleTradiciones.json');
-    final List<dynamic> data = json.decode(response);
-    setState(() {
-      detalleTradiciones =
-          data.map((item) => Map<String, String>.from(item)).toList();
-    });
-  }
+  const DetalleFiestaTradicion({super.key, required this.fiestaName});
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
-    if (detalleTradiciones.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    final fiestaDetalles = detalleTradiciones
-        .firstWhere((element) => element['nombre'] == widget.fiestaName);
-
+    final pageProvider = Provider.of<PageProvider>(context, listen: false);
+    final tradicionesService = Provider.of<TradicionesService>(context, listen: false);
+    final Tradiciones tradicion = tradicionesService.todasLasTradiciones!.firstWhere((element) => element.nombre == fiestaName,);
+    
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -62,24 +36,28 @@ class _DetalleFiestaTradicionState extends State<DetalleFiestaTradicion> {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)), // Redondeamos ambas esquinas superiores de la imagen
-                  child: Image.asset(
-                    fiestaDetalles['imagen']!,
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(20)),
+                  child: Image.network(
+                    tradicion.imagen,
                     fit: BoxFit.cover,
                     width: double.infinity,
-                    height: 180,
+                    height: 180.h,
                   ),
                 ),
                 Positioned(
                   top: 0,
                   left: 0,
-                  right: 0, // Aseguramos que el contenedor ocupe toda la anchura
+                  right:
+                      0, // Aseguramos que el contenedor ocupe toda la anchura
                   child: Container(
                     padding: const EdgeInsets.all(15),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),  // Redondeamos la esquina superior izquierda
-                        topRight: Radius.circular(20), // Redondeamos la esquina superior derecha
+                        topLeft: Radius.circular(
+                            20), // Redondeamos la esquina superior izquierda
+                        topRight: Radius.circular(
+                            20), // Redondeamos la esquina superior derecha
                       ),
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
@@ -91,7 +69,7 @@ class _DetalleFiestaTradicionState extends State<DetalleFiestaTradicion> {
                       ),
                     ),
                     child: Text(
-                      "Fiesta de ${fiestaDetalles['nombre']}",
+                      tradicion.nombre,
                       style: const TextStyle(
                         fontSize: 20,
                         color: Colors.white,
@@ -109,8 +87,9 @@ class _DetalleFiestaTradicionState extends State<DetalleFiestaTradicion> {
                       color: Color.fromRGBO(15, 15, 15, 0.9),
                     ),
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white), // Flecha hacia atrás
-                      onPressed: widget.onClose,
+                      icon: const Icon(Icons.arrow_back,
+                          color: Colors.white), // Flecha hacia atrás
+                      onPressed: () => pageProvider.clearScreen(),
                     ),
                   ),
                 ),
@@ -118,10 +97,10 @@ class _DetalleFiestaTradicionState extends State<DetalleFiestaTradicion> {
             ),
             const SizedBox(height: 10),
             Text(
-              fiestaDetalles['fecha']!,
-              style: const TextStyle(
+              tradicion.fecha,
+              style: TextStyle(
                 color: Color.fromRGBO(224, 120, 62, 1),
-                fontSize: 21,
+                fontSize: 21.sp,
               ),
             ),
             const SizedBox(height: 8),
@@ -130,7 +109,7 @@ class _DetalleFiestaTradicionState extends State<DetalleFiestaTradicion> {
                 child: Container(
                   padding: const EdgeInsets.only(top: 10, bottom: 10),
                   child: Text(
-                    fiestaDetalles['descripcion']!,
+                    tradicion.descripcion,
                     style: const TextStyle(color: Colors.white, fontSize: 18),
                     textAlign: TextAlign.justify,
                   ),

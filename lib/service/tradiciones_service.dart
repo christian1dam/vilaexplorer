@@ -26,7 +26,7 @@ class TradicionesService extends ChangeNotifier {
     await _executeWithLoading(() async {
       final response = await _apiClient.get('/fiesta_tradicion/activas');
       if (response.statusCode == 200) {
-        final List<dynamic> tradicionesList = json.decode(response.body);
+        final List<dynamic> tradicionesList = json.decode(utf8.decode(response.bodyBytes));
         _todasLasTradiciones = tradicionesList
             .map((tradicion) => Tradiciones.fromMap(tradicion))
             .toList();
@@ -40,7 +40,7 @@ class TradicionesService extends ChangeNotifier {
       final response = await _apiClient.get('/fiesta_tradicion/$id');
       if (response.statusCode == 200) {
         _tradicionSeleccionada =
-            Tradiciones.fromMap(json.decode(response.body));
+            Tradiciones.fromMap(json.decode(utf8.decode(response.bodyBytes)));
       }
     }, onError: 'Error al obtener la tradición');
   }
@@ -51,7 +51,7 @@ class TradicionesService extends ChangeNotifier {
       final response =
           await _apiClient.get('/fiesta_tradicion/buscar?keyword=$keyword');
       if (response.statusCode == 200) {
-        final List<dynamic> tradicionesList = json.decode(response.body);
+        final List<dynamic> tradicionesList = json.decode(utf8.decode(response.bodyBytes));
         _todasLasTradiciones = tradicionesList
             .map((tradicion) => Tradiciones.fromMap(tradicion))
             .toList();

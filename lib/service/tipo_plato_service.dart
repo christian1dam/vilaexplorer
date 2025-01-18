@@ -27,7 +27,7 @@ class TipoPlatoService extends ChangeNotifier {
     try {
       final response = await _apiClient.get('/tipo_plato/activos');
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+        final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
         _tiposPlato = data.map((json) => TipoPlato.fromMap(json)).toList();
       } else {
         _error = 'Error: ${response.statusCode} - ${response.reasonPhrase}';

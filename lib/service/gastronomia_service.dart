@@ -34,7 +34,7 @@ class GastronomiaService extends ChangeNotifier {
       debugPrint('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+        final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
         _platos = data.map((json) => Plato.fromMap(json)).toList();
       } else {
         _error = 'Error: ${response.statusCode} - ${response.reasonPhrase}';
@@ -49,32 +49,32 @@ class GastronomiaService extends ChangeNotifier {
   }
 
   Future<void> fetchUserRecipes() async {
-  _isLoading = true;
-  _error = null;
-  notifyListeners();
-
-  final usuarioAutenticado = UsuarioService().getUsuario().idUsuario;  // Obtienes el idUsuario de la sesión.
-
-  try {
-    // Realizas la consulta a la API para obtener las recetas del usuario autenticado.
-    final response = await _apiClient.get('/plato/misRecetas?autorID=$usuarioAutenticado');
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      // Asignas las recetas obtenidas a la lista _platos
-      _platos = data.map((json) => Plato.fromMap(json)).toList();
-    } else {
-      _error = 'Error: ${response.statusCode} - ${response.reasonPhrase}';
-    }
-  } catch (e) {
-    _error = 'Error al obtener tus recetas: $e';
-  } finally {
-    _isLoading = false;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
+
+    final usuarioAutenticado = UsuarioService()
+        .getUsuario()
+        .idUsuario; // Obtienes el idUsuario de la sesión.
+
+    try {
+      // Realizas la consulta a la API para obtener las recetas del usuario autenticado.
+      final response =
+          await _apiClient.get('/plato/misRecetas?autorID=$usuarioAutenticado');
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        // Asignas las recetas obtenidas a la lista _platos
+        _platos = data.map((json) => Plato.fromMap(json)).toList();
+      } else {
+        _error = 'Error: ${response.statusCode} - ${response.reasonPhrase}';
+      }
+    } catch (e) {
+      _error = 'Error al obtener tus recetas: $e';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
-}
-
-
-
 
   // Método para obtener un plato por ID con manejo de estado
   Future<void> fetchPlatoById(int id) async {
