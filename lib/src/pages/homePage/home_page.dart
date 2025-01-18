@@ -111,15 +111,15 @@ class MyHomePage extends StatelessWidget {
             ),
           ),
 
-          // Página de gastronomía superpuesta al mapa
-          Positioned.fill(
-            child: Offstage(
-              offstage: pageProvider.currentPage != 'gastronomia',
-              child: GastronomiaPage(
-                onCategoriaPlatoSelected: (plato) {},
+          if (pageProvider.currentPage == 'gastronomia')
+            Positioned.fill(
+              child: Offstage(
+                offstage: pageProvider.currentPage != 'gastronomia',
+                child: GastronomiaPage(
+                  onCategoriaPlatoSelected: (plato) {},
+                ),
               ),
             ),
-          ),
 
           // FloatingActionButton para cambiar el estilo del mapa
           if (pageProvider.currentPage == 'map')
