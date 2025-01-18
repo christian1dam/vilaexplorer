@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'monumento_card.dart';
 
 class LugarDeInteresPage extends StatefulWidget {
-  final Function(String) onLugarInteresSelected;
-  final VoidCallback onClose;
-
-  const LugarDeInteresPage(
-      {Key? key, required this.onClose, required this.onLugarInteresSelected})
-      : super(key: key);
+  const LugarDeInteresPage({Key? key}) : super(key: key);
 
   @override
   _LugarDeInteresPageState createState() => _LugarDeInteresPageState();
@@ -43,187 +39,173 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
     });
   }
 
-  void _toggleContainer(String nombreLugarInteres) {
-    setState(() {
-      selectedLugarInteres = nombreLugarInteres;
-      widget.onLugarInteresSelected(nombreLugarInteres);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final LugarDeInteresService lugarDeInteresService =
-        context.watch<LugarDeInteresService>();
+    final lugarDeInteresService = Provider.of<LugarDeInteresService>(context, listen: false);
+    final pageProvider = Provider.of<PageProvider>(context, listen: false);
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: GestureDetector(
-              onTap: widget.onClose,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.80,
-                width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(
-                  color: Color.fromRGBO(32, 29, 29, 0.9),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
+    return Stack(
+      children: [
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: GestureDetector(
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.80,
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                color: Color.fromRGBO(32, 29, 29, 0.9),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
-                child: Column(
-                  children: [
-                    BarraDeslizamiento(),
+              ),
+              child: Column(
+                children: [
+                  BarraDeslizamiento(),
 
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Color.fromRGBO(30, 30, 30, 1),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.r)),
-                                ),
-                                margin: const EdgeInsets.only(top: 10),
-                                width: MediaQuery.of(context).size.width * 0.5,
-                                height: 35.h,
-                                child: const Center(
-                                  child: Text(
-                                    'Lugares de Interés',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      fontFamily: 'Poppins',
-                                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(30, 30, 30, 1),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.r)),
+                              ),
+                              margin: const EdgeInsets.only(top: 10),
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              height: 35.h,
+                              child: const Center(
+                                child: Text(
+                                  'Lugares de Interés',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontFamily: 'Poppins',
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.close, color: Colors.white),
-                            onPressed: widget.onClose,
-                          ),
-                        ],
-                      ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Colors.white),
+                          onPressed: () => pageProvider.changePage('map'),
+                        ),
+                      ],
                     ),
-                    // Botones para filtros y barra de búsqueda
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                    isSearchActive
-                                        ? Icons.arrow_back
-                                        : Icons.search,
-                                    color: Colors.white),
-                                onPressed: _toggleSearch,
+                  ),
+                  // Botones para filtros y barra de búsqueda
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                  isSearchActive
+                                      ? Icons.arrow_back
+                                      : Icons.search,
+                                  color: Colors.white),
+                              onPressed: _toggleSearch,
+                            ),
+                            if (!isSearchActive) ...[
+                              // Envolvemos los botones en un Container para el estilo de fondo
+                              Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical:
+                                          2.h), // Reducimos el padding vertical
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 55, 55,
+                                        55), // Fondo oscuro similar al de la imagen
+                                    borderRadius: BorderRadius.circular(20.r),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      _buildFilterButton('Todo', 0),
+                                      _buildFilterButton('Populares', 1),
+                                      _buildFilterButton('Cercanos', 2),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              if (!isSearchActive) ...[
-                                // Envolvemos los botones en un Container para el estilo de fondo
-                                Expanded(
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 2
-                                            .h), // Reducimos el padding vertical
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 55, 55,
-                                          55), // Fondo oscuro similar al de la imagen
-                                      borderRadius: BorderRadius.circular(20.r),
+                            ] else
+                              Expanded(
+                                child: TextField(
+                                  controller: searchController,
+                                  style: const TextStyle(color: Colors.white),
+                                  onChanged: (query) {
+                                    lugarDeInteresService
+                                        .searchLugarDeInteres(query);
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText: 'Buscar lugares de interés...',
+                                    hintStyle:
+                                        const TextStyle(color: Colors.white54),
+                                    fillColor:
+                                        const Color.fromARGB(255, 47, 42, 42),
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20.r)),
                                     ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        _buildFilterButton('Todo', 0),
-                                        _buildFilterButton('Populares', 1),
-                                        _buildFilterButton('Cercanos', 2),
-                                      ],
-                                    ),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 5.h, horizontal: 10.w),
                                   ),
                                 ),
-                              ] else
-                                Expanded(
-                                  child: TextField(
-                                    controller: searchController,
-                                    style: const TextStyle(color: Colors.white),
-                                    onChanged: (query) {
-                                      lugarDeInteresService
-                                          .searchLugarDeInteres(query);
-                                    },
-                                    decoration: InputDecoration(
-                                      hintText: 'Buscar lugares de interés...',
-                                      hintStyle: const TextStyle(
-                                          color: Colors.white54),
-                                      fillColor:
-                                          const Color.fromARGB(255, 47, 42, 42),
-                                      filled: true,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20.r)),
-                                      ),
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 5.h, horizontal: 10.w),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ],
-                      ),
+                              ),
+                          ],
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      child: lugarDeInteresService.isLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : lugarDeInteresService.errorMessage != null
-                              ? Center(
-                                  child: Text(
-                                      lugarDeInteresService.errorMessage!,
-                                      style:
-                                          const TextStyle(color: Colors.white)))
-                              : lugarDeInteresService.lugaresDeInteres.isEmpty
-                                  ? const Center(
-                                      child: Text(
-                                          "No se encontraron monumentos",
-                                          style:
-                                              TextStyle(color: Colors.white)))
-                                  : ListView.builder(
-                                      itemCount: lugarDeInteresService
-                                          .lugaresDeInteres.length,
-                                      itemBuilder: (context, index) {
-                                        final monumento = lugarDeInteresService
-                                            .lugaresDeInteres[index];
-                                        return MonumentoCard(
+                  ),
+                  Expanded(
+                    child: lugarDeInteresService.isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : lugarDeInteresService.errorMessage != null
+                            ? Center(
+                                child: Text(lugarDeInteresService.errorMessage!,
+                                    style:
+                                        const TextStyle(color: Colors.white)))
+                            : lugarDeInteresService.lugaresDeInteres.isEmpty
+                                ? const Center(
+                                    child: Text("No se encontraron monumentos",
+                                        style: TextStyle(color: Colors.white)))
+                                : ListView.builder(
+                                    padding: EdgeInsets.all(0),
+                                    itemCount: lugarDeInteresService
+                                        .lugaresDeInteres.length,
+                                    itemBuilder: (context, index) {
+                                      final monumento = lugarDeInteresService
+                                          .lugaresDeInteres[index];
+                                      return MonumentoCard(
                                           lugarDeInteres: monumento,
-                                          detalleTap: () => _toggleContainer(
-                                              monumento.nombreLugar!),
-                                        );
-                                      },
-                                    ),
-                    ),
-                  ],
-                ),
+                                          detalleTap: () =>
+                                              pageProvider.setLugarDeInteres(
+                                                  monumento.nombreLugar!));
+                                    }),
+                  ),
+                ],
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

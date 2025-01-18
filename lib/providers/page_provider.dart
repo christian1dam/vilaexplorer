@@ -5,6 +5,7 @@ class PageProvider extends ChangeNotifier {
   String currentMapStyle = 'mapbox/streets-v11';
 
   String? selectedFiesta;
+  String? selectedLugarInteres;
   String? selectedCategory;
   String? selectedPlatillo;
   String? selectedIngredientes;
@@ -13,12 +14,19 @@ class PageProvider extends ChangeNotifier {
   void changePage(String page) {
     currentPage = page;
     selectedFiesta = null;
+    selectedLugarInteres = null;
     notifyListeners();
   }
 
   void setFiesta(String fiesta) {
     selectedFiesta = fiesta;
-    currentPage = 'map';
+    currentPage = fiesta;
+    notifyListeners();
+  }
+
+  void setLugarDeInteres(String lugarDeInteres) {
+    selectedLugarInteres = lugarDeInteres;
+    currentPage = lugarDeInteres;
     notifyListeners();
   }
 
@@ -41,6 +49,7 @@ class PageProvider extends ChangeNotifier {
     selectedPlatillo = null;
     selectedIngredientes = null;
     selectedReceta = null;
+    selectedLugarInteres = null;
     notifyListeners();
   }
 

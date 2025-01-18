@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
+import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/cuenta_page.dart';
 import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'package:vilaexplorer/src/pages/homePage/map_view.dart';
+import 'package:vilaexplorer/src/pages/monumentosPage/detalle_monumento.dart';
 import 'package:vilaexplorer/src/pages/monumentosPage/lugar_interes.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/detalle_fiesta_tradicion.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
@@ -18,6 +20,7 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pageProvider = Provider.of<PageProvider>(context);
+    final lugarInteresService = Provider.of<LugarDeInteresService>(context);
 
     return Scaffold(
       body: Stack(
@@ -94,12 +97,19 @@ class MyHomePage extends StatelessWidget {
           Positioned.fill(
             child: Offstage(
               offstage: pageProvider.currentPage != 'lugares de interés',
-              child: LugarDeInteresPage(
-                onClose: () => pageProvider.changePage('map'),
-                onLugarInteresSelected: (lugar) {},
-              ),
+              child: LugarDeInteresPage(),
             ),
           ),
+
+          if (pageProvider.selectedLugarInteres != null)
+            Positioned.fill(
+              child: Offstage(
+                offstage: pageProvider.selectedLugarInteres == null,
+                child: DetalleMonumentoPage(
+                  lugarDeInteres: lugarInteresService.lugaresDeInteres.firstWhere((lugar) => lugar.nombreLugar == pageProvider.selectedLugarInteres),
+                ),
+              ),
+            ),
 
           // Página de cuenta superpuesta al mapa
           Positioned.fill(

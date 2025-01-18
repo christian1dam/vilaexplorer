@@ -28,7 +28,6 @@ class _TradicionesPageState extends State<TradicionesPage> {
   @override
   void initState() {
     super.initState();
-    // Llamar a fetchAllTradiciones cuando se inicia la página
     Future.microtask(() {
       Provider.of<TradicionesService>(context, listen: false).getAllTradiciones();
     });
