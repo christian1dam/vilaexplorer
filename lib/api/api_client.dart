@@ -69,7 +69,7 @@ class ApiClient {
     try {
       final response = await http.put(
         url,
-        headers: _defaultHeaders(),
+        headers: _authHeader(),
         body: jsonEncode(body),
       );
       _handleResponse(response);

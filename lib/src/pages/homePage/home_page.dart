@@ -9,8 +9,8 @@ import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'package:vilaexplorer/src/pages/homePage/map_view.dart';
-import 'package:vilaexplorer/src/pages/monumentosPage/detalle_monumento.dart';
-import 'package:vilaexplorer/src/pages/monumentosPage/lugar_interes.dart';
+import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.dart';
+import 'package:vilaexplorer/src/pages/lugarInteresPage/lugar_interes.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/detalle_fiesta_tradicion.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
 
@@ -104,7 +104,7 @@ class MyHomePage extends StatelessWidget {
             Positioned.fill(
               child: Offstage(
                 offstage: pageProvider.selectedLugarInteres == null,
-                child: DetalleMonumentoPage(
+                child: DetalleLugarInteres(
                   lugarDeInteres: lugarInteresService.lugaresDeInteres.firstWhere((lugar) => lugar.nombreLugar == pageProvider.selectedLugarInteres),
                 ),
               ),

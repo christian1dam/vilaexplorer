@@ -27,7 +27,7 @@ class LugarDeInteresService with ChangeNotifier {
     });
 
     try {
-      final response = await _apiClient.get('/lugar_interes/todos');
+      final response = await _apiClient.get('/lugar_interes/activos');
       final List<dynamic> data = jsonDecode(response.body);
 
       _lugaresDeInteres =
@@ -52,11 +52,10 @@ class LugarDeInteresService with ChangeNotifier {
 
     try {
       final response = await _apiClient.get('/lugar_interes/activos');
-      final String responseBody = utf8.decode(response.bodyBytes);
-      final List<dynamic> data = jsonDecode(responseBody);
-
-      _lugaresDeInteres = data.map((json) => LugarDeInteres.fromMap(json)).toList();
-
+      final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+      print(data);
+      _lugaresDeInteres =
+          data.map((json) => LugarDeInteres.fromMap(json)).toList();
     } catch (error) {
       _errorMessage = 'Error al cargar los lugares de interés activos: $error';
     } finally {
@@ -143,5 +142,124 @@ class LugarDeInteresService with ChangeNotifier {
       height: 200.h,
       fit: BoxFit.cover,
     );
+  }
+
+  /// Verifica si el usuario ya ha puntuado una entidad
+  Future<bool> hasPuntuado({
+    required int idUsuario,
+    required int idEntidad,
+    required String tipoEntidad,
+  }) async {
+    final endpoint =
+        "/puntuacion/usuario/$idUsuario/entidad/$tipoEntidad/$idEntidad";
+
+    try {
+      final response = await _apiClient.get(endpoint);
+      return response.statusCode == 200 && jsonDecode(response.body).isNotEmpty;
+    } catch (e) {
+      print("Error al verificar puntuación: $e");
+      return false;
+    }
+  }
+
+  /// Crea una nueva puntuación
+  Future<void> crearPuntuacion({
+    required int idUsuario,
+    required int idEntidad,
+    required String tipoEntidad,
+    required int puntuacion,
+  }) async {
+    final endpoint = "/puntuacion/crear";
+
+    try {
+      final response = await _apiClient.postAuth(
+        endpoint,
+        body: {
+          "idUsuario": idUsuario,
+          "idEntidad": idEntidad,
+          "tipoEntidad": tipoEntidad,
+          "puntuacion": puntuacion,
+        },
+      );
+
+      if (response.statusCode == 201) {
+        print("Puntuación creada correctamente.");
+        _actualizarEntidadLocal(idEntidad, puntuacion);
+      } else {
+        print("Error al crear la puntuación: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error al crear puntuación: $e");
+    }
+  }
+
+  /// Actualiza una puntuación existente
+  Future<void> actualizarPuntuacion({
+    required int idUsuario,
+    required int idEntidad,
+    required String tipoEntidad,
+    required int nuevaPuntuacion,
+  }) async {
+    final endpoint = "/puntuacion/actualizar"
+        "?idUsuario=$idUsuario"
+        "&idEntidad=$idEntidad"
+        "&tipoEntidad=$tipoEntidad"
+        "&nuevaPuntuacion=$nuevaPuntuacion";
+
+    try {
+      final response = await _apiClient.put(endpoint);
+
+      if (response.statusCode == 200) {
+        print("Puntuación actualizada correctamente.");
+        _actualizarEntidadLocal(idEntidad, nuevaPuntuacion);
+      } else {
+        print("Error al actualizar la puntuación: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error al actualizar puntuación: $e");
+    }
+  }
+
+  /// Lógica principal para crear o actualizar una puntuación
+  Future<void> gestionarPuntuacion({
+    required int idUsuario,
+    required int idEntidad,
+    required String tipoEntidad,
+    required int puntuacion,
+  }) async {
+    final yaPuntuado = await hasPuntuado(
+      idUsuario: idUsuario,
+      idEntidad: idEntidad,
+      tipoEntidad: tipoEntidad,
+    );
+
+    if (yaPuntuado) {
+      await actualizarPuntuacion(
+        idUsuario: idUsuario,
+        idEntidad: idEntidad,
+        tipoEntidad: tipoEntidad,
+        nuevaPuntuacion: puntuacion,
+      );
+    } else {
+      await crearPuntuacion(
+        idUsuario: idUsuario,
+        idEntidad: idEntidad,
+        tipoEntidad: tipoEntidad,
+        puntuacion: puntuacion,
+      );
+    }
+  }
+
+  /// Actualiza localmente la entidad en la lista
+  void _actualizarEntidadLocal(int idEntidad, int puntuacion) {
+    final index = _lugaresDeInteres
+        .indexWhere((lugar) => lugar.idLugarInteres == idEntidad);
+
+    if (index != -1) {
+      // _lugaresDeInteres[index].puntuacionMediaLugar = ;
+      notifyListeners(); // Notificar cambios
+    } else {
+      print("Entidad no encontrada en la lista local.");
+    }
   }
 }

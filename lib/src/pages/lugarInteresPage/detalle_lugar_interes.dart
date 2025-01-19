@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
+import 'package:vilaexplorer/models/tipo_entidad.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
+import 'package:vilaexplorer/service/lugar_interes_service.dart';
+import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
-class DetalleMonumentoPage extends StatelessWidget {
+class DetalleLugarInteres extends StatelessWidget {
   final LugarDeInteres lugarDeInteres;
-  const DetalleMonumentoPage({Key? key, required this.lugarDeInteres})
+
+  const DetalleLugarInteres({Key? key, required this.lugarDeInteres})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
+    final lugarDeInteresService =
+        Provider.of<LugarDeInteresService>(context, listen: false);
+    final usuarioAutenticado = UsuarioService().usuarioAutenticado;
 
     return Stack(
       children: [
@@ -22,7 +30,7 @@ class DetalleMonumentoPage extends StatelessWidget {
           left: 17.w,
           child: Container(
             width: size.width * 0.81.r,
-            height: size.height * 0.42.r,
+            height: size.height * 0.47.r,
             decoration: BoxDecoration(
               color: Color.fromARGB(250, 66, 66, 66),
               borderRadius: BorderRadius.only(
@@ -38,26 +46,24 @@ class DetalleMonumentoPage extends StatelessWidget {
                 // Imagen con título y botón de cerrar superpuestos
                 Stack(
                   children: [
-                    // Imagen del monumento
                     ClipRRect(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20.r),
                         topRight: Radius.circular(20.r),
                       ),
                       child: Image.network(
-                        lugarDeInteres.imagen ??
-                            '', // Asegúrate de que la imagen no sea nula
+                        lugarDeInteres.imagen ?? '',
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: 180.h,
                         errorBuilder: (BuildContext context, Object exception,
                             StackTrace? stackTrace) {
-                          // Imagen de placeholder en caso de error
                           return Image.asset('assets/no-image.jpg',
                               fit: BoxFit.cover);
                         },
                       ),
                     ),
+
                     // Gradiente y superposición para título y botón
                     Container(
                       height: 180.h, // Misma altura que la imagen
@@ -75,15 +81,16 @@ class DetalleMonumentoPage extends StatelessWidget {
                           end: Alignment.center,
                         ),
                       ),
+
                       child: Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
+                          horizontal: 15.w,
                           vertical: 15.h,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Título en la esquina superior izquierda
+                            //TITULO
                             Expanded(
                               child: Align(
                                 alignment: Alignment.topLeft,
@@ -100,27 +107,15 @@ class DetalleMonumentoPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            // Botón de cerrar en la esquina superior derecha
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.8.r),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10.r),
-                                  ),
-                                ),
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.close_outlined,
-                                    color: Colors.white,
-                                    weight: 9999,
-                                    size: 30,
-                                  ),
-                                  highlightColor: Color.fromARGB(200, 200, 18, 18),
-                                  onPressed: () => pageProvider.clearScreen(),
-                                ),
-                              ),
+                            GoBackAndCloseButton(
+                              myIcono: Icons.arrow_back,
+                              onPressed: () =>
+                                  pageProvider.changePage('lugares de interés'),
+                              margin: EdgeInsets.only(right: 5.w),
+                            ),
+                            GoBackAndCloseButton(
+                              onPressed: pageProvider.clearScreen,
+                              myIcono: Icons.close_outlined,
                             ),
                           ],
                         ),
@@ -128,33 +123,76 @@ class DetalleMonumentoPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
-                // Descripción y contenido
+
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.all(16.r),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            lugarDeInteres.descripcion ??
-                                'Descripción no disponible',
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 18),
-                            textAlign: TextAlign.justify,
+                          IntrinsicHeight(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    lugarDeInteres.nombreLugar ??
+                                        'Descripción no disponible',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18.sp),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 4.w,
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    RatingBar.builder(
+                                      itemSize: 23.r,
+                                      initialRating:
+                                          lugarDeInteres.puntuacionMediaLugar ??
+                                              0,
+                                      minRating: 1,
+                                      direction: Axis.horizontal,
+                                      allowHalfRating: false,
+                                      itemCount: 5,
+                                      itemPadding: EdgeInsets.symmetric(
+                                          horizontal: 1.0.w),
+                                      itemBuilder: (context, _) => Icon(
+                                        Icons.star,
+                                        color: Color.fromARGB(230, 255, 205, 0),
+                                      ),
+                                      onRatingUpdate: (rating) async {
+
+                                        lugarDeInteresService.gestionarPuntuacion(
+                                          idUsuario: usuarioAutenticado!.id!,
+                                          idEntidad:lugarDeInteres.idLugarInteres!,
+                                          tipoEntidad: TipoEntidad.LUGAR_INTERES.toString().substring(12),
+                                          puntuacion: rating.toInt(),
+                                        );
+                                        print("Nueva calificación: $rating");
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 16),
-                          const Text(
-                            "Opinión de Turistas",
+                          SizedBox(height: 10.h),
+                          Text(
+                            "Comentarios",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          // Aquí se pueden agregar opiniones adicionales
+                          SizedBox(height: 8.h),
+
+                          // TODO #1 Aquí van las opiniones de los usuarios
                         ],
                       ),
                     ),
@@ -166,9 +204,9 @@ class DetalleMonumentoPage extends StatelessWidget {
         ),
         // Botones flotantes debajo del recuadro
         Positioned(
-          left: 16,
-          right: 16,
-          bottom: 16,
+          left: 16.w,
+          right: 16.w,
+          bottom: 16.h,
           child: Row(
             children: [
               // Botón de "Obtener ruta"
@@ -176,22 +214,26 @@ class DetalleMonumentoPage extends StatelessWidget {
                 flex: 4, // 80% del espacio
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    elevation: 5,
+                    backgroundColor: const Color.fromARGB(255, 1, 140, 241),
+                    elevation: 5.h,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
                   onPressed: () {
                     // Lógica para obtener la ruta
                   },
-                  child: const Text(
+                  child: Text(
                     'Obtener ruta',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.sp,
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+
+              SizedBox(width: 8.w),
               // Botón de "Guardar"
               Expanded(
                 flex: 1, // 20% del espacio
@@ -216,6 +258,44 @@ class DetalleMonumentoPage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class GoBackAndCloseButton extends StatelessWidget {
+  const GoBackAndCloseButton({
+    super.key,
+    required this.onPressed,
+    required this.myIcono,
+    this.margin,
+  });
+
+  final VoidCallback onPressed;
+  final IconData myIcono;
+  final EdgeInsetsGeometry? margin;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topRight,
+      child: Container(
+        margin: margin,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(245, 70, 68, 68),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.r),
+          ),
+        ),
+        child: IconButton(
+          icon: Icon(
+            myIcono,
+            color: Colors.white,
+            weight: 9999,
+            size: 30,
+          ),
+          onPressed: onPressed,
+        ),
+      ),
     );
   }
 }

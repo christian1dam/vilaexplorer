@@ -24,6 +24,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   geolocator: ^13.0.2
   flutter_dotenv: ^5.2.1
+  flutter_rating_bar: ^4.0.1
 
 dev_dependencies:
   flutter_test:
