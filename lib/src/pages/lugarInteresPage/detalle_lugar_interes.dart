@@ -51,16 +51,12 @@ class DetalleLugarInteres extends StatelessWidget {
                         topLeft: Radius.circular(20.r),
                         topRight: Radius.circular(20.r),
                       ),
-                      child: Image.network(
-                        lugarDeInteres.imagen ?? '',
+                      child: FadeInImage.assetNetwork(
+                        placeholder: 'assets/no-image.jpg',
+                        image: lugarDeInteres.imagen!,
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: 180.h,
-                        errorBuilder: (BuildContext context, Object exception,
-                            StackTrace? stackTrace) {
-                          return Image.asset('assets/no-image.jpg',
-                              fit: BoxFit.cover);
-                        },
                       ),
                     ),
 
@@ -166,11 +162,14 @@ class DetalleLugarInteres extends StatelessWidget {
                                         color: Color.fromARGB(230, 255, 205, 0),
                                       ),
                                       onRatingUpdate: (rating) async {
-
-                                        lugarDeInteresService.gestionarPuntuacion(
+                                        lugarDeInteresService
+                                            .gestionarPuntuacion(
                                           idUsuario: usuarioAutenticado!.id!,
-                                          idEntidad:lugarDeInteres.idLugarInteres!,
-                                          tipoEntidad: TipoEntidad.LUGAR_INTERES.toString().substring(12),
+                                          idEntidad:
+                                              lugarDeInteres.idLugarInteres!,
+                                          tipoEntidad: TipoEntidad.LUGAR_INTERES
+                                              .toString()
+                                              .substring(12),
                                           puntuacion: rating.toInt(),
                                         );
                                         print("Nueva calificación: $rating");
