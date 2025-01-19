@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/api/api_client.dart';
+import 'package:vilaexplorer/models/Puntuacion.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
+import 'package:vilaexplorer/models/usuario/usuario.dart';
 
 class LugarDeInteresService with ChangeNotifier {
   final ApiClient _apiClient = ApiClient();
@@ -16,35 +19,6 @@ class LugarDeInteresService with ChangeNotifier {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-  /// Obtiene todos los lugares de interés desde la API
-  Future<void> fetchLugaresDeInteres() async {
-    _isLoading = true;
-    _errorMessage = null;
-
-    // Usamos el post-frame callback
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifyListeners();
-    });
-
-    try {
-      final response = await _apiClient.get('/lugar_interes/activos');
-      final List<dynamic> data = jsonDecode(response.body);
-
-      _lugaresDeInteres =
-          data.map((json) => LugarDeInteres.fromMap(json)).toList();
-    } catch (error) {
-      _errorMessage = 'Error al cargar los lugares de interés: $error';
-    } finally {
-      _isLoading = false;
-
-      // Usamos el post-frame callback nuevamente para llamar a notifyListeners
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        notifyListeners();
-      });
-    }
-  }
-
-  /// Obtiene todos los lugares de interés activos desde la API
   Future<void> fetchLugaresDeInteresActivos() async {
     _isLoading = true;
     _errorMessage = null;
@@ -53,9 +27,7 @@ class LugarDeInteresService with ChangeNotifier {
     try {
       final response = await _apiClient.get('/lugar_interes/activos');
       final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
-      print(data);
-      _lugaresDeInteres =
-          data.map((json) => LugarDeInteres.fromMap(json)).toList();
+      _lugaresDeInteres = data.map((json) => LugarDeInteres.fromMap(json)).toList();
     } catch (error) {
       _errorMessage = 'Error al cargar los lugares de interés activos: $error';
     } finally {
@@ -64,11 +36,11 @@ class LugarDeInteresService with ChangeNotifier {
     }
   }
 
-  /// Obtiene un lugar de interés por su ID
+
   Future<LugarDeInteres?> fetchLugarDeInteresById(int id) async {
     try {
       final response = await _apiClient.get('/lugar_interes/detalle/$id');
-      final Map<String, dynamic> data = jsonDecode(response.body);
+      final Map<String, dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
 
       return LugarDeInteres.fromMap(data);
     } catch (error) {
@@ -78,13 +50,12 @@ class LugarDeInteresService with ChangeNotifier {
     }
   }
 
-  // Buscar monumentos por palabra clave
   Future<void> searchLugarDeInteres(String keyword) async {
     await _executeWithLoading(() async {
       final response =
           await _apiClient.get('/lugar_interes/buscar?keyword=$keyword');
       if (response.statusCode == 200) {
-        final List<dynamic> lugaresDeInteresList = json.decode(response.body);
+        final List<dynamic> lugaresDeInteresList = json.decode(utf8.decode(response.bodyBytes));
         _lugaresDeInteres = lugaresDeInteresList
             .map((lugarInteres) => LugarDeInteres.fromMap(lugarInteres))
             .toList();
@@ -92,7 +63,6 @@ class LugarDeInteresService with ChangeNotifier {
     }, onError: 'Error al buscar lugares de interés');
   }
 
-  // Ejecutar una función con manejo del estado de carga
   Future<void> _executeWithLoading(Future<void> Function() action,
       {required String onError}) async {
     _setLoading(true);
@@ -163,33 +133,31 @@ class LugarDeInteresService with ChangeNotifier {
   }
 
   /// Crea una nueva puntuación
-  Future<void> crearPuntuacion({
-    required int idUsuario,
-    required int idEntidad,
-    required String tipoEntidad,
-    required int puntuacion,
-  }) async {
+  Future<void> crearPuntuacion(Puntuacion puntuacion) async {
     final endpoint = "/puntuacion/crear";
 
+    print("Entrando a crearPuntuacion");
+    print("Endpoint: $endpoint");
+    print("Puntuación enviada: ${puntuacion.toMap()}");
+
     try {
+      print(
+          "Enviando puntuación: ${puntuacion.toMap()}"); // Imprime los datos enviados
+
       final response = await _apiClient.postAuth(
         endpoint,
-        body: {
-          "idUsuario": idUsuario,
-          "idEntidad": idEntidad,
-          "tipoEntidad": tipoEntidad,
-          "puntuacion": puntuacion,
-        },
+        body: puntuacion.toMap(),
       );
 
       if (response.statusCode == 201) {
         print("Puntuación creada correctamente.");
-        _actualizarEntidadLocal(idEntidad, puntuacion);
       } else {
         print("Error al crear la puntuación: ${response.statusCode}");
+        print("Error body: ${response.body}");
       }
     } catch (e) {
       print("Error al crear puntuación: $e");
+      print("${e.hashCode} + ${e.toString()} + ${e.runtimeType}");
     }
   }
 
@@ -211,7 +179,6 @@ class LugarDeInteresService with ChangeNotifier {
 
       if (response.statusCode == 200) {
         print("Puntuación actualizada correctamente.");
-        _actualizarEntidadLocal(idEntidad, nuevaPuntuacion);
       } else {
         print("Error al actualizar la puntuación: ${response.statusCode}");
       }
@@ -241,25 +208,16 @@ class LugarDeInteresService with ChangeNotifier {
         nuevaPuntuacion: puntuacion,
       );
     } else {
-      await crearPuntuacion(
-        idUsuario: idUsuario,
-        idEntidad: idEntidad,
-        tipoEntidad: tipoEntidad,
-        puntuacion: puntuacion,
-      );
+      final puntuacionModel = Puntuacion(
+          idEntidad: idEntidad,
+          puntuacion: puntuacion,
+          usuario: Usuario(
+            idUsuario: idUsuario,
+          ),
+          tipoEntidad: tipoEntidad);
+      await crearPuntuacion(puntuacionModel);
     }
-  }
 
-  /// Actualiza localmente la entidad en la lista
-  void _actualizarEntidadLocal(int idEntidad, int puntuacion) {
-    final index = _lugaresDeInteres
-        .indexWhere((lugar) => lugar.idLugarInteres == idEntidad);
-
-    if (index != -1) {
-      // _lugaresDeInteres[index].puntuacionMediaLugar = ;
-      notifyListeners(); // Notificar cambios
-    } else {
-      print("Entidad no encontrada en la lista local.");
-    }
+    await fetchLugaresDeInteresActivos();
   }
 }

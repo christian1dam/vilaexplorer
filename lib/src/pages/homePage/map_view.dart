@@ -73,7 +73,7 @@ class _MapViewState extends State<MapView> {
     try {
       final lugaresDeInteresService =
           Provider.of<LugarDeInteresService>(context, listen: false);
-      await lugaresDeInteresService.fetchLugaresDeInteres();
+      await lugaresDeInteresService.fetchLugaresDeInteresActivos();
 
       final markers = lugaresDeInteresService.lugaresDeInteres
           .where((lugar) =>
