@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/models/tipo_entidad.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
+import 'package:vilaexplorer/src/pages/homePage/map_view.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class DetalleLugarInteres extends StatelessWidget {
@@ -190,7 +192,6 @@ class DetalleLugarInteres extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 8.h),
-
                           // TODO #1 Aquí van las opiniones de los usuarios
                         ],
                       ),
@@ -220,7 +221,15 @@ class DetalleLugarInteres extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    // Lógica para obtener la ruta
+                 final mapViewState = mapViewKey.currentState;
+                    if (mapViewState != null) {
+                      mapViewState.getRouteTo(
+                          LatLng(lugarDeInteres.coordenadas!.first.latitud!, lugarDeInteres.coordenadas!.first.longitud!));
+                    } else {
+                      print('No se pudo encontrar el estado de MapView.');
+                    }
+                                      
+                  pageProvider.clearScreen();
                   },
                   child: Text(
                     'Obtener ruta',

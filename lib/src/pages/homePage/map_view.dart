@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -8,20 +9,29 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
+import 'package:http/http.dart' as http;
+
+final GlobalKey<_MapViewState> mapViewKey = GlobalKey<_MapViewState>();
 
 class MapView extends StatefulWidget {
   final VoidCallback clearScreen;
 
-  const MapView({Key? key, required this.clearScreen}) : super(key: key);
+  MapView({Key? key, required this.clearScreen}) : super(key: mapViewKey);
 
   @override
   _MapViewState createState() => _MapViewState();
+
+  // Exponer el método público para obtener rutas
+  void getRouteTo(LatLng destination) {
+    createState().getRouteTo(destination);
+  }
 }
 
 class _MapViewState extends State<MapView> {
   LatLng? _currentLocation;
   late final MapController _mapController;
   List<Marker> _markers = [];
+  List<LatLng> _routePoints = [];
   final String accessToken = dotenv.env['MAPBOX_ACCESS_TOKEN'] ??
       (throw Exception(
           'MAPBOX_ACCESS_TOKEN no está definido en el archivo .env'));
@@ -149,6 +159,16 @@ class _MapViewState extends State<MapView> {
                       ],
                     ),
                   MarkerLayer(markers: _markers),
+                  if (_routePoints.isNotEmpty)
+                    PolylineLayer(
+                      polylines: [
+                        Polyline(
+                          points: _routePoints,
+                          color: Colors.blue,
+                          strokeWidth: 4.0,
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ),
@@ -179,20 +199,49 @@ class _MapViewState extends State<MapView> {
 
   _getColorForLugar(String tipoLugar) {
     switch (tipoLugar) {
-      case "Playa":
-        return Colors.amber; // Icono para monumentos
-      case "Museo":
-        return Colors.white38; // Icono para parques
-      case "Parque":
-        return Colors.green;
-      case "Plaza":
-        return Colors.white; // Icono para plazas
-      case "Monumento":
-        return const Color.fromARGB(132, 212, 245, 91); // Icono para parques
-      case "Sitio Arqueológico":
-        return const Color.fromARGB(255, 97, 12, 255); // Icono para museos
+      // case "Playa":
+      //   return Colors.amber;
+      // case "Museo":
+      //   return Colors.white38;
+      // case "Parque":
+      //   return Colors.green;
+      // case "Plaza":
+      //   return Colors.white;
+      // case "Monumento":
+      //   return const Color.fromARGB(132, 212, 245, 91);
+      // case "Sitio Arqueológico":
+      //   return const Color.fromARGB(255, 97, 12, 255);
       default:
-        return Colors.red; // Icono por defecto
+        return Colors.red;
+    }
+  }
+
+  Future<void> _getRoute(LatLng origin, LatLng destination) async {
+    final response = await http.get(
+      Uri.parse(
+        'https://api.mapbox.com/directions/v5/mapbox/driving/${origin.longitude},${origin.latitude};${destination.longitude},${destination.latitude}?geometries=geojson&access_token=$accessToken',
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final coordinates = data['routes'][0]['geometry']['coordinates'];
+
+      setState(() {
+        _routePoints = coordinates
+            .map<LatLng>((coord) => LatLng(coord[1], coord[0]))
+            .toList();
+      });
+    } else {
+      throw Exception('Error al obtener la ruta: ${response.reasonPhrase}');
+    }
+  }
+
+  void getRouteTo(LatLng destination) {
+    if (_currentLocation != null) {
+      _getRoute(_currentLocation!, destination);
+    } else {
+      print('No se puede obtener la ruta: ubicación actual no disponible.');
     }
   }
 }
