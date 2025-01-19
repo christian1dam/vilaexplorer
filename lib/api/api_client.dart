@@ -84,7 +84,7 @@ class ApiClient {
   Future<http.Response> delete(String endpoint) async {
     final url = Uri.parse('$_baseUrl$endpoint');
     try {
-      final response = await http.delete(url, headers: _defaultHeaders());
+      final response = await http.delete(url, headers: _authHeader());
       _handleResponse(response);
       return response;
     } catch (e) {

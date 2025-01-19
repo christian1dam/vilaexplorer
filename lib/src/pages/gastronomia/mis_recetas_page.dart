@@ -85,7 +85,7 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
                               style: const TextStyle(color: Colors.white),
                             ),
                             subtitle: Text(
-                              plato.descripcion ?? '',
+                              plato.descripcion,
                               style: const TextStyle(color: Colors.grey),
                             ),
                             trailing: IconButton(

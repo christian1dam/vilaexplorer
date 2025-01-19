@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/models/tipo_entidad.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
-import 'package:vilaexplorer/service/lugar_interes_service.dart';
+import 'package:vilaexplorer/service/favorito_service.dart';
+import 'package:vilaexplorer/service/puntuacion_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/map_view.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
@@ -20,8 +21,10 @@ class DetalleLugarInteres extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
-    final lugarDeInteresService =
-        Provider.of<LugarDeInteresService>(context, listen: false);
+    final puntuacionService =
+        Provider.of<PuntuacionService>(context, listen: false);
+    final favoritoService =
+        Provider.of<FavoritoService>(context, listen: true);
     final usuarioAutenticado = UsuarioService().usuarioAutenticado;
 
     return Stack(
@@ -163,8 +166,7 @@ class DetalleLugarInteres extends StatelessWidget {
                                         color: Color.fromARGB(230, 255, 205, 0),
                                       ),
                                       onRatingUpdate: (rating) async {
-                                        lugarDeInteresService
-                                            .gestionarPuntuacion(
+                                        puntuacionService.gestionarPuntuacion(
                                           idUsuario: usuarioAutenticado!.id!,
                                           idEntidad:
                                               lugarDeInteres.idLugarInteres!,
@@ -242,25 +244,30 @@ class DetalleLugarInteres extends StatelessWidget {
               ),
 
               SizedBox(width: 8.w),
-              // Botón de "Guardar"
+
               Expanded(
                 flex: 1, // 20% del espacio
                 child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[800],
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[800],
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
-                    onPressed: () {
-                      // Lógica para guardar
-                    },
-                    child: GestureDetector(
-                      child:
-                          const MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
-                      onTap: () => {},
-                    )),
+                  ),
+                  child:
+                      favoritoService.esFavorito(lugarDeInteres.idLugarInteres!)
+                          ? MySvgWidget(path: 'lib/icon/favoriteTrue.svg')
+                          : MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
+                  onPressed: () {
+                    favoritoService.gestionarFavorito(
+                      idUsuario: usuarioAutenticado!.id!,
+                      idEntidad: lugarDeInteres.idLugarInteres!,
+                      tipoEntidad:
+                          TipoEntidad.FIESTA_TRADICION.toString().substring(12),
+                    );
+                  },
+                ),
               ),
             ],
           ),

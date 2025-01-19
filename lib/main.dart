@@ -3,8 +3,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
+import 'package:vilaexplorer/service/favorito_service.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
+import 'package:vilaexplorer/service/puntuacion_service.dart';
 import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
@@ -30,6 +32,8 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TipoPlatoService(), lazy: false),
         ChangeNotifierProvider(create: (_) => PageProvider(), lazy: false),
         ChangeNotifierProvider(create: (_) => LugarDeInteresService(), lazy: false),
+        ChangeNotifierProvider(create: (_) => PuntuacionService(), lazy: false),
+        ChangeNotifierProvider(create: (_) => FavoritoService(), lazy: false),
       ],
       child: const MyApp(),
     );
@@ -86,7 +90,6 @@ class _MyAppState extends State<MyApp> {
             GlobalCupertinoLocalizations.delegate,
           ],
           localeResolutionCallback: (locale, supportedLocales) {
-            // Verifica si el idioma del sistema está soportado
             for (var supportedLocale in supportedLocales) {
               if (supportedLocale.languageCode == locale?.languageCode) {
                 return supportedLocale;

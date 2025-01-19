@@ -27,6 +27,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   font_awesome_flutter: ^10.8.0
   icons_plus: ^5.0.0
+  collection: ^1.18.0
 
 dev_dependencies:
   flutter_test:
@@ -39,7 +40,6 @@ flutter:
   assets:
     - assets/images/
     - lib/icon/
-    - lib/icon/tradiciones/
     - assets/
     - assets/images_gastronomia/
     - assets/images_historias/

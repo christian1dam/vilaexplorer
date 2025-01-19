@@ -86,7 +86,7 @@ class MenuPrincipal extends StatelessWidget {
                           120.w,
                           AppLocalizations.of(context)!.translate('favorites'),
                           "Favoritos",
-                          "lib/icon/favorite.svg",
+                          "lib/icon/favoritos.svg",
                           1,
                           context),
                       _crearBoton(
