@@ -14,8 +14,7 @@ import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 class DetalleLugarInteres extends StatelessWidget {
   final LugarDeInteres lugarDeInteres;
 
-  const DetalleLugarInteres({Key? key, required this.lugarDeInteres})
-      : super(key: key);
+  const DetalleLugarInteres({super.key, required this.lugarDeInteres});
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +27,11 @@ class DetalleLugarInteres extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-          bottom: 60.r,
+          bottom: 70.h,
           left: 17.w,
           child: Container(
-            width: size.width * 0.81.r,
-            height: size.height * 0.47.r,
+            width: 351.w,
+            height: size.height * 0.45.h,
             decoration: BoxDecoration(
               color: Color.fromARGB(250, 66, 66, 66),
               borderRadius: BorderRadius.only(
@@ -221,15 +220,16 @@ class DetalleLugarInteres extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                 final mapViewState = mapViewKey.currentState;
+                    final mapViewState = mapViewKey.currentState;
                     if (mapViewState != null) {
-                      mapViewState.getRouteTo(
-                          LatLng(lugarDeInteres.coordenadas!.first.latitud!, lugarDeInteres.coordenadas!.first.longitud!));
+                      mapViewState.getRouteTo(LatLng(
+                          lugarDeInteres.coordenadas!.first.latitud!,
+                          lugarDeInteres.coordenadas!.first.longitud!));
                     } else {
                       print('No se pudo encontrar el estado de MapView.');
                     }
-                                      
-                  pageProvider.clearScreen();
+
+                    pageProvider.clearScreen();
                   },
                   child: Text(
                     'Obtener ruta',
