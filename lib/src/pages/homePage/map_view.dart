@@ -19,7 +19,6 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
-  bool _isMapLoaded = false;
   LatLng? _currentLocation;
   late final MapController _mapController;
   List<Marker> _markers = [];
@@ -31,19 +30,10 @@ class _MapViewState extends State<MapView> {
   void initState() {
     super.initState();
     _mapController = MapController();
-    _simulateMapLoading();
     _getCurrentLocation();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       print("LLAMANDO A LOADMARKERS");
       await _loadMarkers();
-    });
-  }
-
-  void _simulateMapLoading() {
-    Timer(const Duration(milliseconds: 200), () {
-      setState(() {
-        _isMapLoaded = true;
-      });
     });
   }
 
@@ -125,7 +115,7 @@ class _MapViewState extends State<MapView> {
         return Stack(
           children: [
             Opacity(
-              opacity: _isMapLoaded ? 1 : 0,
+              opacity: 1,
               child: FlutterMap(
                 mapController: _mapController,
                 options: MapOptions(
@@ -162,10 +152,6 @@ class _MapViewState extends State<MapView> {
                 ],
               ),
             ),
-            if (!_isMapLoaded)
-              const Center(
-                child: CircularProgressIndicator(),
-              ),
           ],
         );
       },
