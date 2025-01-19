@@ -177,29 +177,48 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                     ),
                   ),
                   Expanded(
-                    child: lugarDeInteresService.isLoading
-                        ? const Center(child: CircularProgressIndicator())
-                        : lugarDeInteresService.errorMessage != null
-                            ? Center(
-                                child: Text(lugarDeInteresService.errorMessage!,
-                                    style:
-                                        const TextStyle(color: Colors.white)))
-                            : lugaresDeInteres.isEmpty
-                                ? const Center(
-                                    child: Text("No se encontraron monumentos",
-                                        style: TextStyle(color: Colors.white)))
-                                : ListView.builder(
-                                    padding: EdgeInsets.all(0),
-                                    itemCount: lugaresDeInteres.length,
-                                    itemBuilder: (context, index) {
-                                      final lugarDeInteres =
-                                          lugaresDeInteres[index];
-                                      return LugarDeInteresTarjeta(
-                                          lugarDeInteres: lugarDeInteres,
-                                          abrirTarjeta: () =>
-                                              pageProvider.setLugarDeInteres(
-                                                  lugarDeInteres.nombreLugar!));
-                                    }),
+                    child: Builder(
+                      builder: (context) {
+                        if (lugarDeInteresService.isLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+
+                        if (lugarDeInteresService.errorMessage != null) {
+                          return Center(
+                            child: Text(
+                              lugarDeInteresService.errorMessage!,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          );
+                        }
+
+                        if (lugaresDeInteres.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              "No se encontraron monumentos",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          );
+                        }
+
+                        return ListView.builder(
+                          padding: const EdgeInsets.all(0),
+                          itemCount: lugaresDeInteres.length,
+                          itemBuilder: (context, index) {
+                            final lugarDeInteres = lugaresDeInteres[index];
+                            return LugarDeInteresTarjeta(
+                              lugarDeInteres: lugarDeInteres,
+                              abrirTarjeta: () =>
+                                  pageProvider.setLugarDeInteres(
+                                lugarDeInteres.nombreLugar!,
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),

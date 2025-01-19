@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/api/api_client.dart';
@@ -29,7 +28,7 @@ class LugarDeInteresService with ChangeNotifier {
       final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
       _lugaresDeInteres = data.map((json) => LugarDeInteres.fromMap(json)).toList();
     } catch (error) {
-      _errorMessage = 'Error al cargar los lugares de interés activos: $error';
+      _errorMessage = 'Error al cargar los luzgares de interés activos: $error';
     } finally {
       _isLoading = false;
       notifyListeners();

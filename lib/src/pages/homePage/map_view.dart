@@ -33,7 +33,10 @@ class _MapViewState extends State<MapView> {
     _mapController = MapController();
     _simulateMapLoading();
     _getCurrentLocation();
-    _loadMarkers();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      print("LLAMANDO A LOADMARKERS");
+      await _loadMarkers();
+    });
   }
 
   void _simulateMapLoading() {
@@ -78,17 +81,31 @@ class _MapViewState extends State<MapView> {
       final markers = lugaresDeInteresService.lugaresDeInteres
           .where((lugar) =>
               lugar.coordenadas != null && lugar.coordenadas!.isNotEmpty)
-          .expand((lugar) => lugar.coordenadas!)
-          .map(
-            (coordenada) => Marker(
-              point: LatLng(coordenada.latitud!, coordenada.longitud!),
-              width: 50.w,
-              height: 50.h,
-              child: Icon(
-                Icons.location_on,
-                color: Colors.red,
-                size: 50.r,
-              ),
+          .expand(
+            (lugar) => lugar.coordenadas!.map(
+              (coordenada) {
+                final iconData = _getIconForLugar(lugar.tipoLugar!.nombreTipo!);
+                final color = _getColorForLugar(lugar.tipoLugar!.nombreTipo!);
+                final pageProvider =
+                    Provider.of<PageProvider>(context, listen: false);
+                return Marker(
+                  point: LatLng(coordenada.latitud!, coordenada.longitud!),
+                  width: 40.w,
+                  height: 40.h,
+                  rotate: true,
+                  child: Builder(
+                    builder: (context) => IconButton(
+                      icon: Icon(
+                        iconData,
+                        color: color,
+                        size: 40.r,
+                      ),
+                      onPressed: () =>
+                          pageProvider.setLugarDeInteres(lugar.nombreLugar!),
+                    ),
+                  ),
+                );
+              },
             ),
           )
           .toList();
@@ -112,16 +129,15 @@ class _MapViewState extends State<MapView> {
               child: FlutterMap(
                 mapController: _mapController,
                 options: MapOptions(
-                  initialCenter: _currentLocation ?? LatLng(0, 0),
-                  initialZoom: 14,
-                  minZoom: 4,
-                  interactionOptions: const InteractionOptions(
-                    flags: ~InteractiveFlag.doubleTapZoom,
-                  ),
-                  onTap: (tapPosition, latlng) {
-                    widget.clearScreen();
-                  }
-                ),
+                    initialCenter: _currentLocation ?? LatLng(0, 0),
+                    initialZoom: 14,
+                    minZoom: 4,
+                    interactionOptions: const InteractionOptions(
+                      flags: ~InteractiveFlag.doubleTapZoom,
+                    ),
+                    onTap: (tapPosition, latlng) {
+                      widget.clearScreen();
+                    }),
                 children: [
                   TileLayer(
                     urlTemplate:
@@ -154,5 +170,43 @@ class _MapViewState extends State<MapView> {
         );
       },
     );
+  }
+
+  _getIconForLugar(String tipoLugar) {
+    switch (tipoLugar) {
+      // case "Playa":
+      //   return FontAwesomeIcons.umbrellaBeach; // Icono para monumentos
+      // case "Museo":
+      //   return Icons.museum; // Icono para parques
+      // case "Parque":
+      //   return FontAwesomeIcons.treeCity;
+      // case "Plaza":
+      //   return FontAwesomeIcons.chair; // Icono para plazas
+      // case "Monumento":
+      //   return Icons.museum; // Icono para parques
+      // case "Sitio Arqueológico":
+      //   return AntDesign.history_outline; // Icono para museos
+      default:
+        return Icons.location_pin; // Icono por defecto
+    }
+  }
+
+  _getColorForLugar(String tipoLugar) {
+    switch (tipoLugar) {
+      case "Playa":
+        return Colors.amber; // Icono para monumentos
+      case "Museo":
+        return Colors.white38; // Icono para parques
+      case "Parque":
+        return Colors.green;
+      case "Plaza":
+        return Colors.white; // Icono para plazas
+      case "Monumento":
+        return const Color.fromARGB(132, 212, 245, 91); // Icono para parques
+      case "Sitio Arqueológico":
+        return const Color.fromARGB(255, 97, 12, 255); // Icono para museos
+      default:
+        return Colors.red; // Icono por defecto
+    }
   }
 }
