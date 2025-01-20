@@ -86,6 +86,9 @@ class PuntuacionService extends ChangeNotifier {
     required String tipoEntidad,
     required int puntuacion,
   }) async {
+
+    print(this._lugarDeInteresService.lugaresDeInteres);
+
     final yaPuntuado = await hasPuntuado(
       idUsuario: idUsuario,
       idEntidad: idEntidad,

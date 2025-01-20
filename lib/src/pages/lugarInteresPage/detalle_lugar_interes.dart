@@ -7,6 +7,7 @@ import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/models/tipo_entidad.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/favorito_service.dart';
+import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/service/puntuacion_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/map_view.dart';
@@ -26,6 +27,7 @@ class DetalleLugarInteres extends StatelessWidget {
     final favoritoService =
         Provider.of<FavoritoService>(context, listen: true);
     final usuarioAutenticado = UsuarioService().usuarioAutenticado;
+    final lugarDeInteresService = Provider.of<LugarDeInteresService>(context, listen: true);
 
     return Stack(
       children: [
@@ -152,8 +154,9 @@ class DetalleLugarInteres extends StatelessWidget {
                                   children: [
                                     RatingBar.builder(
                                       itemSize: 23.r,
-                                      initialRating:
-                                          lugarDeInteres.puntuacionMediaLugar ??
+                                       //TODO #2 refactorizar la pagina para que solamente se consuma el lugar de interes por servicio
+                                      //  HAY QUE ENCONTRAR EL LUGAR DE INTERES EN EL BUILD.
+                                      initialRating: lugarDeInteresService.lugaresDeInteres.firstWhere( (lugar) => lugar.idLugarInteres! == lugarDeInteres.idLugarInteres!).puntuacionMediaLugar ??
                                               0,
                                       minRating: 1,
                                       direction: Axis.horizontal,
