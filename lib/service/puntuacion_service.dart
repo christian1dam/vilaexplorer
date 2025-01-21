@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/models/puntuacion.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
@@ -8,7 +9,6 @@ import 'package:vilaexplorer/service/lugar_interes_service.dart';
 
 class PuntuacionService extends ChangeNotifier {
   final ApiClient _apiClient = ApiClient();
-  final LugarDeInteresService _lugarDeInteresService = LugarDeInteresService();
 
   Future<bool> hasPuntuado({
     required int idUsuario,
@@ -85,9 +85,8 @@ class PuntuacionService extends ChangeNotifier {
     required int idEntidad,
     required String tipoEntidad,
     required int puntuacion,
+    required BuildContext context
   }) async {
-
-    print(this._lugarDeInteresService.lugaresDeInteres);
 
     final yaPuntuado = await hasPuntuado(
       idUsuario: idUsuario,
@@ -113,6 +112,8 @@ class PuntuacionService extends ChangeNotifier {
       await crearPuntuacion(puntuacionModel);
     }
 
-    await _lugarDeInteresService.fetchLugaresDeInteresActivos();
+    if (context.mounted) {
+      await Provider.of<LugarDeInteresService>(context, listen: false).fetchLugaresDeInteresActivos();
+    }
   }
 }

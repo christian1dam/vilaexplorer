@@ -176,7 +176,8 @@ class DetalleLugarInteres extends StatelessWidget {
                                           tipoEntidad: TipoEntidad.LUGAR_INTERES
                                               .toString()
                                               .substring(12),
-                                          puntuacion: rating.toInt(),
+                                          puntuacion: rating.toInt(), 
+                                          context: context
                                         );
                                         print("Nueva calificación: $rating");
                                       },

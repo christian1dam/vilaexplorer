@@ -30,7 +30,6 @@ class LugarDeInteresService with ChangeNotifier {
     } finally {
       _isLoading = false;
       print("SE HA ACTUALIZADO LA PUNTUACIÓN");
-      print(this._lugaresDeInteres);
       notifyListeners();
     }
   }
