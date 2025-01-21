@@ -9,6 +9,9 @@ class LugarDeInteresService with ChangeNotifier {
   List<LugarDeInteres> _lugaresDeInteres = [];
   List<LugarDeInteres> get lugaresDeInteres => _lugaresDeInteres;
 
+  LugarDeInteres? _lugarDeInteresActual = LugarDeInteres(); 
+  LugarDeInteres get lugarDeInteres => _lugarDeInteresActual!;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -30,32 +33,35 @@ class LugarDeInteresService with ChangeNotifier {
     } finally {
       _isLoading = false;
       print("SE HA ACTUALIZADO LA PUNTUACIÓN");
-      print(this._lugaresDeInteres);
       notifyListeners();
     }
   }
 
-  Future<LugarDeInteres?> fetchLugarDeInteresById(int id) async {
+  Future<void> fetchLugarDeInteresById(int id) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
     try {
       final response = await _apiClient.get('/lugar_interes/detalle/$id');
       final Map<String, dynamic> data =
           jsonDecode(utf8.decode(response.bodyBytes));
 
-      return LugarDeInteres.fromMap(data);
+      _lugarDeInteresActual = LugarDeInteres.fromMap(data);
+      debugPrint("SE HA OBTENIDO EL LUGAR DE INTERES DE LA BD");
     } catch (error) {
       _errorMessage = 'Error al obtener el lugar de interés: $error';
+    } finally {
+       _isLoading = false;
       notifyListeners();
-      return null;
     }
   }
 
   Future<void> searchLugarDeInteres(String keyword) async {
     await _executeWithLoading(() async {
-      final response =
-          await _apiClient.get('/lugar_interes/buscar?keyword=$keyword');
+      final response = await _apiClient.get('/lugar_interes/buscar?keyword=$keyword');
       if (response.statusCode == 200) {
-        final List<dynamic> lugaresDeInteresList =
-            json.decode(utf8.decode(response.bodyBytes));
+        final List<dynamic> lugaresDeInteresList = json.decode(utf8.decode(response.bodyBytes));
         _lugaresDeInteres = lugaresDeInteresList
             .map((lugarInteres) => LugarDeInteres.fromMap(lugarInteres))
             .toList();

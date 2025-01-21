@@ -7,7 +7,7 @@ import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'lugar_interes_tarjeta.dart';
 
 class LugarDeInteresPage extends StatefulWidget {
-  const LugarDeInteresPage({Key? key}) : super(key: key);
+  const LugarDeInteresPage({super.key});
 
   @override
   _LugarDeInteresPageState createState() => _LugarDeInteresPageState();
@@ -41,8 +41,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
 
   @override
   Widget build(BuildContext context) {
-    final lugarDeInteresService =
-        Provider.of<LugarDeInteresService>(context, listen: false);
+    final lugarDeInteresService = Provider.of<LugarDeInteresService>(context, listen: false);
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
     final lugaresDeInteres = lugarDeInteresService.lugaresDeInteres;
 
@@ -212,7 +211,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                               lugarDeInteres: lugarDeInteres,
                               abrirTarjeta: () =>
                                   pageProvider.setLugarDeInteres(
-                                lugarDeInteres.nombreLugar!,
+                                lugarDeInteres.idLugarInteres!,
                               ),
                             );
                           },

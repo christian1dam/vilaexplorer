@@ -75,7 +75,7 @@ class _MapViewState extends State<MapView> {
   Future<void> _loadMarkers() async {
     try {
       final lugaresDeInteresService =
-          Provider.of<LugarDeInteresService>(context, listen: false);
+          Provider.of<LugarDeInteresService>(context, listen: false); // TODO -> LISTEN TRUE
       await lugaresDeInteresService.fetchLugaresDeInteresActivos();
 
       final markers = lugaresDeInteresService.lugaresDeInteres
@@ -101,7 +101,7 @@ class _MapViewState extends State<MapView> {
                         size: 40.r,
                       ),
                       onPressed: () =>
-                          pageProvider.setLugarDeInteres(lugar.nombreLugar!),
+                          pageProvider.setLugarDeInteres(lugar.idLugarInteres!),
                     ),
                   ),
                 );

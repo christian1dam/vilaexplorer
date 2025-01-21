@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class PageProvider extends ChangeNotifier {
   String currentPage = 'map';
   String currentMapStyle = 'mapbox/streets-v11';
-
+  
   String? selectedFiesta;
-  String? selectedLugarInteres;
+  int? idLugarDeInteres;
   String? selectedCategory;
   String? selectedPlatillo;
   String? selectedIngredientes;
@@ -14,7 +14,7 @@ class PageProvider extends ChangeNotifier {
   void changePage(String page) {
     currentPage = page;
     selectedFiesta = null;
-    selectedLugarInteres = null;
+    idLugarDeInteres = null;
     notifyListeners();
   }
 
@@ -24,14 +24,14 @@ class PageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setLugarDeInteres(String lugarDeInteres) {
-    selectedLugarInteres = lugarDeInteres;
-    currentPage = lugarDeInteres;
+  void setLugarDeInteres(int idLugarInteres) {
+    clearScreen();
+    idLugarDeInteres = idLugarInteres;
     notifyListeners();
   }
 
   void setCategory(String category) {
-    selectedCategory = category;
+    selectedCategory = category;  
     notifyListeners();
   }
 
@@ -49,7 +49,7 @@ class PageProvider extends ChangeNotifier {
     selectedPlatillo = null;
     selectedIngredientes = null;
     selectedReceta = null;
-    selectedLugarInteres = null;
+    idLugarDeInteres = null;
     notifyListeners();
   }
 

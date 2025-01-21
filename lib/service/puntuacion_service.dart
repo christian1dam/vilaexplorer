@@ -113,6 +113,6 @@ class PuntuacionService extends ChangeNotifier {
       await crearPuntuacion(puntuacionModel);
     }
 
-    await _lugarDeInteresService.fetchLugaresDeInteresActivos();
+    await _lugarDeInteresService.fetchLugarDeInteresById(idUsuario);
   }
 }
