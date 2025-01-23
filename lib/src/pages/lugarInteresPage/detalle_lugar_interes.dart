@@ -13,32 +13,59 @@ import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/map_view.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
-class DetalleLugarInteres extends StatelessWidget {
-  final int idLugarDeInteres;
+class DetalleLugarInteres extends StatefulWidget {
+  final int lugarDeInteresID;
 
-  const DetalleLugarInteres({super.key, required this.idLugarDeInteres});
+  const DetalleLugarInteres({super.key, required this.lugarDeInteresID});
+
+  @override
+  State<DetalleLugarInteres> createState() => _DetalleLugarInteresState();
+}
+
+class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
+  late Future<LugarDeInteres> _lugarDeInteresFuture;
+  late LugarDeInteres _lugarDeInteres;
+
+  @override
+  void initState() {
+    super.initState();
+     _lugarDeInteresFuture = _fetchData();
+  }
+
+  Future<LugarDeInteres> _fetchData() async {
+    final service = Provider.of<LugarDeInteresService>(context, listen: false);
+    await service.fetchLugarDeInteresById(widget.lugarDeInteresID);
+    return service.lugarDeInteres;
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final pageProvider = Provider.of<PageProvider>(context, listen: false);
-    final puntuacionService = Provider.of<PuntuacionService>(context, listen: false);
+    final pageProvider = Provider.of<PageProvider>(context, listen: true);
+    final puntuacionService =
+        Provider.of<PuntuacionService>(context, listen: false);
     final favoritoService = Provider.of<FavoritoService>(context, listen: true);
+    final lugarDeInteresService =
+        Provider.of<LugarDeInteresService>(context, listen: true);
     final usuarioAutenticado = UsuarioService().usuarioAutenticado;
 
-    return Consumer<LugarDeInteresService>(
-      
-      builder: (context, lugarDeInteresService, child) {
-
-        if (lugarDeInteresService.isLoading) {
+    return FutureBuilder(
+      future: _lugarDeInteresFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.black,
+              color: Colors.white,
+              strokeWidth: 13,
+            ),
           );
-        } else if (lugarDeInteresService.errorMessage != null) {
+        } else if (snapshot.hasError) {
           return Center(
-              child: Text('Error: ${lugarDeInteresService.errorMessage}'));
+            child: Text("ERROR: ${snapshot.error}"),
+          );
         } else {
-          final lugarDeInteres = lugarDeInteresService.lugarDeInteres;
+          _lugarDeInteres = lugarDeInteresService.lugarDeInteres;
           return Stack(
             children: [
               Positioned(
@@ -69,7 +96,7 @@ class DetalleLugarInteres extends StatelessWidget {
                             ),
                             child: FadeInImage.assetNetwork(
                               placeholder: 'assets/no-image.jpg',
-                              image: lugarDeInteres.imagen!,
+                              image: _lugarDeInteres.imagen!,
                               fit: BoxFit.cover,
                               width: double.infinity,
                               height: 180.h,
@@ -108,7 +135,7 @@ class DetalleLugarInteres extends StatelessWidget {
                                     child: Align(
                                       alignment: Alignment.topLeft,
                                       child: Text(
-                                        lugarDeInteres.nombreLugar ??
+                                        _lugarDeInteres.nombreLugar ??
                                             'Nombre no disponible',
                                         style: TextStyle(
                                           fontSize: 19.sp,
@@ -153,7 +180,7 @@ class DetalleLugarInteres extends StatelessWidget {
                                     children: [
                                       Flexible(
                                         child: Text(
-                                          lugarDeInteres.nombreLugar ??
+                                          _lugarDeInteres.nombreLugar ??
                                               'Descripción no disponible',
                                           style: TextStyle(
                                               color: Colors.white,
@@ -171,9 +198,8 @@ class DetalleLugarInteres extends StatelessWidget {
                                             itemSize: 23.r,
                                             //TODO #2 refactorizar la pagina para que solamente se consuma el lugar de interes por servicio
                                             //  HAY QUE ENCONTRAR EL LUGAR DE INTERES EN EL BUILD.
-                                            initialRating: lugarDeInteres
-                                                    .puntuacionMediaLugar ??
-                                                0,
+                                            initialRating: _lugarDeInteres
+                                                .puntuacionMediaLugar!,
                                             minRating: 1,
                                             direction: Axis.horizontal,
                                             allowHalfRating: false,
@@ -186,20 +212,28 @@ class DetalleLugarInteres extends StatelessWidget {
                                                   230, 255, 205, 0),
                                             ),
                                             onRatingUpdate: (rating) async {
-                                              puntuacionService
+                                              await puntuacionService
                                                   .gestionarPuntuacion(
-                                                idUsuario:
-                                                    usuarioAutenticado!.id!,
-                                                idEntidad: lugarDeInteres
-                                                    .idLugarInteres!,
-                                                tipoEntidad: TipoEntidad
-                                                    .LUGAR_INTERES
-                                                    .toString()
-                                                    .substring(12),
-                                                puntuacion: rating.toInt(),
-                                              );
-                                              print(
-                                                  "Nueva calificación: $rating");
+                                                      idUsuario:
+                                                          usuarioAutenticado!
+                                                              .id!,
+                                                      idEntidad: _lugarDeInteres
+                                                          .idLugarInteres!,
+                                                      tipoEntidad: TipoEntidad
+                                                          .LUGAR_INTERES
+                                                          .toString()
+                                                          .substring(12),
+                                                      puntuacion:
+                                                          rating.toInt(),
+                                                      context: context);
+                                              debugPrint(
+                                                  "Nueva calificación: $rating \n ${_lugarDeInteres.puntuacionMediaLugar}");
+
+                                              setState(() {
+                                                _lugarDeInteres =
+                                                    lugarDeInteresService
+                                                        .lugarDeInteres;
+                                              });
                                             },
                                           ),
                                         ],
@@ -250,10 +284,11 @@ class DetalleLugarInteres extends StatelessWidget {
                           final mapViewState = mapViewKey.currentState;
                           if (mapViewState != null) {
                             mapViewState.getRouteTo(LatLng(
-                                lugarDeInteres.coordenadas!.first.latitud!,
-                                lugarDeInteres.coordenadas!.first.longitud!));
+                                _lugarDeInteres.coordenadas!.first.latitud!,
+                                _lugarDeInteres.coordenadas!.first.longitud!));
                           } else {
-                            print('No se pudo encontrar el estado de MapView.');
+                            debugPrint(
+                                'No se pudo encontrar el estado de MapView.');
                           }
 
                           pageProvider.clearScreen();
@@ -281,13 +316,13 @@ class DetalleLugarInteres extends StatelessWidget {
                           ),
                         ),
                         child: favoritoService
-                                .esFavorito(lugarDeInteres.idLugarInteres!)
+                                .esFavorito(_lugarDeInteres.idLugarInteres!)
                             ? MySvgWidget(path: 'lib/icon/favoriteTrue.svg')
                             : MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
                         onPressed: () {
                           favoritoService.gestionarFavorito(
                             idUsuario: usuarioAutenticado!.id!,
-                            idEntidad: lugarDeInteres.idLugarInteres!,
+                            idEntidad: _lugarDeInteres.idLugarInteres!,
                             tipoEntidad: TipoEntidad.FIESTA_TRADICION
                                 .toString()
                                 .substring(12),

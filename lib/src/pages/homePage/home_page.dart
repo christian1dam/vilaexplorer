@@ -20,7 +20,8 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pageProvider = Provider.of<PageProvider>(context, listen: true);
-    final lugarInteresService = Provider.of<LugarDeInteresService>(context, listen: true);
+    final lugarDeInteresService =
+        Provider.of<LugarDeInteresService>(context, listen: false);
 
     return Scaffold(
       body: Stack(
@@ -105,7 +106,7 @@ class MyHomePage extends StatelessWidget {
               child: Offstage(
                 offstage: pageProvider.idLugarDeInteres == null,
                 child: DetalleLugarInteres(
-                  idLugarDeInteres: pageProvider.idLugarDeInteres!,
+                  lugarDeInteresID: pageProvider.idLugarDeInteres!,
                 ),
               ),
             ),

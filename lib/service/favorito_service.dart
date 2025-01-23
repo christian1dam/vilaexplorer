@@ -24,11 +24,11 @@ class FavoritoService extends ChangeNotifier {
             data.map((json) => Favorito.fromMap(json)).toList();
         notifyListeners();
       } else {
-        print("Error al obtener favoritos: ${response.statusCode}");
+       debugPrint("Error al obtener favoritos: ${response.statusCode}");
         _favoritosDelUsuario = [];
       }
     } catch (e) {
-      print("Error al obtener favoritos: $e");
+     debugPrint("Error al obtener favoritos: $e");
       _favoritosDelUsuario = [];
     }
   }
@@ -42,15 +42,15 @@ class FavoritoService extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        print("Favorito creado correctamente.");
+       debugPrint("Favorito creado correctamente.");
         notifyListeners();
         return true;
       } else {
-        print("Error al crear favorito: ${response.statusCode}");
+       debugPrint("Error al crear favorito: ${response.statusCode}");
         return false;
       }
     } catch (e) {
-      print("Error al crear favorito: $e");
+     debugPrint("Error al crear favorito: $e");
       return false;
     }
   }
@@ -60,19 +60,19 @@ class FavoritoService extends ChangeNotifier {
     try {
       final response = await _apiClient.delete(endpoint);
       if (response.statusCode == 204) {
-        print("Favorito eliminado correctamente.");
+       debugPrint("Favorito eliminado correctamente.");
         _favoritosDelUsuario.removeWhere((f) => f.idFavorito == idFavorito);
         notifyListeners();
         return true;
       } else if (response.statusCode == 404) {
-        print("Favorito no encontrado: ${response.statusCode}");
+       debugPrint("Favorito no encontrado: ${response.statusCode}");
         return false;
       } else {
-        print("Error al eliminar favorito: ${response.statusCode}");
+       debugPrint("Error al eliminar favorito: ${response.statusCode}");
         return false;
       }
     } catch (e) {
-      print("Error al eliminar favorito: $e");
+     debugPrint("Error al eliminar favorito: $e");
       return false;
     }
   }

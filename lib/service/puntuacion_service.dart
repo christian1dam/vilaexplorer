@@ -1,14 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vilaexplorer/api/api_client.dart';
+import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/models/puntuacion.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 
 class PuntuacionService extends ChangeNotifier {
   final ApiClient _apiClient = ApiClient();
-  final LugarDeInteresService _lugarDeInteresService = LugarDeInteresService();
 
   Future<bool> hasPuntuado({
     required int idUsuario,
@@ -22,40 +23,42 @@ class PuntuacionService extends ChangeNotifier {
       final response = await _apiClient.get(endpoint);
       return response.statusCode == 200 && jsonDecode(response.body).isNotEmpty;
     } catch (e) {
-      print("Error al verificar puntuación: $e");
+      debugPrint("Error al verificar puntuación: $e");
       return false;
     }
   }
 
-  Future<void> crearPuntuacion(Puntuacion puntuacion) async {
+  Future<LugarDeInteres> crearPuntuacion(Puntuacion puntuacion) async {
     final endpoint = "/puntuacion/crear";
 
-    print("Entrando a crearPuntuacion");
-    print("Endpoint: $endpoint");
-    print("Puntuación enviada: ${puntuacion.toMap()}");
+    debugPrint("Entrando a crearPuntuacion");
+    debugPrint("Endpoint: $endpoint");
+    debugPrint("Puntuación enviada: ${puntuacion.toMap()}");
 
     try {
-      print(
-          "Enviando puntuación: ${puntuacion.toMap()}");
+      debugPrint("Enviando puntuación: ${puntuacion.toMap()}");
 
       final response = await _apiClient.postAuth(
         endpoint,
         body: puntuacion.toMap(),
       );
 
-      if (response.statusCode == 201) {
-        print("Puntuación creada correctamente.");
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        debugPrint("Puntuación creada correctamente.");
+        return LugarDeInteres.fromMap(
+            json.decode(utf8.decode(response.bodyBytes)));
       } else {
-        print("Error al crear la puntuación: ${response.statusCode}");
-        print("Error body: ${response.body}");
+        throw Exception(
+            "Error al crear la puntuación: ${response.statusCode}\nError body: ${response.body}");
       }
     } catch (e) {
-      print("Error al crear puntuación: $e");
-      print("${e.hashCode} + ${e.toString()} + ${e.runtimeType}");
+      debugPrint("Error al crear puntuación: $e");
+
+      throw Exception("${e.hashCode} + ${e.toString()} + ${e.runtimeType}");
     }
   }
 
-  Future<void> actualizarPuntuacion({
+  Future<LugarDeInteres> actualizarPuntuacion({
     required int idUsuario,
     required int idEntidad,
     required String tipoEntidad,
@@ -71,24 +74,24 @@ class PuntuacionService extends ChangeNotifier {
       final response = await _apiClient.put(endpoint);
 
       if (response.statusCode == 200) {
-        print("Puntuación actualizada correctamente.");
+        debugPrint("Puntuación actualizada correctamente.");
+        return LugarDeInteres.fromMap(
+            json.decode(utf8.decode(response.bodyBytes)));
       } else {
-        print("Error al actualizar la puntuación: ${response.statusCode}");
+        throw Exception(
+            "Error al crear la puntuación: ${response.statusCode}\nError body: ${response.body}");
       }
     } catch (e) {
-      print("Error al actualizar puntuación: $e");
+      throw Exception("Error al actualizar puntuación: $e");
     }
   }
 
-  Future<void> gestionarPuntuacion({
-    required int idUsuario,
-    required int idEntidad,
-    required String tipoEntidad,
-    required int puntuacion,
-  }) async {
-
-    print(this._lugarDeInteresService.lugaresDeInteres);
-
+  Future<void> gestionarPuntuacion(
+      {required int idUsuario,
+      required int idEntidad,
+      required String tipoEntidad,
+      required int puntuacion,
+      required BuildContext context}) async {
     final yaPuntuado = await hasPuntuado(
       idUsuario: idUsuario,
       idEntidad: idEntidad,
@@ -96,13 +99,19 @@ class PuntuacionService extends ChangeNotifier {
     );
 
     if (yaPuntuado) {
-      await actualizarPuntuacion(
+      LugarDeInteres lugarDeInteres = await actualizarPuntuacion(
         idUsuario: idUsuario,
         idEntidad: idEntidad,
         tipoEntidad: tipoEntidad,
         nuevaPuntuacion: puntuacion,
       );
+
+      if (context.mounted) {
+        Provider.of<LugarDeInteresService>(context, listen: false).setLugarDeInteres = lugarDeInteres;
+      }
+      
     } else {
+
       final puntuacionModel = Puntuacion(
           idEntidad: idEntidad,
           puntuacion: puntuacion,
@@ -110,9 +119,13 @@ class PuntuacionService extends ChangeNotifier {
             idUsuario: idUsuario,
           ),
           tipoEntidad: tipoEntidad);
-      await crearPuntuacion(puntuacionModel);
-    }
 
-    await _lugarDeInteresService.fetchLugarDeInteresById(idUsuario);
+      LugarDeInteres lugarDeInteres = await crearPuntuacion(puntuacionModel);
+
+      
+      if (context.mounted) {
+        Provider.of<LugarDeInteresService>(context, listen: false).setLugarDeInteres = lugarDeInteres;
+      }
+    }
   }
 }

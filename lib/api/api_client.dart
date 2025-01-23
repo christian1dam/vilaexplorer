@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:vilaexplorer/service/usuario_service.dart';
 
 class ApiClient {
-  final String _baseUrl =
-      'http://172.24.16.1:8080/api/v0';
-      // 'http://192.168.100.103:8080/api/v0';
+  final String _baseUrl = 
+  // 'http://172.26.80.1:8080/api/v0';
+  'http://192.168.100.103:8080/api/v0';
   // 'http://172.20.10.2:8080/api/v0'; // Wifi Móvil
   // 'http://192.168.0.31:8080/api/v0'; // Red
 
@@ -14,8 +15,8 @@ class ApiClient {
     final url = Uri.parse('$_baseUrl$endpoint');
     try {
       final response = await http.get(url, headers: _authHeader());
-      print(response.headers);
-      print(response.reasonPhrase);
+      debugPrint("${response.headers}");
+      debugPrint("${response.reasonPhrase}");
       _handleResponse(response);
 
       return response;
@@ -35,8 +36,9 @@ class ApiClient {
         headers: _defaultHeaders(),
         body: jsonEncode(body),
       );
-      print("POST request to $url with body: $body");
-      print("Response status: ${response.statusCode}, body: ${response.body}");
+      debugPrint("POST request to $url with body: $body");
+      debugPrint(
+          "Response status: ${response.statusCode}, body: ${response.body}");
       _handleResponse(response);
       return response;
     } catch (e) {
@@ -54,8 +56,9 @@ class ApiClient {
         headers: _authHeader(),
         body: jsonEncode(body),
       );
-      print("POST request to $url with body: $body");
-      print("Response status: ${response.statusCode}, body: ${response.body}");
+      debugPrint("POST request to $url with body: $body");
+      debugPrint(
+          "Response status: ${response.statusCode}, body: ${response.body}");
       _handleResponse(response);
       return response;
     } catch (e) {
@@ -129,7 +132,7 @@ class ApiClient {
   Map<String, String> _authHeader() {
     final usuarioAutenticado = UsuarioService().usuarioAutenticado;
 
-    print('${usuarioAutenticado!.type} ${usuarioAutenticado.token}');
+    debugPrint('${usuarioAutenticado!.type} ${usuarioAutenticado.token}');
 
     return {
       'Content-Type': 'application/json',
