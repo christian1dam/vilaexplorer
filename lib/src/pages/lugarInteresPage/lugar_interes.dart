@@ -7,7 +7,7 @@ import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'lugar_interes_tarjeta.dart';
 
 class LugarDeInteresPage extends StatefulWidget {
-  const LugarDeInteresPage({Key? key}) : super(key: key);
+  const LugarDeInteresPage({super.key});
 
   @override
   _LugarDeInteresPageState createState() => _LugarDeInteresPageState();

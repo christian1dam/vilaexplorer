@@ -85,12 +85,8 @@ class _FavoritosPageState extends State<FavoritosPage> {
                           onPressed: _toggleSearch,
                         ),
                         Container(
-                          decoration: const BoxDecoration(
-                            color: Color.fromRGBO(30, 30, 30, 1),
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
                           margin: const EdgeInsets.only(top: 10, left: 10),
-                          width: size.width * 0.5,
+                          width: size.width * 0.50,
                           height: 35,
                           child: Center(
                             child: Text(
