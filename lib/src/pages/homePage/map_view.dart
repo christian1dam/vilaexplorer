@@ -42,7 +42,7 @@ class _MapViewState extends State<MapView> {
     _mapController = MapController();
     _getCurrentLocation();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      print("LLAMANDO A LOADMARKERS");
+     debugPrint("LLAMANDO A LOADMARKERS");
       await _loadMarkers();
     });
   }
@@ -75,7 +75,7 @@ class _MapViewState extends State<MapView> {
   Future<void> _loadMarkers() async {
     try {
       final lugaresDeInteresService =
-          Provider.of<LugarDeInteresService>(context, listen: false);
+          Provider.of<LugarDeInteresService>(context, listen: false); // TODO -> LISTEN TRUE
       await lugaresDeInteresService.fetchLugaresDeInteresActivos();
 
       final markers = lugaresDeInteresService.lugaresDeInteres
@@ -101,7 +101,7 @@ class _MapViewState extends State<MapView> {
                         size: 40.r,
                       ),
                       onPressed: () =>
-                          pageProvider.setLugarDeInteres(lugar.nombreLugar!),
+                          pageProvider.setLugarDeInteres(lugar.idLugarInteres!),
                     ),
                   ),
                 );
@@ -114,7 +114,7 @@ class _MapViewState extends State<MapView> {
         _markers = markers;
       });
     } catch (error) {
-      print('Error al cargar los marcadores: $error');
+     debugPrint('Error al cargar los marcadores: $error');
     }
   }
 
@@ -241,7 +241,7 @@ class _MapViewState extends State<MapView> {
     if (_currentLocation != null) {
       _getRoute(_currentLocation!, destination);
     } else {
-      print('No se puede obtener la ruta: ubicación actual no disponible.');
+     debugPrint('No se puede obtener la ruta: ubicación actual no disponible.');
     }
   }
 }

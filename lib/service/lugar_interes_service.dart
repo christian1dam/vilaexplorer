@@ -9,6 +9,16 @@ class LugarDeInteresService with ChangeNotifier {
   List<LugarDeInteres> _lugaresDeInteres = [];
   List<LugarDeInteres> get lugaresDeInteres => _lugaresDeInteres;
 
+  LugarDeInteres? _lugarDeInteresActual;
+  LugarDeInteres get lugarDeInteres => _lugarDeInteresActual!;
+
+  set setLugarDeInteres(LugarDeInteres lugar) {
+    _lugarDeInteresActual = lugar;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      notifyListeners();
+    });
+  }
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -29,22 +39,21 @@ class LugarDeInteresService with ChangeNotifier {
       _errorMessage = 'Error al cargar los luzgares de interés activos: $error';
     } finally {
       _isLoading = false;
-      print("SE HA ACTUALIZADO LA PUNTUACIÓN");
+      debugPrint("SE HA ACTUALIZADO LA PUNTUACIÓN");
       notifyListeners();
     }
   }
 
-  Future<LugarDeInteres?> fetchLugarDeInteresById(int id) async {
+  Future<void> fetchLugarDeInteresById(int id) async {
     try {
       final response = await _apiClient.get('/lugar_interes/detalle/$id');
       final Map<String, dynamic> data =
           jsonDecode(utf8.decode(response.bodyBytes));
 
-      return LugarDeInteres.fromMap(data);
-    } catch (error) {
-      _errorMessage = 'Error al obtener el lugar de interés: $error';
-      notifyListeners();
-      return null;
+      debugPrint("SE HA OBTENIDO EL LUGAR DE INTERES DE LA BD");
+      _lugarDeInteresActual = LugarDeInteres.fromMap(data);
+    } catch (e) {
+      throw Exception("Error al obtener el lugar de interés: $e");
     }
   }
 

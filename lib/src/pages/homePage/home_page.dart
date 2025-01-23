@@ -19,8 +19,9 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pageProvider = Provider.of<PageProvider>(context);
-    final lugarInteresService = Provider.of<LugarDeInteresService>(context);
+    final pageProvider = Provider.of<PageProvider>(context, listen: true);
+    final lugarDeInteresService =
+        Provider.of<LugarDeInteresService>(context, listen: false);
 
     return Scaffold(
       body: Stack(
@@ -100,12 +101,12 @@ class MyHomePage extends StatelessWidget {
             ),
           ),
 
-          if (pageProvider.selectedLugarInteres != null)
+          if (pageProvider.idLugarDeInteres != null)
             Positioned.fill(
               child: Offstage(
-                offstage: pageProvider.selectedLugarInteres == null,
+                offstage: pageProvider.idLugarDeInteres == null,
                 child: DetalleLugarInteres(
-                  lugarDeInteres: lugarInteresService.lugaresDeInteres.firstWhere((lugar) => lugar.nombreLugar == pageProvider.selectedLugarInteres),
+                  lugarDeInteresID: pageProvider.idLugarDeInteres!,
                 ),
               ),
             ),
