@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
-import 'package:vilaexplorer/main.dart';  // Asegúrate de importar el archivo main.dart
+import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class AppBarCustom extends StatelessWidget {
@@ -11,12 +11,20 @@ class AppBarCustom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87.withOpacity(0),
-      foregroundColor: Colors.white,
-      title: Row(
-        children: _contentAppBar(context), // Pasa el context a la función para poder usarlo
-      ),
+          toolbarHeight: 120.h,
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.black87.withOpacity(0),
+          foregroundColor: Colors.white,
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: _contentAppBar(context),
+              ),
+              _searchBar(context),
+            ],
+          ),
     );
   }
 
@@ -27,15 +35,15 @@ class AppBarCustom extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 1.h),
           decoration: BoxDecoration(
-              color: Color.fromRGBO(36, 36, 36, 1),
+              color: Color.fromRGBO(32, 29, 29, 0.9),
               borderRadius: BorderRadius.all(Radius.circular(15.r))),
           child: GestureDetector(
             onTap: onMenuPressed,
             child: Container(
-              height: 54.h,
+              height: 42.h,
               width: 50.w,
               decoration: BoxDecoration(
-                  color: Color.fromRGBO(36, 36, 36, 1),
+                  color: Color.fromRGBO(32, 29, 29, 0.9),
                   borderRadius: BorderRadius.all(Radius.circular(12.r))),
               child: Icon(
                 Icons.menu,
@@ -50,11 +58,11 @@ class AppBarCustom extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
           decoration: BoxDecoration(
-            color: Color.fromRGBO(36, 36, 36, 1),
+            color: Color.fromRGBO(32, 29, 29, 0.9),
             borderRadius: BorderRadius.all(Radius.circular(20.r)),
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
             child: Row(
               children: [
                 Padding(
@@ -73,13 +81,12 @@ class AppBarCustom extends StatelessWidget {
           ),
         ),
       ),
-      Spacer(), // Para separar el tiempo del menú y ubicación
-      // Contenedor redondeado para el tiempo
+      Spacer(),
       Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
         decoration: BoxDecoration(
-          color: Color.fromRGBO(36, 36, 36, 1),
-          borderRadius: BorderRadius.all(Radius.circular(20.r)),  // Redondear el borde
+          color: Color.fromRGBO(32, 29, 29, 0.9),
+          borderRadius: BorderRadius.all(Radius.circular(20.r)),
         ),
         child: Row(
           children: [
@@ -88,16 +95,42 @@ class AppBarCustom extends StatelessWidget {
               child: MySvgWidget(path: "lib/icon/sol_icon.svg", height: 20.h),
             ),
             Text(AppLocalizations.of(context)!.translate('weather_number')),
-            // Aquí eliminamos el IconButton para el idioma
           ],
         ),
       ),
     ];
   }
 
-  // Método para cambiar el idioma
-  void _changeLanguage(BuildContext context, Locale locale) {
-    // Llamar al método estático para cambiar el idioma sin usar setState
-    MyApp.setLocale(context, locale);
+  Widget _searchBar(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 5.w, top: 5, bottom: 5.h),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(32, 29, 29, 0.9),
+          borderRadius: BorderRadius.all(Radius.circular(30.r)),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context)!.translate('mp_search'),
+                  hintStyle: TextStyle(color: Colors.white),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                ),
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.search, color: Colors.white),
+              onPressed: () {
+                // Add search functionality here
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
