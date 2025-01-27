@@ -54,7 +54,7 @@ class MenuPrincipal extends StatelessWidget {
                 ),
                 color: Color.fromRGBO(32, 29, 29, 0.9),
               ),
-              height: 500.h,
+              height: MediaQuery.of(context).size.height * 0.50,
               child: Column(
                 children: <Widget>[
                   // Barra estilo iOS para cerrar el menú
@@ -62,13 +62,6 @@ class MenuPrincipal extends StatelessWidget {
 
                   const Spacer(),
 
-                  // Buscador
-                  SearchBar(
-                    hintText:
-                        AppLocalizations.of(context)!.translate('mp_search'),
-                  ),
-
-                  Divider(height: 10.h, color: Colors.transparent),
 
                   // Botones principales
                   Row(

@@ -102,10 +102,6 @@ class _CuentaPageState extends State<CuentaPage> {
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(32, 29, 29, 1),
         title: Container(
-          decoration: const BoxDecoration(
-            color: Color.fromRGBO(30, 30, 30, 1),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Text(
             AppLocalizations.of(context)!.translate('account'),
