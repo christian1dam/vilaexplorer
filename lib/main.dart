@@ -13,6 +13,8 @@ import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
+import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 import 'src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
 
@@ -73,7 +75,6 @@ class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 
-  // Método estático para cambiar el idioma
   static void setLocale(BuildContext context, Locale newLocale) {
     _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
     state?.setLocale(newLocale);
@@ -82,6 +83,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Locale _locale = const Locale('es');
+  late Future<Widget> _splashOrHomeFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _splashOrHomeFuture = _checkEstadoSesion();
+  }
 
   void setLocale(Locale locale) {
     setState(() {
@@ -91,44 +99,53 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    // Inicializa ScreenUtil
-    return ScreenUtilInit(
-      designSize: const Size(384, 857),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Vila Explorer',
-          theme: ThemeData(primarySwatch: Colors.blue),
-          home: SplashPage(),
-          locale: _locale, // Define el idioma actual
-          supportedLocales: const [
-            Locale('en'),
-            Locale('es'),
-            Locale('ca'),
-            Locale('zh'),
-            Locale('fr'),
-          ],
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          localeResolutionCallback: (locale, supportedLocales) {
-            for (var supportedLocale in supportedLocales) {
-              if (supportedLocale.languageCode == locale?.languageCode) {
-                return supportedLocale;
-              }
-            }
-            return supportedLocales.first;
+    return FutureBuilder(
+      future: _splashOrHomeFuture,
+      builder: (context, snapshot) {
+        return ScreenUtilInit(
+          designSize: const Size(384, 857),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Vila Explorer',
+              theme: ThemeData(primarySwatch: Colors.blue),
+              home: snapshot.data,
+              locale: _locale, // Define el idioma actual
+              supportedLocales: const [
+                Locale('en'),
+                Locale('es'),
+                Locale('ca'),
+                Locale('zh'),
+                Locale('fr'),
+              ],
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              localeResolutionCallback: (locale, supportedLocales) {
+                for (var supportedLocale in supportedLocales) {
+                  if (supportedLocale.languageCode == locale?.languageCode) {
+                    return supportedLocale;
+                  }
+                }
+                return supportedLocales.first;
+              },
+            );
           },
         );
-      },
+      }
     );
   }
+
+  Future<Widget> _checkEstadoSesion() async {
+    return await UserPreferences().sesion ? MyHomePage() : SplashPage();
+  }
 }
+
 
 // import 'package:flutter/material.dart';
 

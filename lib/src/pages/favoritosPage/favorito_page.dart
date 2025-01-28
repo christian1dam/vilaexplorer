@@ -7,8 +7,8 @@ import 'package:vilaexplorer/models/gastronomia/plato.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/models/tradiciones/tradiciones.dart';
 import 'package:vilaexplorer/service/favorito_service.dart';
-import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
+import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class FavoritosPage extends StatefulWidget {
   final Function onClose;
@@ -32,9 +32,9 @@ class _FavoritosPageState extends State<FavoritosPage> {
   }
 
   Future<List<dynamic>> _fetchData() async {
-    final usuarioAutenticado = UsuarioService().usuarioAutenticado;
+    final userPreferences = UserPreferences();
     final service = Provider.of<FavoritoService>(context, listen: false);
-    await service.getFavoritosByUsuario(usuarioAutenticado!.id!);
+    await service.getFavoritosByUsuario(await userPreferences.id);
     return service.favoritosDelUsuario;
   }
 
@@ -217,7 +217,8 @@ class _FavoritosPageState extends State<FavoritosPage> {
                                     .map((favorito) {
                                   final lugar = favorito;
                                   return Dismissible(
-                                    key: Key(lugar.idFiestaTradicion.toString()),
+                                    key:
+                                        Key(lugar.idFiestaTradicion.toString()),
                                     direction: DismissDirection.endToStart,
                                     onDismissed: (direction) {
                                       // TODO #2
@@ -230,8 +231,8 @@ class _FavoritosPageState extends State<FavoritosPage> {
                                           borderRadius:
                                               BorderRadius.circular(6.r),
                                           child: FadeInImage(
-                                            placeholder:
-                                                AssetImage("assets/no-image.jpg"),
+                                            placeholder: AssetImage(
+                                                "assets/no-image.jpg"),
                                             image: NetworkImage(lugar.imagen),
                                             fit: BoxFit.cover,
                                           ),

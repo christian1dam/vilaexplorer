@@ -28,11 +28,9 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
   }
 
   Future<Map<String, Map<String, String>>> _getHistorias() async {
-    final String response =
-        await rootBundle.loadString('assets/historias.json');
+    final String response = await rootBundle.loadString('assets/historias.json');
     final Map<String, dynamic> data = json.decode(response);
-    return data
-        .map((key, value) => MapEntry(key, Map<String, String>.from(value)));
+    return data.map((key, value) => MapEntry(key, Map<String, String>.from(value)));
   }
 
   @override
@@ -81,27 +79,36 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
+                    children: [
                       ButtonMenuCustom(
                         width: 120.w,
                         textContent: AppLocalizations.of(context)!
                             .translate('traditions'),
                         svgPath: "lib/icon/tradiciones.svg",
-                        onTap: () => pageProvider.changePage('tradiciones'),
+                        onTap: () => {
+                          pageProvider.changePage('tradiciones'),
+                          Navigator.pop(context)
+                        },
                       ),
                       ButtonMenuCustom(
                         width: 120.w,
                         textContent: AppLocalizations.of(context)!
                             .translate('favorites'),
                         svgPath: "lib/icon/favoritos.svg",
-                        onTap: () => pageProvider.changePage("favoritos"),
+                        onTap: () => {
+                          pageProvider.changePage("favoritos"),
+                          Navigator.pop(context)
+                        },
                       ),
                       ButtonMenuCustom(
                         width: 120.w,
                         textContent: AppLocalizations.of(context)!
                             .translate('my_account'),
                         svgPath: "lib/icon/user_icon.svg",
-                        onTap: () => pageProvider.changePage("cuenta"),
+                        onTap: () => {
+                          pageProvider.changePage("cuenta"),
+                          Navigator.pop(context)
+                        },
                       ),
                     ],
                   ),
@@ -118,14 +125,20 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                         textContent: AppLocalizations.of(context)!
                             .translate('gastronomy'),
                         svgPath: "lib/icon/gastronomia.svg",
-                        onTap: () => pageProvider.changePage('gastronomia'),
+                        onTap: () => {
+                          pageProvider.changePage('gastronomia'),
+                          Navigator.pop(context)
+                        },
                       ),
                       ButtonMenuCustom(
                         width: 180.w,
                         textContent:
                             AppLocalizations.of(context)!.translate('sights'),
                         svgPath: "lib/icon/monumentos.svg",
-                        onTap: () => pageProvider.changePage("monumentos"),
+                        onTap: () => {
+                          pageProvider.changePage("monumentos"),
+                          Navigator.pop(context)
+                        },
                       ),
                     ],
                   ),
@@ -160,6 +173,8 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
             ),
           ),
         );
+
+        Navigator.pop(context);
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 5.w),
@@ -213,8 +228,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: historiasMap.keys.map((imageUrl) {
-                return _buildHistoriaItem(
-                    context, imageUrl, historiasMap[imageUrl]!, historiasMap);
+                return _buildHistoriaItem(context, imageUrl, historiasMap[imageUrl]!, historiasMap);
               }).toList(),
             ),
           ),

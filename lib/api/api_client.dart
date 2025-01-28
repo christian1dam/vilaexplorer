@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:vilaexplorer/service/usuario_service.dart';
+import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class ApiClient {
   final String _baseUrl = 
@@ -14,7 +15,7 @@ class ApiClient {
   Future<http.Response> get(String endpoint) async {
     final url = Uri.parse('$_baseUrl$endpoint');
     try {
-      final response = await http.get(url, headers: _authHeader());
+      final response = await http.get(url, headers: await _authHeader());
       debugPrint("${response.headers}");
       debugPrint("${response.reasonPhrase}");
       _handleResponse(response);
@@ -53,7 +54,7 @@ class ApiClient {
     try {
       final response = await http.post(
         url,
-        headers: _authHeader(),
+        headers: await _authHeader(),
         body: jsonEncode(body),
       );
       debugPrint("POST request to $url with body: $body");
@@ -73,7 +74,7 @@ class ApiClient {
     try {
       final response = await http.put(
         url,
-        headers: _authHeader(),
+        headers: await _authHeader(),
         body: jsonEncode(body),
       );
       _handleResponse(response);
@@ -87,7 +88,7 @@ class ApiClient {
   Future<http.Response> delete(String endpoint) async {
     final url = Uri.parse('$_baseUrl$endpoint');
     try {
-      final response = await http.delete(url, headers: _authHeader());
+      final response = await http.delete(url, headers: await _authHeader());
       _handleResponse(response);
       return response;
     } catch (e) {
@@ -129,15 +130,15 @@ class ApiClient {
     }
   }
 
-  Map<String, String> _authHeader() {
-    final usuarioAutenticado = UsuarioService().usuarioAutenticado;
-
-    debugPrint('${usuarioAutenticado!.type} ${usuarioAutenticado.token}');
+  Future<Map<String, String>> _authHeader() async {
+    final userPreferences = UserPreferences();
+    String type = await userPreferences.typeToken;
+    String token = await userPreferences.token;
 
     return {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': '${usuarioAutenticado.type} ${usuarioAutenticado.token}',
+      'Authorization': '$type $token',
     };
   }
 }

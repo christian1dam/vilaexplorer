@@ -4,19 +4,11 @@ import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/exception/invalid_password_exception.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
 import 'package:vilaexplorer/models/usuario/usuario_auth.dart';
+import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class UsuarioService extends ChangeNotifier {
-  static final UsuarioService _instance = UsuarioService._internal();
-
-  late UsuarioAuth? usuarioAutenticado;
-
+  final userPreferences = UserPreferences();
   late Usuario allUserData;
-
-  UsuarioService._internal();
-
-  factory UsuarioService() {
-    return _instance;
-  }
 
   String? _error;
 
@@ -25,7 +17,6 @@ class UsuarioService extends ChangeNotifier {
   String? get error => _error;
   Usuario getUsuario() => allUserData;
 
-  // Método para crear un nuevo usuario
   Future<bool> signupUsuario(String nombre, String email, String password,
       String assertPassword) async {
     const String endpoint = '/auth/signup?rol=Cliente';
@@ -37,33 +28,33 @@ class UsuarioService extends ChangeNotifier {
     UsuarioAuth usuario = UsuarioAuth(username: nombre, email: email, password: password);
 
     try {
-      final response =
-          await _apiClient.post(endpoint, body: usuario.registerRequest());
+      final response = await _apiClient.post(endpoint, body: usuario.toMap());
       if (response.statusCode == 201) {
-        return true; // Usuario creado exitosamente
+        return true;
       }
     } catch (e) {
       debugPrint('Error al crear usuario: ${e.toString()}');
     }
-    return false; // Fallo en la creación del usuario
+    return false;
   }
 
-  // Método para iniciar sesión
   Future<void> loginUsuario(String email, String password) async {
     const String endpoint = '/auth/signin';
-
     UsuarioAuth usuario = UsuarioAuth(email: email, password: password);
 
     try {
       final response = await _apiClient.post(endpoint, body: usuario.loginRequest());
 
       if (response.statusCode == 200) {
+        final data = jsonDecode(utf8.decode(response.bodyBytes));
 
-        
-        usuarioAutenticado =
-            UsuarioAuth.fromMap(jsonDecode(response.body));
+        await userPreferences.setTypeToken(data['type']);
+        await userPreferences.setToken(data['token']);
+        await userPreferences.setId(data['id']);
+        await userPreferences.setPassword(data['password']);
+        await userPreferences.setSesion(true);
 
-        allUserData = await getUsuarioByID(usuarioAutenticado!.id!);
+        allUserData = await getUsuarioByID(data['id']);
         notifyListeners();
       } else {
         debugPrint('Error al iniciar sesión: ${response.body}');
@@ -77,8 +68,8 @@ class UsuarioService extends ChangeNotifier {
   }
 
   // Método para cerrar sesión
-  void cerrarSesion() {
-    usuarioAutenticado = null;
+  void cerrarSesion() async {
+    await userPreferences.storage.deleteAll();
     _error = null;
     notifyListeners();
   }

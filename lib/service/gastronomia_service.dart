@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/models/gastronomia/post_plato.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
+import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 import '../models/gastronomia/plato.dart';
 import 'package:http/http.dart' as http;
 
@@ -53,14 +54,12 @@ class GastronomiaService extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    final usuarioAutenticado = UsuarioService()
-        .getUsuario()
-        .idUsuario; // Obtienes el idUsuario de la sesión.
+    final idUsuario = await UserPreferences().id; // Obtienes el idUsuario de la sesión.
 
     try {
       // Realizas la consulta a la API para obtener las recetas del usuario autenticado.
       final response =
-          await _apiClient.get('/plato/misRecetas?autorID=$usuarioAutenticado');
+          await _apiClient.get('/plato/misRecetas?autorID=$idUsuario');
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         // Asignas las recetas obtenidas a la lista _platos
@@ -106,7 +105,7 @@ class GastronomiaService extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    final usuarioAutenticado = UsuarioService().getUsuario().idUsuario;
+    final idUsuario = await UserPreferences().id;
 
     try {
       // Subir imagen a Cloudinary
@@ -129,7 +128,7 @@ class GastronomiaService extends ChangeNotifier {
 
       // Hacer la petición POST para crear el plato
       final response = await _apiClient.postAuth(
-        '/plato/crearFlutter?autorID=$usuarioAutenticado&tipoPlatoID=$idTipo',
+        '/plato/crearFlutter?autorID=$idUsuario&tipoPlatoID=$idTipo',
         body: postPlato.toMap(),
       );
 

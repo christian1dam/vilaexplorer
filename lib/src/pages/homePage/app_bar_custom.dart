@@ -32,6 +32,9 @@ class AppBarCustom extends StatelessWidget {
             onTap: () async {
               return showModalBottomSheet(
                 context: context,
+                sheetAnimationStyle: AnimationStyle(
+                  duration: Duration(milliseconds: 400)
+                ),
                 builder: (BuildContext context) {
                   return MenuPrincipal();
                 },

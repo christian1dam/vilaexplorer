@@ -33,9 +33,12 @@ class _AddPlatoState extends State<AddPlato> {
   @override
   void initState() {
     super.initState();
-    _addIngredientRow();
-    Provider.of<TipoPlatoService>(context, listen: false)
-        .fetchTiposPlatoActivos();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _addIngredientRow();
+      Provider.of<TipoPlatoService>(context, listen: false)
+          .fetchTiposPlatoActivos();
+    });
   }
 
   void _addIngredientRow() {

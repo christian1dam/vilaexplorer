@@ -9,9 +9,9 @@ import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/favorito_service.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/service/puntuacion_service.dart';
-import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/map_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
+import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class DetalleLugarInteres extends StatefulWidget {
   final int lugarDeInteresID;
@@ -47,7 +47,7 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
     final favoritoService = Provider.of<FavoritoService>(context, listen: true);
     final lugarDeInteresService =
         Provider.of<LugarDeInteresService>(context, listen: true);
-    final usuarioAutenticado = UsuarioService().usuarioAutenticado;
+    final userPreferences = UserPreferences();
 
     return FutureBuilder(
       future: _lugarDeInteresFuture,
@@ -222,7 +222,7 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                             onRatingUpdate: (rating) async {
                                               await puntuacionService
                                                   .gestionarPuntuacion(
-                                                      idUsuario:usuarioAutenticado!.id!,
+                                                      idUsuario: await userPreferences.id,
                                                       idEntidad: _lugarDeInteres.idLugarInteres!,
                                                       tipoEntidad: TipoEntidad.LUGAR_INTERES.name,
                                                       puntuacion:rating.toInt(),
@@ -323,9 +323,9 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                 TipoEntidad.FIESTA_TRADICION)
                             ? MySvgWidget(path: 'lib/icon/favoriteTrue.svg')
                             : MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
-                        onPressed: () {
+                        onPressed: () async {
                           favoritoService.gestionarFavorito(
-                            idUsuario: usuarioAutenticado!.id!,
+                            idUsuario: await userPreferences.id,
                             idEntidad: _lugarDeInteres.idLugarInteres!,
                             tipoEntidad: TipoEntidad.FIESTA_TRADICION.name,
                           );
