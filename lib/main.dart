@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -34,7 +36,7 @@ void main() async {
   } catch (error, stackTrace) {
     debugPrint('Error durante la inicialización: $error');
     debugPrint('StackTrace: $stackTrace');
-    // exit(1);
+    exit(1);
   }
 
   await FMTCStore('VilaExplorerMapStore').manage.create();

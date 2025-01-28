@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class ApiClient {

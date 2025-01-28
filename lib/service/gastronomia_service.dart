@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/models/gastronomia/post_plato.dart';
-import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 import '../models/gastronomia/plato.dart';
 import 'package:http/http.dart' as http;
