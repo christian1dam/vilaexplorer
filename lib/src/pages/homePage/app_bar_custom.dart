@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
-import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class AppBarCustom extends StatelessWidget {
@@ -21,7 +19,6 @@ class AppBarCustom extends StatelessWidget {
   }
 
   List<Widget> _contentAppBar(BuildContext context) {
-    final pageProvider = Provider.of<PageProvider>(context, listen: false);
 
     return <Widget>[
       Padding(
@@ -36,19 +33,7 @@ class AppBarCustom extends StatelessWidget {
               return showModalBottomSheet(
                 context: context,
                 builder: (BuildContext context) {
-                  return MenuPrincipal(
-                    onShowTradicionesPressed: () =>
-                        pageProvider.changePage('tradiciones'),
-                    onShowGastronomiaPressed: () =>
-                        pageProvider.changePage('gastronomia'),
-                    onShowFavoritosPressed: () =>
-                        pageProvider.changePage('favoritos'),
-                    onShowCuentaPressed: () =>
-                        pageProvider.changePage('cuenta'),
-                    onShowMonumentosPressed: () =>
-                        pageProvider.changePage('lugares de interés'),
-                    onCloseMenu: () => pageProvider.changePage('map'),
-                  );
+                  return MenuPrincipal();
                 },
               );
             },

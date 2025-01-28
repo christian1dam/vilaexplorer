@@ -31,14 +31,8 @@ class _BackgroundMapState extends State<BackgroundMap> {
   late final MapController _mapController;
   List<Marker> _markers = [];
   List<LatLng> _routePoints = [];
-  final String accessToken = dotenv.env['MAPBOX_ACCESS_TOKEN'] ??
-      (throw Exception(
-          'MAPBOX_ACCESS_TOKEN no está definido en el archivo .env'));
-  final _tileProvider = FMTCTileProvider(
-    stores: const {
-      'VilaExplorerMapStore': BrowseStoreStrategy.readUpdateCreate
-    },
-  );
+  final String accessToken = dotenv.env['MAPBOX_ACCESS_TOKEN'] ?? (throw Exception('MAPBOX_ACCESS_TOKEN no está definido en el archivo .env'));
+  final _tileProvider = FMTCTileProvider(stores: const {'VilaExplorerMapStore': BrowseStoreStrategy.readUpdateCreate},);
 
   @override
   void initState() {
@@ -89,8 +83,7 @@ class _BackgroundMapState extends State<BackgroundMap> {
               (coordenada) {
                 final iconData = _getIconForLugar(lugar.tipoLugar!.nombreTipo!);
                 final color = _getColorForLugar(lugar.tipoLugar!.nombreTipo!);
-                final pageProvider =
-                    Provider.of<PageProvider>(context, listen: false);
+                final pageProvider = Provider.of<PageProvider>(context, listen: false);
                 return Marker(
                   point: LatLng(coordenada.latitud!, coordenada.longitud!),
                   width: 40.w,

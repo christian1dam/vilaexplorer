@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -6,116 +9,136 @@ import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/src/pages/homePage/history_page.dart';
 
-class MenuPrincipal extends StatelessWidget {
-  final Function()? onShowTradicionesPressed;
-  final Function()? onShowFavoritosPressed;
-  final Function()? onShowCuentaPressed;
-  final Function()? onShowGastronomiaPressed;
-  final Function()? onShowMonumentosPressed;
-
-  final VoidCallback? onCloseMenu;
-
+class MenuPrincipal extends StatefulWidget {
   const MenuPrincipal({
     super.key,
-    this.onShowTradicionesPressed,
-    this.onShowFavoritosPressed,
-    this.onShowCuentaPressed,
-    this.onShowGastronomiaPressed,
-    this.onShowMonumentosPressed,
-    this.onCloseMenu,
   });
+
+  @override
+  State<MenuPrincipal> createState() => _MenuPrincipalState();
+}
+
+class _MenuPrincipalState extends State<MenuPrincipal> {
+  late Future<Map<String, Map<String, String>>> _historias;
+
+  @override
+  void initState() {
+    super.initState();
+    _historias = _getHistorias();
+  }
+
+  Future<Map<String, Map<String, String>>> _getHistorias() async {
+    final String response =
+        await rootBundle.loadString('assets/historias.json');
+    final Map<String, dynamic> data = json.decode(response);
+    return data
+        .map((key, value) => MapEntry(key, Map<String, String>.from(value)));
+  }
 
   @override
   Widget build(BuildContext context) {
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
 
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.r),
-            topRight: Radius.circular(30.r),
-          ),
-          color: Color.fromARGB(255, 24, 24, 24),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              blurRadius: 10,
-              spreadRadius: 1,
-              offset: Offset(0, 1),
-            ),
-          ]),
-      height: 350.h,
-      child: Column(
-        children: <Widget>[
-          BarraDeslizamiento(),
+    return FutureBuilder(
+        future: _historias,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            final historiasMap = snapshot.data!;
+            return Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.r),
+                    topRight: Radius.circular(30.r),
+                  ),
+                  color: Color.fromARGB(255, 24, 24, 24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      blurRadius: 10,
+                      spreadRadius: 1,
+                      offset: Offset(0, 1),
+                    ),
+                  ]),
+              height: 500.h,
+              child: Column(
+                children: <Widget>[
+                  BarraDeslizamiento(),
 
-          const Spacer(),
+                  const Spacer(),
 
-          SearchBar(
-            hintText: AppLocalizations.of(context)!.translate('mp_search'),
-          ),
+                  SearchBar(
+                    hintText:
+                        AppLocalizations.of(context)!.translate('mp_search'),
+                  ),
 
-          Divider(height: 10.h, color: Colors.transparent),
+                  Divider(height: 10.h, color: Colors.transparent),
 
-          // Botones principales
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              ButtonMenuCustom(
-                width: 120.w,
-                textContent:
-                    AppLocalizations.of(context)!.translate('traditions'),
-                svgPath: "lib/icon/tradiciones.svg",
-                onTap: () => pageProvider.changePage('tradiciones'),
+                  // Botones principales
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      ButtonMenuCustom(
+                        width: 120.w,
+                        textContent: AppLocalizations.of(context)!
+                            .translate('traditions'),
+                        svgPath: "lib/icon/tradiciones.svg",
+                        onTap: () => pageProvider.changePage('tradiciones'),
+                      ),
+                      ButtonMenuCustom(
+                        width: 120.w,
+                        textContent: AppLocalizations.of(context)!
+                            .translate('favorites'),
+                        svgPath: "lib/icon/favoritos.svg",
+                        onTap: () => pageProvider.changePage("favoritos"),
+                      ),
+                      ButtonMenuCustom(
+                        width: 120.w,
+                        textContent: AppLocalizations.of(context)!
+                            .translate('my_account'),
+                        svgPath: "lib/icon/user_icon.svg",
+                        onTap: () => pageProvider.changePage("cuenta"),
+                      ),
+                    ],
+                  ),
+
+                  Divider(height: 10.h, color: Colors.transparent),
+
+                  // Segunda fila de botones
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ButtonMenuCustom(
+                        width: 180.w,
+                        textContent: AppLocalizations.of(context)!
+                            .translate('gastronomy'),
+                        svgPath: "lib/icon/gastronomia.svg",
+                        onTap: () => pageProvider.changePage('gastronomia'),
+                      ),
+                      ButtonMenuCustom(
+                        width: 180.w,
+                        textContent:
+                            AppLocalizations.of(context)!.translate('sights'),
+                        svgPath: "lib/icon/monumentos.svg",
+                        onTap: () => pageProvider.changePage("monumentos"),
+                      ),
+                    ],
+                  ),
+
+                  Divider(height: 10.h, color: Colors.transparent),
+
+                  // Historias
+                  _buildHistoriasSection(context, historiasMap),
+                ],
               ),
-              ButtonMenuCustom(
-                width: 120.w,
-                textContent:
-                    AppLocalizations.of(context)!.translate('favorites'),
-                svgPath: "lib/icon/favoritos.svg",
-                onTap: () => pageProvider.changePage("favoritos"),
-              ),
-              ButtonMenuCustom(
-                width: 120.w,
-                textContent:
-                    AppLocalizations.of(context)!.translate('my_account'),
-                svgPath: "lib/icon/user_icon.svg",
-                onTap: () => pageProvider.changePage("cuenta"),
-              ),
-            ],
-          ),
-
-          Divider(height: 10.h, color: Colors.transparent),
-
-          // Segunda fila de botones
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              ButtonMenuCustom(
-                width: 180.w,
-                textContent:
-                    AppLocalizations.of(context)!.translate('gastronomy'),
-                svgPath: "lib/icon/gastronomia.svg",
-                onTap: () => pageProvider.changePage('gastronomia'),
-              ),
-              ButtonMenuCustom(
-                width: 180.w,
-                textContent: AppLocalizations.of(context)!.translate('sights'),
-                svgPath: "lib/icon/monumentos.svg",
-                onTap: () => pageProvider.changePage("monumentos"),
-              ),
-            ],
-          ),
-
-          Divider(height: 10.h, color: Colors.transparent),
-
-          // Historias
-          // _buildHistoriasSection(context, historiasMap),
-        ],
-      ),
-    );
+            );
+          }
+        });
   }
 
   // Método para crear los ítems de historia
