@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
-import 'package:vilaexplorer/main.dart';  // Asegúrate de importar el archivo main.dart
+import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class AppBarCustom extends StatelessWidget {
-  final Function() onMenuPressed;
-  const AppBarCustom({super.key, required this.onMenuPressed});
+  const AppBarCustom({super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -15,27 +15,48 @@ class AppBarCustom extends StatelessWidget {
       backgroundColor: Colors.black87.withOpacity(0),
       foregroundColor: Colors.white,
       title: Row(
-        children: _contentAppBar(context), // Pasa el context a la función para poder usarlo
+        children: _contentAppBar(context),
       ),
     );
   }
 
   List<Widget> _contentAppBar(BuildContext context) {
+    final pageProvider = Provider.of<PageProvider>(context, listen: false);
+
     return <Widget>[
       Padding(
         padding: EdgeInsets.only(left: 5.w, right: 10.w),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 1.h),
           decoration: BoxDecoration(
-              color: Color.fromRGBO(36, 36, 36, 1),
+              color: Color.fromARGB(255, 24, 24, 24),
               borderRadius: BorderRadius.all(Radius.circular(15.r))),
           child: GestureDetector(
-            onTap: onMenuPressed,
+            onTap: () async {
+              return showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return MenuPrincipal(
+                    onShowTradicionesPressed: () =>
+                        pageProvider.changePage('tradiciones'),
+                    onShowGastronomiaPressed: () =>
+                        pageProvider.changePage('gastronomia'),
+                    onShowFavoritosPressed: () =>
+                        pageProvider.changePage('favoritos'),
+                    onShowCuentaPressed: () =>
+                        pageProvider.changePage('cuenta'),
+                    onShowMonumentosPressed: () =>
+                        pageProvider.changePage('lugares de interés'),
+                    onCloseMenu: () => pageProvider.changePage('map'),
+                  );
+                },
+              );
+            },
             child: Container(
               height: 54.h,
               width: 50.w,
               decoration: BoxDecoration(
-                  color: Color.fromRGBO(36, 36, 36, 1),
+                  color: Color.fromARGB(255, 24, 24, 24),
                   borderRadius: BorderRadius.all(Radius.circular(12.r))),
               child: Icon(
                 Icons.menu,
@@ -78,8 +99,9 @@ class AppBarCustom extends StatelessWidget {
       Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
         decoration: BoxDecoration(
-          color: Color.fromRGBO(36, 36, 36, 1),
-          borderRadius: BorderRadius.all(Radius.circular(20.r)),  // Redondear el borde
+          color: Color.fromARGB(255, 24, 24, 24),
+          borderRadius:
+              BorderRadius.all(Radius.circular(20.r)), // Redondear el borde
         ),
         child: Row(
           children: [
@@ -93,11 +115,5 @@ class AppBarCustom extends StatelessWidget {
         ),
       ),
     ];
-  }
-
-  // Método para cambiar el idioma
-  void _changeLanguage(BuildContext context, Locale locale) {
-    // Llamar al método estático para cambiar el idioma sin usar setState
-    MyApp.setLocale(context, locale);
   }
 }

@@ -10,7 +10,7 @@ import 'package:vilaexplorer/service/favorito_service.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/service/puntuacion_service.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
-import 'package:vilaexplorer/src/pages/homePage/map_view.dart';
+import 'package:vilaexplorer/src/pages/homePage/map_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class DetalleLugarInteres extends StatefulWidget {
@@ -29,7 +29,7 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
   @override
   void initState() {
     super.initState();
-     _lugarDeInteresFuture = _fetchData();
+    _lugarDeInteresFuture = _fetchData();
   }
 
   Future<LugarDeInteres> _fetchData() async {
@@ -100,6 +100,15 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                               fit: BoxFit.cover,
                               width: double.infinity,
                               height: 180.h,
+                              fadeInDuration: Duration(milliseconds: 400),
+                              imageErrorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                  "assets/no-image.jpg",
+                                  height: 180.h,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                );
+                              },
                             ),
                           ),
 
@@ -208,31 +217,21 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                                 horizontal: 1.0.w),
                                             itemBuilder: (context, _) => Icon(
                                               Icons.star,
-                                              color: Color.fromARGB(
-                                                  230, 255, 205, 0),
+                                              color: Color.fromARGB(230, 255, 205, 0),
                                             ),
                                             onRatingUpdate: (rating) async {
                                               await puntuacionService
                                                   .gestionarPuntuacion(
-                                                      idUsuario:
-                                                          usuarioAutenticado!
-                                                              .id!,
-                                                      idEntidad: _lugarDeInteres
-                                                          .idLugarInteres!,
-                                                      tipoEntidad: TipoEntidad
-                                                          .LUGAR_INTERES
-                                                          .toString()
-                                                          .substring(12),
-                                                      puntuacion:
-                                                          rating.toInt(),
-                                                      context: context);
-                                              debugPrint(
-                                                  "Nueva calificación: $rating \n ${_lugarDeInteres.puntuacionMediaLugar}");
+                                                      idUsuario:usuarioAutenticado!.id!,
+                                                      idEntidad: _lugarDeInteres.idLugarInteres!,
+                                                      tipoEntidad: TipoEntidad.LUGAR_INTERES.name,
+                                                      puntuacion:rating.toInt(),
+                                                      context: context,
+                                                      );
+                                              debugPrint("Nueva calificación: $rating \n ${_lugarDeInteres.puntuacionMediaLugar}");
 
                                               setState(() {
-                                                _lugarDeInteres =
-                                                    lugarDeInteresService
-                                                        .lugarDeInteres;
+                                                _lugarDeInteres = lugarDeInteresService.lugarDeInteres;
                                               });
                                             },
                                           ),
@@ -283,12 +282,16 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                         onPressed: () {
                           final mapViewState = mapViewKey.currentState;
                           if (mapViewState != null) {
-                            mapViewState.getRouteTo(LatLng(
+                            mapViewState.getRouteTo(
+                              LatLng(
                                 _lugarDeInteres.coordenadas!.first.latitud!,
-                                _lugarDeInteres.coordenadas!.first.longitud!));
+                                _lugarDeInteres.coordenadas!.first.longitud!,
+                              ),
+                            );
                           } else {
                             debugPrint(
-                                'No se pudo encontrar el estado de MapView.');
+                              'No se pudo encontrar el estado de MapView.',
+                            );
                           }
 
                           pageProvider.clearScreen();
@@ -315,17 +318,16 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
-                        child: favoritoService
-                                .esFavorito(_lugarDeInteres.idLugarInteres!)
+                        child: favoritoService.esFavorito(
+                                _lugarDeInteres.idLugarInteres!,
+                                TipoEntidad.FIESTA_TRADICION)
                             ? MySvgWidget(path: 'lib/icon/favoriteTrue.svg')
                             : MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
                         onPressed: () {
                           favoritoService.gestionarFavorito(
                             idUsuario: usuarioAutenticado!.id!,
                             idEntidad: _lugarDeInteres.idLugarInteres!,
-                            tipoEntidad: TipoEntidad.FIESTA_TRADICION
-                                .toString()
-                                .substring(12),
+                            tipoEntidad: TipoEntidad.FIESTA_TRADICION.name,
                           );
                         },
                       ),

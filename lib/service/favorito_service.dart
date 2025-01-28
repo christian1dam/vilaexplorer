@@ -3,14 +3,34 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/models/favorito.dart';
+import 'package:vilaexplorer/models/gastronomia/plato.dart';
+import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
+import 'package:vilaexplorer/models/tipo_entidad.dart';
+import 'package:vilaexplorer/models/tradiciones/tradiciones.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
 
 class FavoritoService extends ChangeNotifier {
   final ApiClient _apiClient = ApiClient();
-  List<Favorito> _favoritosDelUsuario = [];
+  List<dynamic> _favoritosDelUsuario = [];
 
-   bool esFavorito(int idEntidad) {
-    return _favoritosDelUsuario.any((favorito) => favorito.idEntidad == idEntidad);
+  List<dynamic> get favoritosDelUsuario => _favoritosDelUsuario;
+
+  bool esFavorito(int idEntidad, TipoEntidad tipoEntidad) {
+    return _favoritosDelUsuario.any(
+      (favorito) {
+        
+        if (tipoEntidad == TipoEntidad.LUGAR_INTERES &&
+            favorito is LugarDeInteres) {
+          return favorito.idLugarInteres == idEntidad;
+        } else if (tipoEntidad == TipoEntidad.PLATO && favorito is Plato) {
+          return favorito.platoId == idEntidad;
+        } else if (tipoEntidad == TipoEntidad.FIESTA_TRADICION &&
+            favorito is Tradiciones) {
+          return favorito.idFiestaTradicion == idEntidad;
+        }
+        return false;
+      },
+    );
   }
 
   Future<void> getFavoritosByUsuario(int idUsuario) async {
@@ -19,16 +39,32 @@ class FavoritoService extends ChangeNotifier {
       final response = await _apiClient.get(endpoint);
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        _favoritosDelUsuario =
-            data.map((json) => Favorito.fromMap(json)).toList();
+        final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+
+        _favoritosDelUsuario = data
+            .map((json) {
+              if (json.containsKey("idLugarInteres")) {
+                return LugarDeInteres.fromMap(json);
+              } else if (json.containsKey("platoId")) {
+                return Plato.fromMap(json);
+              } else if (json.containsKey("idFiestaTradicion")) {
+                return Tradiciones.fromMap(json);
+              } else {
+                debugPrint(
+                    "No se pudo determinar el tipo de entidad para el JSON: $json");
+                return null;
+              }
+            })
+            .where((favorito) => favorito != null)
+            .toList();
+
         notifyListeners();
       } else {
-       debugPrint("Error al obtener favoritos: ${response.statusCode}");
+        debugPrint("Error al obtener favoritos: ${response.statusCode}");
         _favoritosDelUsuario = [];
       }
     } catch (e) {
-     debugPrint("Error al obtener favoritos: $e");
+      debugPrint("Error al obtener favoritos: $e");
       _favoritosDelUsuario = [];
     }
   }
@@ -42,15 +78,15 @@ class FavoritoService extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-       debugPrint("Favorito creado correctamente.");
+        debugPrint("Favorito creado correctamente.");
         notifyListeners();
         return true;
       } else {
-       debugPrint("Error al crear favorito: ${response.statusCode}");
+        debugPrint("Error al crear favorito: ${response.statusCode}");
         return false;
       }
     } catch (e) {
-     debugPrint("Error al crear favorito: $e");
+      debugPrint("Error al crear favorito: $e");
       return false;
     }
   }
@@ -60,19 +96,19 @@ class FavoritoService extends ChangeNotifier {
     try {
       final response = await _apiClient.delete(endpoint);
       if (response.statusCode == 204) {
-       debugPrint("Favorito eliminado correctamente.");
+        debugPrint("Favorito eliminado correctamente.");
         _favoritosDelUsuario.removeWhere((f) => f.idFavorito == idFavorito);
         notifyListeners();
         return true;
       } else if (response.statusCode == 404) {
-       debugPrint("Favorito no encontrado: ${response.statusCode}");
+        debugPrint("Favorito no encontrado: ${response.statusCode}");
         return false;
       } else {
-       debugPrint("Error al eliminar favorito: ${response.statusCode}");
+        debugPrint("Error al eliminar favorito: ${response.statusCode}");
         return false;
       }
     } catch (e) {
-     debugPrint("Error al eliminar favorito: $e");
+      debugPrint("Error al eliminar favorito: $e");
       return false;
     }
   }

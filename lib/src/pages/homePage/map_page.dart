@@ -3,31 +3,30 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:http/http.dart' as http;
 
-final GlobalKey<_MapViewState> mapViewKey = GlobalKey<_MapViewState>();
+final mapViewKey = GlobalKey<_BackgroundMapState>();
 
-class MapView extends StatefulWidget {
-  final VoidCallback clearScreen;
-
-  MapView({Key? key, required this.clearScreen}) : super(key: mapViewKey);
+class BackgroundMap extends StatefulWidget {
+  BackgroundMap({Key? key}) : super(key: mapViewKey);
 
   @override
-  _MapViewState createState() => _MapViewState();
+  _BackgroundMapState createState() => _BackgroundMapState();
 
-  // Exponer el método público para obtener rutas
   void getRouteTo(LatLng destination) {
     createState().getRouteTo(destination);
   }
 }
 
-class _MapViewState extends State<MapView> {
+class _BackgroundMapState extends State<BackgroundMap> {
   LatLng? _currentLocation;
   late final MapController _mapController;
   List<Marker> _markers = [];
@@ -35,15 +34,21 @@ class _MapViewState extends State<MapView> {
   final String accessToken = dotenv.env['MAPBOX_ACCESS_TOKEN'] ??
       (throw Exception(
           'MAPBOX_ACCESS_TOKEN no está definido en el archivo .env'));
+  final _tileProvider = FMTCTileProvider(
+    stores: const {
+      'VilaExplorerMapStore': BrowseStoreStrategy.readUpdateCreate
+    },
+  );
 
   @override
   void initState() {
     super.initState();
     _mapController = MapController();
     _getCurrentLocation();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-     debugPrint("LLAMANDO A LOADMARKERS");
-      await _loadMarkers();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugPrint("LLAMANDO A LOADMARKERS");
+      _loadMarkers();
+      Provider.of<MapStateProvider>(context, listen: false).setMapLoaded = true;
     });
   }
 
@@ -72,12 +77,10 @@ class _MapViewState extends State<MapView> {
     }
   }
 
-  Future<void> _loadMarkers() async {
+  void _loadMarkers() {
     try {
       final lugaresDeInteresService =
-          Provider.of<LugarDeInteresService>(context, listen: false); // TODO -> LISTEN TRUE
-      await lugaresDeInteresService.fetchLugaresDeInteresActivos();
-
+          Provider.of<LugarDeInteresService>(context, listen: false);
       final markers = lugaresDeInteresService.lugaresDeInteres
           .where((lugar) =>
               lugar.coordenadas != null && lugar.coordenadas!.isNotEmpty)
@@ -114,7 +117,7 @@ class _MapViewState extends State<MapView> {
         _markers = markers;
       });
     } catch (error) {
-     debugPrint('Error al cargar los marcadores: $error');
+      debugPrint('Error al cargar los marcadores: $error');
     }
   }
 
@@ -136,10 +139,11 @@ class _MapViewState extends State<MapView> {
                       flags: ~InteractiveFlag.doubleTapZoom,
                     ),
                     onTap: (tapPosition, latlng) {
-                      widget.clearScreen();
+                      pageProvider.clearScreen();
                     }),
                 children: [
                   TileLayer(
+                    tileProvider: _tileProvider,
                     urlTemplate:
                         'https://api.mapbox.com/styles/v1/${pageProvider.currentMapStyle}/tiles/{z}/{x}/{y}?access_token=$accessToken',
                     additionalOptions: {
@@ -241,7 +245,8 @@ class _MapViewState extends State<MapView> {
     if (_currentLocation != null) {
       _getRoute(_currentLocation!, destination);
     } else {
-     debugPrint('No se puede obtener la ruta: ubicación actual no disponible.');
+      debugPrint(
+          'No se puede obtener la ruta: ubicación actual no disponible.');
     }
   }
 }

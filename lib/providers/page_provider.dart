@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class PageProvider extends ChangeNotifier {
   String currentPage = 'map';
   String currentMapStyle = 'mapbox/streets-v11';
-  
+
   String? selectedFiesta;
   int? idLugarDeInteres;
   String? selectedCategory;
@@ -31,7 +31,7 @@ class PageProvider extends ChangeNotifier {
   }
 
   void setCategory(String category) {
-    selectedCategory = category;  
+    selectedCategory = category;
     notifyListeners();
   }
 

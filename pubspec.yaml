@@ -17,7 +17,6 @@ dependencies:
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
   flutter_svg: ^2.0.10+1
-  sqflite: ^2.4.1
   provider: ^6.1.2
   http: ^1.2.2
   image_picker: ^1.1.2
@@ -28,6 +27,8 @@ dependencies:
   font_awesome_flutter: ^10.8.0
   icons_plus: ^5.0.0
   collection: ^1.18.0
+  path_provider: ^2.1.5
+  flutter_map_tile_caching: ^10.0.0
 
 dev_dependencies:
   flutter_test:

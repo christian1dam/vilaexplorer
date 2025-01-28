@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
-import 'package:vilaexplorer/main.dart';
+import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/src/pages/homePage/history_page.dart';
-
-import 'dart:convert';
-import 'package:flutter/services.dart';
 
 class MenuPrincipal extends StatelessWidget {
   final Function()? onShowTradicionesPressed;
@@ -29,183 +27,99 @@ class MenuPrincipal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onVerticalDragUpdate: (details) {
-        if (details.primaryDelta! > 10) {
-          onCloseMenu
-              ?.call(); // Llamamos a onCloseMenu si el usuario desliza hacia abajo
-        }
-      },
-      child: FutureBuilder<Map<String, Map<String, String>>>(
-        future: _loadHistoriasFromJson(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            final historiasMap = snapshot.data!;
+    final pageProvider = Provider.of<PageProvider>(context, listen: false);
 
-            return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30.r),
-                  topRight: Radius.circular(30.r),
-                ),
-                color: Color.fromRGBO(32, 29, 29, 0.9),
-              ),
-              height: 500.h,
-              child: Column(
-                children: <Widget>[
-                  // Barra estilo iOS para cerrar el menú
-                  BarraDeslizamiento(),
-
-                  const Spacer(),
-
-                  // Buscador
-                  SearchBar(
-                    hintText:
-                        AppLocalizations.of(context)!.translate('mp_search'),
-                  ),
-
-                  Divider(height: 10.h, color: Colors.transparent),
-
-                  // Botones principales
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      _crearBoton(
-                          120.w,
-                          AppLocalizations.of(context)!.translate('traditions'),
-                          "Tradiciones",
-                          "lib/icon/tradiciones.svg",
-                          1,
-                          context),
-                      _crearBoton(
-                          120.w,
-                          AppLocalizations.of(context)!.translate('favorites'),
-                          "Favoritos",
-                          "lib/icon/favoritos.svg",
-                          1,
-                          context),
-                      _crearBoton(
-                          120.w,
-                          AppLocalizations.of(context)!.translate('my_account'),
-                          "Cuenta",
-                          "lib/icon/user_icon.svg",
-                          1,
-                          context),
-                    ],
-                  ),
-
-                  Divider(height: 10.h, color: Colors.transparent),
-
-                  // Segunda fila de botones
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      _crearBoton(
-                          180.w,
-                          AppLocalizations.of(context)!.translate('gastronomy'),
-                          "Gastronomia",
-                          "lib/icon/gastronomia.svg",
-                          1,
-                          context),
-                      _crearBoton(
-                          180.w,
-                          AppLocalizations.of(context)!.translate('sights'),
-                          "Monumentos",
-                          "lib/icon/monumentos.svg",
-                          1,
-                          context),
-                    ],
-                  ),
-
-                  Divider(height: 10.h, color: Colors.transparent),
-
-                  // Historias
-                  _buildHistoriasSection(context, historiasMap),
-                ],
-              ),
-            );
-          }
-        },
-      ),
-    );
-  }
-
-  // Método para crear los botones del menú principal
-  Widget _crearBoton(double mywidth, String texto, String redirector,
-      String imagePath, double tamanoTexto, BuildContext context) {
-    return SizedBox(
-      width: mywidth,
-      height: 105.h,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.only(left: 12.w, top: 15.h),
-          foregroundColor: Colors.white,
-          backgroundColor: const Color.fromRGBO(39, 39, 39, 0.92),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0.r),
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30.r),
+            topRight: Radius.circular(30.r),
           ),
-          splashFactory: InkRipple.splashFactory,
-          shadowColor: Colors.white.withOpacity(0.3),
-        ),
-        child: SizedBox(
-          width: double.infinity,
-          height: double.infinity,
-          child: Column(
+          color: Color.fromARGB(255, 24, 24, 24),
+          boxShadow: [
+            BoxShadow(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              blurRadius: 10,
+              spreadRadius: 1,
+              offset: Offset(0, 1),
+            ),
+          ]),
+      height: 350.h,
+      child: Column(
+        children: <Widget>[
+          BarraDeslizamiento(),
+
+          const Spacer(),
+
+          SearchBar(
+            hintText: AppLocalizations.of(context)!.translate('mp_search'),
+          ),
+
+          Divider(height: 10.h, color: Colors.transparent),
+
+          // Botones principales
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              MySvgWidget(path: imagePath, width: 40.w, height: 40.h),
-              SizedBox(height: 5.h),
-              Text(
-                texto,
-                style: TextStyle(fontSize: tamanoTexto * 17.sp),
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              ButtonMenuCustom(
+                width: 120.w,
+                textContent:
+                    AppLocalizations.of(context)!.translate('traditions'),
+                svgPath: "lib/icon/tradiciones.svg",
+                onTap: () => pageProvider.changePage('tradiciones'),
+              ),
+              ButtonMenuCustom(
+                width: 120.w,
+                textContent:
+                    AppLocalizations.of(context)!.translate('favorites'),
+                svgPath: "lib/icon/favoritos.svg",
+                onTap: () => pageProvider.changePage("favoritos"),
+              ),
+              ButtonMenuCustom(
+                width: 120.w,
+                textContent:
+                    AppLocalizations.of(context)!.translate('my_account'),
+                svgPath: "lib/icon/user_icon.svg",
+                onTap: () => pageProvider.changePage("cuenta"),
               ),
             ],
           ),
-        ),
-        onPressed: () {
-          if (redirector == "Favoritos" && onShowFavoritosPressed != null) {
-            onShowFavoritosPressed!();
-          } else if (redirector == "Gastronomia" &&
-              onShowGastronomiaPressed != null) {
-            onShowGastronomiaPressed!();
-          } else if (redirector == "Tradiciones" &&
-              onShowTradicionesPressed != null) {
-            onShowTradicionesPressed!();
-          } else if (redirector == "Cuenta" && onShowCuentaPressed != null) {
-            onShowCuentaPressed!();
-          } else if (redirector == "Monumentos" &&
-              onShowMonumentosPressed != null) {
-            onShowMonumentosPressed!();
-          }
-        },
+
+          Divider(height: 10.h, color: Colors.transparent),
+
+          // Segunda fila de botones
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              ButtonMenuCustom(
+                width: 180.w,
+                textContent:
+                    AppLocalizations.of(context)!.translate('gastronomy'),
+                svgPath: "lib/icon/gastronomia.svg",
+                onTap: () => pageProvider.changePage('gastronomia'),
+              ),
+              ButtonMenuCustom(
+                width: 180.w,
+                textContent: AppLocalizations.of(context)!.translate('sights'),
+                svgPath: "lib/icon/monumentos.svg",
+                onTap: () => pageProvider.changePage("monumentos"),
+              ),
+            ],
+          ),
+
+          Divider(height: 10.h, color: Colors.transparent),
+
+          // Historias
+          // _buildHistoriasSection(context, historiasMap),
+        ],
       ),
     );
   }
 
-  // Método para cambiar el idioma
-  void _changeLanguage(BuildContext context, Locale locale) {
-    MyApp.setLocale(context, locale);
-  }
-
-  // Método para cargar el JSON desde los assets
-  static Future<Map<String, Map<String, String>>>
-      _loadHistoriasFromJson() async {
-    final String response =
-        await rootBundle.loadString('assets/historias.json');
-    final Map<String, dynamic> data = json.decode(response);
-    return data
-        .map((key, value) => MapEntry(key, Map<String, String>.from(value)));
-  }
-
   // Método para crear los ítems de historia
-  Widget _buildHistoriaItem( 
+  Widget _buildHistoriaItem(
       BuildContext context,
       String imageUrl,
       Map<String, String> historia,
@@ -287,6 +201,110 @@ class MenuPrincipal extends StatelessWidget {
   }
 }
 
+class ButtonMenuCustom extends StatelessWidget {
+  final double width;
+  final double height = 105;
+  final double textSize = 1;
+  final String textContent;
+  final String svgPath;
+  final Function() onTap;
+
+  const ButtonMenuCustom({
+    super.key,
+    required this.textContent,
+    required this.svgPath,
+    required this.onTap,
+    required this.width,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width.w,
+      height: height.h,
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.only(left: 12.w, top: 15.h),
+          foregroundColor: Colors.white,
+          backgroundColor: const Color.fromRGBO(39, 39, 39, 0.92),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0.r),
+          ),
+          splashFactory: InkRipple.splashFactory,
+          shadowColor: Colors.white.withOpacity(0.3),
+        ),
+        child: SizedBox(
+          width: 100.w,
+          height: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MySvgWidget(path: svgPath, width: 40.w, height: 40.h),
+              Text(
+                textContent,
+                style: TextStyle(fontSize: textSize * 17.sp),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Widget _crearBoton(double mywidth, String texto, String redirector,
+//     String imagePath, double tamanoTexto, BuildContext context) {
+//   return SizedBox(
+//     width: mywidth,
+//     height: 105.h,
+//     child: ElevatedButton(
+//       style: ElevatedButton.styleFrom(
+//         padding: EdgeInsets.only(left: 12.w, top: 15.h),
+//         foregroundColor: Colors.white,
+//         backgroundColor: const Color.fromRGBO(39, 39, 39, 0.92),
+//         shape: RoundedRectangleBorder(
+//           borderRadius: BorderRadius.circular(30.0.r),
+//         ),
+//         splashFactory: InkRipple.splashFactory,
+//         shadowColor: Colors.white.withOpacity(0.3),
+//       ),
+//       child: SizedBox(
+//         width: 100.w,
+//         height: double.infinity,
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             MySvgWidget(path: imagePath, width: 40.w, height: 40.h),
+//             Text(
+//               texto,
+//               style: TextStyle(fontSize: tamanoTexto * 17.sp),
+//             ),
+//           ],
+//         ),
+//       ),
+//       onPressed: () {
+//         if (redirector == "Favoritos" && onShowFavoritosPressed != null) {
+//           onShowFavoritosPressed!();
+//         } else if (redirector == "Gastronomia" &&
+//             onShowGastronomiaPressed != null) {
+//           onShowGastronomiaPressed!();
+//         } else if (redirector == "Tradiciones" &&
+//             onShowTradicionesPressed != null) {
+//           onShowTradicionesPressed!();
+//         } else if (redirector == "Cuenta" && onShowCuentaPressed != null) {
+//           onShowCuentaPressed!();
+//         } else if (redirector == "Monumentos" &&
+//             onShowMonumentosPressed != null) {
+//           onShowMonumentosPressed!();
+//         }
+//       },
+//     ),
+//   );
+// }
+
 class BarraDeslizamiento extends StatelessWidget {
   const BarraDeslizamiento({
     super.key,
@@ -296,12 +314,15 @@ class BarraDeslizamiento extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.0.h),
-      child: Container(
-        width: 100.w,
-        height: 10.h,
-        decoration: BoxDecoration(
-          color: Colors.grey[400],
-          borderRadius: BorderRadius.circular(10.r),
+      child: Align(
+        alignment: Alignment.center,
+        child: Container(
+          width: 100.w,
+          height: 10.h,
+          decoration: BoxDecoration(
+            color: Colors.grey[400],
+            borderRadius: BorderRadius.circular(10.r),
+          ),
         ),
       ),
     );

@@ -1,67 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/cuenta_page.dart';
 import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
-import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
-import 'package:vilaexplorer/src/pages/homePage/map_view.dart';
+import 'package:vilaexplorer/src/pages/homePage/map_page.dart';
 import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.dart';
 import 'package:vilaexplorer/src/pages/lugarInteresPage/lugar_interes.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/detalle_fiesta_tradicion.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _fetchUserData();
+    });
+  }
+
+  void _fetchUserData() async {
+    final lugaresDeInteresService =
+        Provider.of<LugarDeInteresService>(context, listen: false);
+    await lugaresDeInteresService.fetchLugaresDeInteresActivos();
+  }
 
   @override
   Widget build(BuildContext context) {
     final pageProvider = Provider.of<PageProvider>(context, listen: true);
-    final lugarDeInteresService =
-        Provider.of<LugarDeInteresService>(context, listen: false);
+    final mapProvider = Provider.of<MapStateProvider>(context, listen: true);
+    final isMapLoaded = mapProvider.isMapLoaded;
 
     return Scaffold(
       body: Stack(
         children: [
-          MapView(
-            clearScreen: pageProvider.clearScreen,
-          ),
+          BackgroundMap(),
 
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: AppBarCustom(
-              onMenuPressed: () {
-                pageProvider.changePage(
-                    pageProvider.currentPage == 'menu' ? 'map' : 'menu');
-              },
+          if (isMapLoaded)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: AppBarCustom(),
             ),
-          ),
-
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Offstage(
-              offstage: pageProvider.currentPage != 'menu',
-              child: MenuPrincipal(
-                onShowTradicionesPressed: () =>
-                    pageProvider.changePage('tradiciones'),
-                onShowGastronomiaPressed: () =>
-                    pageProvider.changePage('gastronomia'),
-                onShowFavoritosPressed: () =>
-                    pageProvider.changePage('favoritos'),
-                onShowCuentaPressed: () => pageProvider.changePage('cuenta'),
-                onShowMonumentosPressed: () =>
-                    pageProvider.changePage('lugares de interés'),
-                onCloseMenu: () => pageProvider.changePage('map'),
-              ),
-            ),
-          ),
 
           // Página de tradiciones superpuesta al mapa
           Positioned.fill(
@@ -131,8 +123,9 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
 
-          // FloatingActionButton para cambiar el estilo del mapa
-          if (pageProvider.currentPage == 'map')
+          if (pageProvider.currentPage == 'map' &&
+              pageProvider.idLugarDeInteres == null &&
+              mapProvider.isMapLoaded)
             Positioned(
               bottom: 75.h,
               right: 20.w,

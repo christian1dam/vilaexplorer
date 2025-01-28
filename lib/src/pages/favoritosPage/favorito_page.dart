@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
+import 'package:vilaexplorer/models/gastronomia/plato.dart';
+import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
+import 'package:vilaexplorer/models/tradiciones/tradiciones.dart';
+import 'package:vilaexplorer/service/favorito_service.dart';
+import 'package:vilaexplorer/service/usuario_service.dart';
+import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class FavoritosPage extends StatefulWidget {
   final Function onClose;
@@ -14,10 +22,20 @@ class FavoritosPage extends StatefulWidget {
 class _FavoritosPageState extends State<FavoritosPage> {
   bool isSearchActive = false;
   TextEditingController searchController = TextEditingController();
+  late Future<List<dynamic>> _favoritosDelUsuarioFuture;
+  late List<dynamic> _favoritosDelUsuario;
 
   @override
   void initState() {
     super.initState();
+    _favoritosDelUsuarioFuture = _fetchData();
+  }
+
+  Future<List<dynamic>> _fetchData() async {
+    final usuarioAutenticado = UsuarioService().usuarioAutenticado;
+    final service = Provider.of<FavoritoService>(context, listen: false);
+    await service.getFavoritosByUsuario(usuarioAutenticado!.id!);
+    return service.favoritosDelUsuario;
   }
 
   void _toggleSearch() {
@@ -31,214 +49,214 @@ class _FavoritosPageState extends State<FavoritosPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final favoritoService =
+        Provider.of<FavoritoService>(context, listen: false);
 
-    return Stack(
-      children: [
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: GestureDetector(
-            onTap: () {
-              if (isSearchActive) {
-                setState(() {
-                  isSearchActive = false;
-                  searchController.clear();
-                });
-              }
-            },
-            child: Container(
-              height: size.height * 0.65,
-              width: size.width,
-              decoration: const BoxDecoration(
-                color: Color.fromRGBO(32, 29, 29, 0.9),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
+    return FutureBuilder(
+      future: _favoritosDelUsuarioFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.white,
+              backgroundColor: Colors.black,
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text("ERROR: ${snapshot.error}"),
+          );
+        } else {
+          _favoritosDelUsuario = favoritoService.favoritosDelUsuario;
+          return Stack(
+            children: [
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: GestureDetector(
+                  onTap: () {
+                    if (isSearchActive) {
+                      setState(() {
+                        isSearchActive = false;
+                        searchController.clear();
+                      });
+                    }
+                  },
+                  child: Container(
+                    height: 550.h,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(32, 29, 29, 0.9),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.r),
+                        topRight: Radius.circular(20.r),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        BarraDeslizamiento(),
+
+                        // Container(
+                        //   color: Colors.red,
+                        // child:
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.search,
+                                color: Colors.white,
+                              ),
+                              onPressed: _toggleSearch,
+                            ),
+                            Center(
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('favorites'),
+                                style: TextStyle(
+                                    fontSize: 25.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    letterSpacing: 1.w),
+                              ),
+                            ),
+                            IconButton(
+                              icon:
+                                  const Icon(Icons.close, color: Colors.white),
+                              onPressed: () {
+                                widget.onClose();
+                              },
+                            ),
+                          ],
+                        ),
+
+                        if (isSearchActive)
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
+                            child: TextField(
+                              controller: searchController,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                hintText: AppLocalizations.of(context)!
+                                    .translate('search_favorites'),
+                                hintStyle: TextStyle(color: Colors.white54),
+                                fillColor: Color.fromARGB(255, 47, 42, 42),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.r)),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 5.h, horizontal: 10.w),
+                              ),
+                            ),
+                          ),
+
+                        Divider(
+                          color: Colors.white,
+                          thickness: 1.h,
+                          indent: 25.w,
+                          endIndent: 25.w,
+                        ),
+
+                        Expanded(
+                          child: ListView(
+                            padding: EdgeInsets.only(top: 10.h),
+                            children: [
+                              // Primera lista desplegable
+                              ExpansionTile(
+                                title: Text(
+                                  AppLocalizations.of(context)!
+                                      .translate('monuments_place'),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                collapsedIconColor: Colors.white,
+                                iconColor: Colors.white,
+                                children: _favoritosDelUsuario
+                                    .whereType<LugarDeInteres>()
+                                    .map((favorito) {
+                                  final lugar = favorito;
+                                  return ListTile(
+                                    title: Text(
+                                      lugar.nombreLugar!,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                              ExpansionTile(
+                                title: Text(
+                                  AppLocalizations.of(context)!
+                                      .translate('gastronomy'),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                collapsedIconColor: Colors.white,
+                                iconColor: Colors.white,
+                                children: _favoritosDelUsuario
+                                    .whereType<Plato>()
+                                    .map((favorito) {
+                                  final plato = favorito;
+                                  return ListTile(
+                                    title: Text(
+                                      plato.nombre,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                              ExpansionTile(
+                                title: Text(
+                                  AppLocalizations.of(context)!
+                                      .translate('traditions'),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                collapsedIconColor: Colors.white,
+                                iconColor: Colors.white,
+                                children: _favoritosDelUsuario
+                                    .whereType<Tradiciones>()
+                                    .map((favorito) {
+                                  final lugar = favorito;
+                                  return Dismissible(
+                                    key: Key(lugar.idFiestaTradicion.toString()),
+                                    direction: DismissDirection.endToStart,
+                                    onDismissed: (direction) {
+                                      // TODO #2
+                                    },
+                                    child: ListTile(
+                                      leading: SizedBox(
+                                        width: 40.w,
+                                        height: 50.h,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(6.r),
+                                          child: FadeInImage(
+                                            placeholder:
+                                                AssetImage("assets/no-image.jpg"),
+                                            image: NetworkImage(lugar.imagen),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      title: Text(
+                                        lugar.nombre,
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-              child: Column(
-                children: [
-                  // Barra de estilo iOS
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Container(
-                      width: 100,
-                      height: 5,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[400],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.search,
-                            color: Colors.white,
-                          ),
-                          onPressed: _toggleSearch,
-                        ),
-                        Container(
-                          decoration: const BoxDecoration(
-                            color: Color.fromRGBO(30, 30, 30, 1),
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
-                          margin: const EdgeInsets.only(top: 10, left: 10),
-                          width: size.width * 0.5,
-                          height: 35,
-                          child: Center(
-                            child: Text(
-                              AppLocalizations.of(context)!.translate('favorites'),
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontFamily: 'Poppins',
-                              ),
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close, color: Colors.white),
-                          onPressed: () {
-                            widget.onClose();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (isSearchActive)
-                  
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TextField(
-                        controller: searchController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)!.translate('search_favorites'),
-                          hintStyle: TextStyle(color: Colors.white54),
-                          fillColor: Color.fromARGB(255, 47, 42, 42),
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        ),
-                      ),
-                    ),
-                    
-                  if (isSearchActive)
-                  const SizedBox(height: 10),
-                  Divider(
-                    color: Colors.white,
-                    thickness: 1,
-                    indent: 25,
-                    endIndent: 25,
-                  ),
-                  Expanded(
-                    child: ListView(
-                      padding: EdgeInsets.only(top: 10),
-                      children: [
-                        // Primera lista desplegable
-                        ExpansionTile(
-                          title: Text(
-                            AppLocalizations.of(context)!.translate('monuments_place'),
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          collapsedIconColor: Colors.white,
-                          iconColor: Colors.white,
-                          children: const [
-                            ListTile(
-                              title: Text(
-                                'Lugar 1',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            ListTile(
-                              title: Text(
-                                'Lugar 2',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            ListTile(
-                              title: Text(
-                                'Lugar 3',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                        ExpansionTile(
-                          title: Text(
-                            AppLocalizations.of(context)!.translate('gastronomy'),
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          collapsedIconColor: Colors.white,
-                          iconColor: Colors.white,
-                          children: const [
-                            ListTile(
-                              title: Text(
-                                'Restaurante 1',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            ListTile(
-                              title: Text(
-                                'Restaurante 2',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            ListTile(
-                              title: Text(
-                                'Restaurante 3',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                        ExpansionTile(
-                          title: Text(
-                            AppLocalizations.of(context)!.translate('traditions'),
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          collapsedIconColor: Colors.white,
-                          iconColor: Colors.white,
-                          children: const [
-                            ListTile(
-                              title: Text(
-                                'Tradición 1',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            ListTile(
-                              title: Text(
-                                'Tradición 2',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            ListTile(
-                              title: Text(
-                                'Tradición 3',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
+            ],
+          );
+        }
+      },
     );
   }
 
