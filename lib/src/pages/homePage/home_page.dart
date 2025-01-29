@@ -46,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Stack(
         children: [
           BackgroundMap(),
-
+          
           if (isMapLoaded)
             Positioned(
               top: 0,
@@ -55,7 +55,6 @@ class _MyHomePageState extends State<MyHomePage> {
               child: AppBarCustom(),
             ),
 
-          // Página de tradiciones superpuesta al mapa
           Positioned.fill(
             child: Offstage(
               offstage: pageProvider.currentPage != 'tradiciones',
@@ -76,7 +75,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
 
-          // Página de favoritos superpuesta al mapa
           Positioned.fill(
             child: Offstage(
               offstage: pageProvider.currentPage != 'favoritos',
@@ -103,13 +101,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
 
-          // Página de cuenta superpuesta al mapa
           Positioned.fill(
             child: Offstage(
               offstage: pageProvider.currentPage != 'cuenta',
-              child: CuentaPage(
-                onClose: () => pageProvider.changePage('map'),
-              ),
+              child: CuentaPage(),
             ),
           ),
 
@@ -122,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-
+            
           if (pageProvider.currentPage == 'map' &&
               pageProvider.idLugarDeInteres == null)
             Positioned(

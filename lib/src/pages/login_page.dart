@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Future<bool> _loginUser() async {
-    final usuarioService = Provider.of<UsuarioService>(context, listen: false);
+    final usuarioService = UsuarioService();
 
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
+import 'package:vilaexplorer/models/usuario/usuario.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/login_page.dart';
 
@@ -59,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   void _registerUser(BuildContext context) async {
-    final usuarioSerivce = Provider.of<UsuarioService>(context, listen: false);
+    final usuarioSerivce = UsuarioService();
 
     final String name = _nameController.text.trim();
     final String email = _emailController.text.trim();

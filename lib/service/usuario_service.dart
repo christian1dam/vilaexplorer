@@ -2,22 +2,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/exception/invalid_password_exception.dart';
-import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/models/usuario/usuario_auth.dart';
-import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
-import 'package:provider/provider.dart';
 
-class UsuarioService extends ChangeNotifier {
+class UsuarioService {
   final userPreferences = UserPreferences();
-  // late Usuario allUserData;
-
-  // String? _error;
 
   final ApiClient _apiClient = ApiClient();
-
-  // String? get error => _error;
-  // Usuario getUsuario() => allUserData;
 
   Future<bool> signupUsuario(String nombre, String email, String password,
       String assertPassword) async {
@@ -68,12 +59,5 @@ class UsuarioService extends ChangeNotifier {
       throw Exception("Excepción al iniciar sesión");
     }
     return false;
-  }
-
-  Future<void> cerrarSesion(BuildContext context) async {
-    if (context.mounted) {
-      Provider.of<PageProvider>(context, listen: false).clearScreen();
-      await userPreferences.storage.deleteAll();
-    }
   }
 }

@@ -3,14 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
+import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/login_page.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class CuentaPage extends StatefulWidget {
-  final Function onClose;
-
-  const CuentaPage({super.key, required this.onClose});
+  const CuentaPage({super.key});
 
   @override
   _CuentaPageState createState() => _CuentaPageState();
@@ -96,8 +95,8 @@ class _CuentaPageState extends State<CuentaPage> {
 
   @override
   Widget build(BuildContext context) {
-    final usuarioService = Provider.of<UsuarioService>(context);
-
+    final pageProvider = Provider.of<PageProvider>(context, listen: false);
+    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(32, 29, 29, 1),
@@ -121,7 +120,7 @@ class _CuentaPageState extends State<CuentaPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            widget.onClose(); // Llamas al onClose aquí
+            pageProvider.changePage('map');
           },
         ),
       ),
@@ -317,7 +316,7 @@ class _CuentaPageState extends State<CuentaPage> {
                     width: 200.w,
                     child: ElevatedButton(
                       onPressed: () async {
-                        await usuarioService.cerrarSesion(context);
+                        pageProvider.clearScreen();
                         Navigator.of(context).pushAndRemoveUntil(
                             PageRouteBuilder(
                               pageBuilder:
@@ -341,8 +340,8 @@ class _CuentaPageState extends State<CuentaPage> {
                               transitionDuration:
                                   const Duration(milliseconds: 250),
                             ),
-                            (route) => false
-                            );
+                            (route) => false);
+                        await UserPreferences().storage.deleteAll();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,

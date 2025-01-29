@@ -48,7 +48,6 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UsuarioService(), lazy: false),
         ChangeNotifierProvider(create: (_) => TradicionesService(), lazy: false),
         ChangeNotifierProvider(create: (_) => GastronomiaService(), lazy: false),
         ChangeNotifierProvider(create: (_) => TipoPlatoService(), lazy: false),
