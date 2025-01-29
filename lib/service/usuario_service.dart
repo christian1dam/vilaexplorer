@@ -2,30 +2,31 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/exception/invalid_password_exception.dart';
-import 'package:vilaexplorer/models/usuario/usuario.dart';
+import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/models/usuario/usuario_auth.dart';
+import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
+import 'package:provider/provider.dart';
 
 class UsuarioService extends ChangeNotifier {
   final userPreferences = UserPreferences();
-  late Usuario allUserData;
+  // late Usuario allUserData;
 
-  String? _error;
+  // String? _error;
 
   final ApiClient _apiClient = ApiClient();
 
-  String? get error => _error;
-  Usuario getUsuario() => allUserData;
+  // String? get error => _error;
+  // Usuario getUsuario() => allUserData;
 
-  Future<bool> signupUsuario(String nombre, String email, String password,
-      String assertPassword) async {
+  Future<bool> signupUsuario(String nombre, String email, String password, String assertPassword) async {
+    
     const String endpoint = '/auth/signup?rol=Cliente';
+    late UsuarioAuth usuario;
 
-    if (password != assertPassword) {
-      throw InvalidPasswordException("Las contraseñas no coinciden");
-    }
-
-    UsuarioAuth usuario = UsuarioAuth(username: nombre, email: email, password: password);
+    password != assertPassword
+        ? throw InvalidPasswordException("Las contraseñas no coinciden")
+        : usuario = UsuarioAuth(username: nombre, email: email, password: password); //TODO -> SE DEBEN MANEJAR DESDE EL FORMULARIO
 
     try {
       final response = await _apiClient.post(endpoint, body: usuario.toMap());
@@ -34,6 +35,7 @@ class UsuarioService extends ChangeNotifier {
       }
     } catch (e) {
       debugPrint('Error al crear usuario: ${e.toString()}');
+      throw Exception(e);
     }
     return false;
   }
@@ -43,7 +45,8 @@ class UsuarioService extends ChangeNotifier {
     UsuarioAuth usuario = UsuarioAuth(email: email, password: password);
 
     try {
-      final response = await _apiClient.post(endpoint, body: usuario.loginRequest());
+      final response =
+          await _apiClient.post(endpoint, body: usuario.loginRequest());
 
       if (response.statusCode == 200) {
         final data = jsonDecode(utf8.decode(response.bodyBytes));
@@ -51,43 +54,21 @@ class UsuarioService extends ChangeNotifier {
         await userPreferences.setTypeToken(data['type']);
         await userPreferences.setToken(data['token']);
         await userPreferences.setId(data['id']);
-        await userPreferences.setPassword(data['password']);
         await userPreferences.setSesion(true);
+        await userPreferences.setUsername(data['username']);
+        await userPreferences.setEmail(data['email']);
 
-        allUserData = await getUsuarioByID(data['id']);
-        notifyListeners();
-      } else {
-        debugPrint('Error al iniciar sesión: ${response.body}');
-        notifyListeners(); // Fallo en el inicio de sesión
       }
     } catch (e) {
-      _error = 'Error al autenticar al usuario: $e';
-      debugPrint('Excepción al iniciar sesión: $e');
-      notifyListeners();
+      throw Exception("Excepción al iniciar sesión: $e");
     }
   }
 
-  // Método para cerrar sesión
-  void cerrarSesion() async {
-    await userPreferences.storage.deleteAll();
-    _error = null;
-    notifyListeners();
-  }
-
-  Future<Usuario> getUsuarioByID(int id) async {
-    try {
-      final response = await _apiClient.get('/usuario/por-id/$id');
-      if (response.statusCode == 200) {
-        Usuario usuario = Usuario.fromMap(jsonDecode(utf8.decode(response.bodyBytes)));
-
-        return usuario;
-      } else {
-        throw Exception('Error al obtener el usuario: ${response.body}');
-      }
-    } catch (e) {
-      _error = 'error al obtener el usuario por ID: $e';
-      debugPrint(e.toString());
-      throw Exception('Error al obtener el usuario por ID: $e');
+  Future<void> cerrarSesion(BuildContext context) async {
+    if (context.mounted) {
+      Provider.of<PageProvider>(context, listen: false).clearScreen();
+      await userPreferences.storage.deleteAll();
     }
+    return;
   }
 }

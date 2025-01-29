@@ -124,8 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
 
           if (pageProvider.currentPage == 'map' &&
-              pageProvider.idLugarDeInteres == null &&
-              mapProvider.isMapLoaded)
+              pageProvider.idLugarDeInteres == null)
             Positioned(
               bottom: 75.h,
               right: 20.w,

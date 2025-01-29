@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
@@ -18,59 +19,11 @@ class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+  late Future<void>? _loginFuture;
 
   late AnimationController _rotationController;
   late Animation<double> _rotationAnimation;
   late Animation<double> _buttonAnimation;
-
-  void _loginUser(BuildContext context) async {
-    final usuarioService = Provider.of<UsuarioService>(context, listen: false);
-
-    final String email = _emailController.text.trim();
-    final String password = _passwordController.text.trim();
-
-    if (email.isEmpty || password.isEmpty) {
-      _scaffoldMessengerKey.currentState?.showSnackBar(
-        const SnackBar(content: Text('Por favor, ingrese todos los campos')),
-      );
-      return;
-    }
-
-    await usuarioService.loginUsuario(email, password);
-
-    if (usuarioService.error == null) {
-      _scaffoldMessengerKey.currentState?.showSnackBar(
-        const SnackBar(content: Text('Inicio de sesión exitoso')),
-      );
-
-      // Navegar a la pantalla principal si el inicio de sesión fue exitoso
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(0.0, 1.0);
-            const end = Offset.zero;
-            const curve = Curves.easeInOut;
-
-            var tween =
-                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 100),
-        ),
-      );
-    } else {
-      _scaffoldMessengerKey.currentState?.showSnackBar(
-        SnackBar(content: Text(usuarioService.error!)),
-      );
-    }
-  }
 
   @override
   void initState() {
@@ -94,6 +47,24 @@ class _LoginPageState extends State<LoginPage>
     );
 
     _rotationController.forward();
+
+    _loginFuture = null;
+  }
+
+  Future<void> _loginUser() async {
+    final usuarioService = Provider.of<UsuarioService>(context, listen: false);
+
+    final String email = _emailController.text.trim();
+    final String password = _passwordController.text.trim();
+
+    email.isEmpty || password.isEmpty
+        ? ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Por favor, ingrese todos los campos'),
+              duration: Duration(milliseconds: 800),
+            ),
+          )
+        : await usuarioService.loginUsuario(email, password);
   }
 
   @override
@@ -105,7 +76,6 @@ class _LoginPageState extends State<LoginPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldMessengerKey,
       backgroundColor: const Color.fromARGB(255, 28, 28, 28),
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -167,21 +137,21 @@ class _LoginPageState extends State<LoginPage>
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 Text(
                   AppLocalizations.of(context)!.translate('login'),
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 20.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 _buildTextField(
                     AppLocalizations.of(context)!.translate('email'),
                     false,
                     _emailController),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 _buildTextField(
                     AppLocalizations.of(context)!.translate('password'),
                     true,
@@ -257,21 +227,59 @@ class _LoginPageState extends State<LoginPage>
                           _showLanguageOptions(context);
                         },
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 155, 58, 51),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 30, vertical: 15),
-                        ),
-                        onPressed: () {
-                          _loginUser(context);
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!.translate('access'),
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
+                      FutureBuilder(
+                          future: _loginFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    snapshot.error.toString(),
+                                  ),
+                                ),
+                              );
+                            } else if (snapshot.connectionState == ConnectionState.done) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                Navigator.of(context).pushReplacement(
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      
+                                      const begin = Offset(0.0, 1.0);
+                                      const end = Offset.zero;
+                                      const curve = Curves.easeInOut;
+
+                                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                                      return SlideTransition(
+                                        position: animation.drive(tween),
+                                        child: child,
+                                      );
+                                    },
+                                    transitionDuration: const Duration(milliseconds: 100),
+                                  ),
+                                );
+                              });
+                            }
+                            return ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromARGB(255, 155, 58, 51),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 30, vertical: 15),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _loginFuture = _loginUser();
+                                });
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('access'),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            );
+                          }),
                     ],
                   ),
                 ),

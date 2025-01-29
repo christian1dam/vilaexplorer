@@ -4,7 +4,9 @@ import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class AppBarCustom extends StatelessWidget {
-  const AppBarCustom({super.key,});
+  const AppBarCustom({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,6 @@ class AppBarCustom extends StatelessWidget {
   }
 
   List<Widget> _contentAppBar(BuildContext context) {
-
     return <Widget>[
       Padding(
         padding: EdgeInsets.only(left: 5.w, right: 10.w),
@@ -32,9 +33,8 @@ class AppBarCustom extends StatelessWidget {
             onTap: () async {
               return showModalBottomSheet(
                 context: context,
-                sheetAnimationStyle: AnimationStyle(
-                  duration: Duration(milliseconds: 400)
-                ),
+                sheetAnimationStyle:
+                    AnimationStyle(duration: Duration(milliseconds: 400)),
                 builder: (BuildContext context) {
                   return MenuPrincipal();
                 },

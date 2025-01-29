@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/login_page.dart';
+import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class CuentaPage extends StatefulWidget {
   final Function onClose;
@@ -15,24 +17,23 @@ class CuentaPage extends StatefulWidget {
 }
 
 class _CuentaPageState extends State<CuentaPage> {
-  // Datos simulados del usuario. En la vida real, los cargarías de tu base de datos.
-  String userName = "Juan Pérez";
-  String userEmail = "juan.perez@email.com";
-  String userPassword = "*****"; // La contraseña no se muestra por seguridad
+  final _userData = UserPreferences();
+  late Future<void> _userDataFuture;
+  late String username;
+  late String email;
 
-  // Método que podría obtener los datos del usuario desde una base de datos
-  Future<Map<String, String>> _loadUserData() async {
-    // Aquí iría el código para cargar los datos del usuario desde la base de datos.
-    await Future.delayed(
-        const Duration(seconds: 2)); // Simula un delay de carga
-    return {
-      'name': userName,
-      'email': userEmail,
-      'password': userPassword,
-    };
+  @override
+  void initState() {
+    super.initState();
+    _userDataFuture = _loadUserData();
   }
 
-  // Función para mostrar las opciones de idioma
+  Future<void> _loadUserData() async {
+    username = await _userData.username;
+    email = await _userData.email;
+  }
+
+
   void _showLanguageOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -89,7 +90,7 @@ class _CuentaPageState extends State<CuentaPage> {
         _changeLanguage(context, newLocale);
         Navigator.pop(context);
       },
-      leading: Image.asset(flagPath, height: 60, width: 60),
+      leading: Image.asset(flagPath, height: 60.h, width: 60.w),
       title: Text(language, style: TextStyle(color: Colors.white)),
     );
   }
@@ -110,7 +111,7 @@ class _CuentaPageState extends State<CuentaPage> {
           child: Text(
             AppLocalizations.of(context)!.translate('account'),
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 20.sp,
               fontWeight: FontWeight.bold,
               color: Colors.white,
               fontFamily: 'Poppins',
@@ -142,9 +143,9 @@ class _CuentaPageState extends State<CuentaPage> {
                       backgroundColor: Colors.white,
                       child: Icon(Icons.person, size: 40, color: Colors.black),
                     ),
-                    const SizedBox(width: 10),
-                    FutureBuilder<Map<String, String>>(
-                      future: _loadUserData(),
+                    SizedBox(width: 10.w),
+                    FutureBuilder(
+                      future: _userDataFuture,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -157,15 +158,15 @@ class _CuentaPageState extends State<CuentaPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              usuarioService.allUserData.nombre!,
-                              style: const TextStyle(
-                                  fontSize: 20, color: Colors.white),
+                              username,
+                              style: TextStyle(
+                                  fontSize: 20.sp, color: Colors.white),
                             ),
-                            const SizedBox(height: 5),
+                            SizedBox(height: 5.h),
                             Text(
-                              usuarioService.allUserData.email!,
-                              style: const TextStyle(
-                                  fontSize: 16, color: Colors.white70),
+                              email,
+                              style: TextStyle(
+                                  fontSize: 16.sp, color: Colors.white70),
                             ),
                           ],
                         );
@@ -173,41 +174,41 @@ class _CuentaPageState extends State<CuentaPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 Text(
                   '${AppLocalizations.of(context)!.translate('password')}:',
                   style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
-                const SizedBox(height: 5),
+                SizedBox(height: 5.h),
                 TextFormField(
-                  initialValue: usuarioService.allUserData.password,
+                  initialValue: "*********",
                   obscureText: true,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: "******",
                     hintStyle: TextStyle(color: Colors.white54),
                     fillColor: Color.fromARGB(255, 47, 42, 42),
                     filled: true,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: BorderRadius.all(Radius.circular(10.r)),
                     ),
                   ),
                   style: const TextStyle(color: Colors.white),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
                       // Lógica para editar el perfil
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 40),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 12.h, horizontal: 40.w),
                       backgroundColor: Colors.green,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(20.r),
                       ),
                     ),
                     child: Text(
@@ -215,16 +216,16 @@ class _CuentaPageState extends State<CuentaPage> {
                         style: TextStyle(color: Colors.white)),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 Text(
                   AppLocalizations.of(context)!.translate('help'),
                   style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
                 SizedBox(
-                  width: 80,
+                  width: 80.w,
                   child: const Divider(color: Colors.white),
                 ),
                 Column(
@@ -245,16 +246,16 @@ class _CuentaPageState extends State<CuentaPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 Text(
                   AppLocalizations.of(context)!.translate('settings'),
                   style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
                 SizedBox(
-                  width: 80,
+                  width: 80.w,
                   child: const Divider(color: Colors.white),
                 ),
                 Column(
@@ -265,8 +266,7 @@ class _CuentaPageState extends State<CuentaPage> {
                           '◦ ${AppLocalizations.of(context)!.translate('language')}',
                           style: TextStyle(color: Colors.white)),
                       onTap: () {
-                        _showLanguageOptions(
-                            context); // Llama a la función para cambiar idioma
+                        _showLanguageOptions(context); // Llama a la función para cambiar idioma
                       },
                     ),
                     ListTile(
@@ -278,16 +278,16 @@ class _CuentaPageState extends State<CuentaPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 Text(
                   AppLocalizations.of(context)!.translate('more_information'),
                   style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
                 SizedBox(
-                  width: 80,
+                  width: 80.w,
                   child: const Divider(color: Colors.white),
                 ),
                 Column(
@@ -308,44 +308,40 @@ class _CuentaPageState extends State<CuentaPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 Align(
                   alignment: Alignment.center,
                   child: SizedBox(
-                    width: 200,
+                    width: 200.w,
                     child: ElevatedButton(
-                      onPressed: () {
-                        usuarioService.cerrarSesion();
-                        Navigator.of(context).push(
+                      onPressed: () async {
+                        await usuarioService.cerrarSesion(context);
+
+                        Navigator.of(context).pushAndRemoveUntil(
                           PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    LoginPage(),
-                            transitionsBuilder: (context, animation,
-                                secondaryAnimation, child) {
+                            pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
                               // Cambiar Offset a (-1.0, 0.0) para deslizar hacia la izquierda
-                              const begin = Offset(-0.0, 1.0);
+                              const begin = Offset(-1.0, 0.0);
                               const end = Offset.zero;
                               const curve = Curves.easeInOut;
 
-                              var tween = Tween(begin: begin, end: end)
-                                  .chain(CurveTween(curve: curve));
+                              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
                               return SlideTransition(
                                 position: animation.drive(tween),
                                 child: child,
                               );
                             },
-                            transitionDuration: const Duration(seconds: 1),
+                            transitionDuration: const Duration(milliseconds: 250),
                           ),
+                          (route) => false
                         );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 40),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 4.w),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r),
                         ),
                       ),
                       child: const Text("Cerrar sesión",
@@ -353,12 +349,11 @@ class _CuentaPageState extends State<CuentaPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 30.h),
                 Align(
-                  alignment: Alignment
-                      .center, // Usa 'Alignment.center' en lugar de 'Center()'
+                  alignment: Alignment.center, // Usa 'Alignment.center' en lugar de 'Center()'
                   child: SizedBox(
-                    width: 150,
+                    width: 150.w,
                     child: const Divider(color: Colors.white),
                   ),
                 ),

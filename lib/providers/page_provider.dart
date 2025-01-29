@@ -44,12 +44,12 @@ class PageProvider extends ChangeNotifier {
 
   void clearScreen() {
     currentPage = 'map';
+    idLugarDeInteres = null;
     selectedFiesta = null;
     selectedCategory = null;
     selectedPlatillo = null;
     selectedIngredientes = null;
     selectedReceta = null;
-    idLugarDeInteres = null;
     notifyListeners();
   }
 

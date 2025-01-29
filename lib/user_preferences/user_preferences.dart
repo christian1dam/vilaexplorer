@@ -26,7 +26,7 @@ class UserPreferences {
     await _storage.write(key: 'typeToken', value: typeToken);
   }
 
-    Future<String> get token async {
+  Future<String> get token async {
     String? token = await _storage.read(key: 'token');
     return token!;
   }
@@ -44,21 +44,30 @@ class UserPreferences {
     return int.parse(id!);
   }
 
-  Future<void> setPassword(String password) async {
-    await storage.write(key: 'password', value: password);
-  }
-
-   Future<String> get password async {
-    final password = await storage.read(key: 'password');
-    return password!;
-  }
-
-  Future<void> setSesion(bool estado) async {  
+  Future<void> setSesion(bool estado) async {
     await storage.write(key: 'estadoSesion', value: estado.toString());
   }
 
   Future<bool> get sesion async {
     final estadoSesion = await storage.read(key: 'estadoSesion');
     return estadoSesion == 'true';
+  }
+
+  Future<String> get username async {
+    String? username = await _storage.read(key: 'username');
+    return username!;
+  }
+
+  Future<void> setUsername(String username) async {
+    await _storage.write(key: 'username', value: username);
+  }
+
+    Future<String> get email async {
+    String? email = await _storage.read(key: 'email');
+    return email!;
+  }
+
+  Future<void> setEmail(String email) async {
+    await _storage.write(key: 'email', value: email);
   }
 }
