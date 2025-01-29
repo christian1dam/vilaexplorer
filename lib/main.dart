@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -23,12 +21,10 @@ import 'l10n/app_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  // Configura el manejador de errores global
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
     debugPrint('FlutterError: ${details.exception}');
     debugPrint('StackTrace: ${details.stack}');
-    // exit(1);
   };
 
   try {
@@ -36,7 +32,6 @@ void main() async {
   } catch (error, stackTrace) {
     debugPrint('Error durante la inicialización: $error');
     debugPrint('StackTrace: $stackTrace');
-    exit(1);
   }
 
   await FMTCStore('VilaExplorerMapStore').manage.create();
@@ -54,14 +49,11 @@ class AppState extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UsuarioService(), lazy: false),
-        ChangeNotifierProvider(
-            create: (_) => TradicionesService(), lazy: false),
-        ChangeNotifierProvider(
-            create: (_) => GastronomiaService(), lazy: false),
+        ChangeNotifierProvider(create: (_) => TradicionesService(), lazy: false),
+        ChangeNotifierProvider(create: (_) => GastronomiaService(), lazy: false),
         ChangeNotifierProvider(create: (_) => TipoPlatoService(), lazy: false),
         ChangeNotifierProvider(create: (_) => PageProvider(), lazy: false),
-        ChangeNotifierProvider(
-            create: (_) => LugarDeInteresService(), lazy: false),
+        ChangeNotifierProvider(create: (_) => LugarDeInteresService(), lazy: false),
         ChangeNotifierProvider(create: (_) => PuntuacionService(), lazy: false),
         ChangeNotifierProvider(create: (_) => FavoritoService(), lazy: false),
         ChangeNotifierProvider(create: (_) => MapStateProvider(), lazy: false),
@@ -144,6 +136,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<Widget> _checkEstadoSesion() async {
+    // bool sesion = ;
+    debugPrint("ESTADO DE LA SESION DEL USUARIO: ${await UserPreferences().sesion}");
     return await UserPreferences().sesion ? MyHomePage() : SplashPage();
   }
 }

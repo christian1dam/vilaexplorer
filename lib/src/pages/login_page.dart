@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
@@ -19,7 +20,7 @@ class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  late Future<void>? _loginFuture;
+  late Future<bool>? _loginFuture;
 
   late AnimationController _rotationController;
   late Animation<double> _rotationAnimation;
@@ -47,24 +48,26 @@ class _LoginPageState extends State<LoginPage>
     );
 
     _rotationController.forward();
-
     _loginFuture = null;
   }
 
-  Future<void> _loginUser() async {
+  Future<bool> _loginUser() async {
     final usuarioService = Provider.of<UsuarioService>(context, listen: false);
 
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
 
-    email.isEmpty || password.isEmpty
-        ? ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Por favor, ingrese todos los campos'),
-              duration: Duration(milliseconds: 800),
-            ),
-          )
-        : await usuarioService.loginUsuario(email, password);
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, ingrese todos los campos'),
+          duration: Duration(milliseconds: 800),
+        ),
+      );
+      return false;
+    } else {
+      return await usuarioService.loginUsuario(email, password);
+    }
   }
 
   @override
@@ -231,35 +234,46 @@ class _LoginPageState extends State<LoginPage>
                           future: _loginFuture,
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    snapshot.error.toString(),
-                                  ),
-                                ),
+                              WidgetsBinding.instance.addPostFrameCallback(
+                                (_) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          "Este usuario no esta registrado"),
+                                      duration: Duration(milliseconds: 800),
+                                    ),
+                                  );
+                                },
                               );
-                            } else if (snapshot.connectionState == ConnectionState.done) {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                Navigator.of(context).pushReplacement(
-                                  PageRouteBuilder(
-                                    pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
-                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                      
-                                      const begin = Offset(0.0, 1.0);
-                                      const end = Offset.zero;
-                                      const curve = Curves.easeInOut;
+                            } else if (snapshot.hasData && snapshot.data!) {
+                              WidgetsBinding.instance.addPostFrameCallback(
+                                (_) {
+                                  Navigator.of(context).pushReplacement(
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          MyHomePage(),
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        const begin = Offset(0.0, 1.0);
+                                        const end = Offset.zero;
+                                        const curve = Curves.easeInOut;
 
-                                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                        var tween = Tween(
+                                                begin: begin, end: end)
+                                            .chain(CurveTween(curve: curve));
 
-                                      return SlideTransition(
-                                        position: animation.drive(tween),
-                                        child: child,
-                                      );
-                                    },
-                                    transitionDuration: const Duration(milliseconds: 100),
-                                  ),
-                                );
-                              });
+                                        return SlideTransition(
+                                          position: animation.drive(tween),
+                                          child: child,
+                                        );
+                                      },
+                                      transitionDuration:
+                                          const Duration(milliseconds: 100),
+                                    ),
+                                  );
+                                },
+                              );
                             }
                             return ElevatedButton(
                               style: ElevatedButton.styleFrom(

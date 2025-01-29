@@ -6,33 +6,29 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
-import 'package:http/http.dart' as http;
-
-final mapViewKey = GlobalKey<_BackgroundMapState>();
 
 class BackgroundMap extends StatefulWidget {
-  BackgroundMap({Key? key}) : super(key: mapViewKey);
+  const BackgroundMap({super.key});
 
   @override
   _BackgroundMapState createState() => _BackgroundMapState();
-
-  void getRouteTo(LatLng destination) {
-    createState().getRouteTo(destination);
-  }
 }
 
 class _BackgroundMapState extends State<BackgroundMap> {
-  LatLng? _currentLocation;
   late final MapController _mapController;
   List<Marker> _markers = [];
-  List<LatLng> _routePoints = [];
-  final String accessToken = dotenv.env['MAPBOX_ACCESS_TOKEN'] ?? (throw Exception('MAPBOX_ACCESS_TOKEN no está definido en el archivo .env'));
-  final _tileProvider = FMTCTileProvider(stores: const {'VilaExplorerMapStore': BrowseStoreStrategy.readUpdateCreate},);
+  final String accessToken = dotenv.env['MAPBOX_ACCESS_TOKEN'] ??
+      (throw Exception(
+          'MAPBOX_ACCESS_TOKEN no está definido en el archivo .env'));
+  final _tileProvider = FMTCTileProvider(
+    stores: const {
+      'VilaExplorerMapStore': BrowseStoreStrategy.readUpdateCreate
+    },
+  );
 
   @override
   void initState() {
@@ -41,37 +37,21 @@ class _BackgroundMapState extends State<BackgroundMap> {
     _getCurrentLocation();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugPrint("LLAMANDO A LOADMARKERS");
-      _loadMarkers();
+      _drawMarkers();
       Provider.of<MapStateProvider>(context, listen: false).setMapLoaded = true;
     });
   }
 
   Future<void> _getCurrentLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) return;
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) return;
-    }
-
-    if (permission == LocationPermission.deniedForever) return;
-
-    Position position = await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
-    );
-
-    setState(() {
-      _currentLocation = LatLng(position.latitude, position.longitude);
-    });
-
-    if (_currentLocation != null) {
-      _mapController.move(_currentLocation!, 16);
+    final mapStateProvider =
+        Provider.of<MapStateProvider>(context, listen: false);
+    await mapStateProvider.getCurrentLocation();
+    if (mapStateProvider.currentLocation != null) {
+      _mapController.move(mapStateProvider.currentLocation!, 16);
     }
   }
 
-  void _loadMarkers() {
+  void _drawMarkers() {
     try {
       final lugaresDeInteresService =
           Provider.of<LugarDeInteresService>(context, listen: false);
@@ -83,7 +63,8 @@ class _BackgroundMapState extends State<BackgroundMap> {
               (coordenada) {
                 final iconData = _getIconForLugar(lugar.tipoLugar!.nombreTipo!);
                 final color = _getColorForLugar(lugar.tipoLugar!.nombreTipo!);
-                final pageProvider = Provider.of<PageProvider>(context, listen: false);
+                final pageProvider =
+                    Provider.of<PageProvider>(context, listen: false);
                 return Marker(
                   point: LatLng(coordenada.latitud!, coordenada.longitud!),
                   width: 40.w,
@@ -116,62 +97,60 @@ class _BackgroundMapState extends State<BackgroundMap> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PageProvider>(
-      builder: (context, pageProvider, child) {
-        return Stack(
-          children: [
-            Opacity(
-              opacity: 1,
-              child: FlutterMap(
-                mapController: _mapController,
-                options: MapOptions(
-                    initialCenter: _currentLocation ?? LatLng(0, 0),
-                    initialZoom: 14,
-                    minZoom: 4,
-                    interactionOptions: const InteractionOptions(
-                      flags: ~InteractiveFlag.doubleTapZoom,
-                    ),
-                    onTap: (tapPosition, latlng) {
-                      pageProvider.clearScreen();
-                    }),
-                children: [
-                  TileLayer(
-                    tileProvider: _tileProvider,
-                    urlTemplate:
-                        'https://api.mapbox.com/styles/v1/${pageProvider.currentMapStyle}/tiles/{z}/{x}/{y}?access_token=$accessToken',
-                    additionalOptions: {
-                      'access_token': accessToken,
-                    },
-                  ),
-                  if (_currentLocation != null)
-                    CircleLayer(
-                      circles: [
-                        CircleMarker(
-                          point: _currentLocation!,
-                          color: Colors.blue.withOpacity(0.5),
-                          borderStrokeWidth: 2.r,
-                          borderColor: Colors.blue,
-                          radius: 10.r,
-                        ),
-                      ],
-                    ),
-                  MarkerLayer(markers: _markers),
-                  if (_routePoints.isNotEmpty)
-                    PolylineLayer(
-                      polylines: [
-                        Polyline(
-                          points: _routePoints,
-                          color: Colors.blue,
-                          strokeWidth: 4.0,
-                        ),
-                      ],
-                    ),
-                ],
+    final mapStateProvider = Provider.of<MapStateProvider>(context, listen:false);
+    final pageProvider = Provider.of<PageProvider>(context, listen:false);
+    return Stack(
+      children: [
+        Opacity(
+          opacity: 1,
+          child: FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+                initialCenter: mapStateProvider.currentLocation ?? LatLng(0, 0),
+                initialZoom: 14,
+                minZoom: 4,
+                interactionOptions: const InteractionOptions(
+                  flags: ~InteractiveFlag.doubleTapZoom,
+                ),
+                onTap: (tapPosition, latlng) {
+                  pageProvider.clearScreen();
+                }),
+            children: [
+              TileLayer(
+                tileProvider: _tileProvider,
+                urlTemplate:
+                    'https://api.mapbox.com/styles/v1/${pageProvider.currentMapStyle}/tiles/{z}/{x}/{y}?access_token=$accessToken',
+                additionalOptions: {
+                  'access_token': accessToken,
+                },
               ),
-            ),
-          ],
-        );
-      },
+              if (mapStateProvider.currentLocation != null)
+                CircleLayer(
+                  circles: [
+                    CircleMarker(
+                      point: mapStateProvider.currentLocation!,
+                      color: Colors.blue.withOpacity(0.5),
+                      borderStrokeWidth: 2.r,
+                      borderColor: Colors.blue,
+                      radius: 10.r,
+                    ),
+                  ],
+                ),
+              MarkerLayer(markers: _markers),
+              if (mapStateProvider.routePoints.isNotEmpty)
+                PolylineLayer(
+                  polylines: [
+                    Polyline(
+                      points: mapStateProvider.routePoints,
+                      color: Colors.blue,
+                      strokeWidth: 4.0,
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -213,33 +192,17 @@ class _BackgroundMapState extends State<BackgroundMap> {
     }
   }
 
-  Future<void> _getRoute(LatLng origin, LatLng destination) async {
-    final response = await http.get(
-      Uri.parse(
-        'https://api.mapbox.com/directions/v5/mapbox/driving/${origin.longitude},${origin.latitude};${destination.longitude},${destination.latitude}?geometries=geojson&access_token=$accessToken',
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final coordinates = data['routes'][0]['geometry']['coordinates'];
-
-      setState(() {
-        _routePoints = coordinates
-            .map<LatLng>((coord) => LatLng(coord[1], coord[0]))
-            .toList();
-      });
-    } else {
-      throw Exception('Error al obtener la ruta: ${response.reasonPhrase}');
-    }
-  }
-
-  void getRouteTo(LatLng destination) {
-    if (_currentLocation != null) {
-      _getRoute(_currentLocation!, destination);
-    } else {
-      debugPrint(
-          'No se puede obtener la ruta: ubicación actual no disponible.');
+  void getRouteTo(LatLng destination, BuildContext context) {
+    if (context.mounted) {
+      final mapStateProvider =
+          Provider.of<MapStateProvider>(context, listen: false);
+      if (mapStateProvider.currentLocation != null) {
+        mapStateProvider.getRouteTo(
+            destination, mapStateProvider.currentLocation!);
+      } else {
+        debugPrint(
+            'No se puede obtener la ruta: ubicación actual no disponible.');
+      }
     }
   }
 }

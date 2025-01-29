@@ -33,7 +33,6 @@ class _CuentaPageState extends State<CuentaPage> {
     email = await _userData.email;
   }
 
-
   void _showLanguageOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -44,7 +43,7 @@ class _CuentaPageState extends State<CuentaPage> {
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.grey[850]?.withOpacity(0.8),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -103,11 +102,11 @@ class _CuentaPageState extends State<CuentaPage> {
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(32, 29, 29, 1),
         title: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: Color.fromRGBO(30, 30, 30, 1),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderRadius: BorderRadius.all(Radius.circular(10.r)),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
           child: Text(
             AppLocalizations.of(context)!.translate('account'),
             style: TextStyle(
@@ -138,10 +137,11 @@ class _CuentaPageState extends State<CuentaPage> {
                 // User profile section
                 Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 30,
+                    CircleAvatar(
+                      radius: 30.r,
                       backgroundColor: Colors.white,
-                      child: Icon(Icons.person, size: 40, color: Colors.black),
+                      child:
+                          Icon(Icons.person, size: 40.w, color: Colors.black),
                     ),
                     SizedBox(width: 10.w),
                     FutureBuilder(
@@ -152,7 +152,8 @@ class _CuentaPageState extends State<CuentaPage> {
                           return const CircularProgressIndicator();
                         }
                         if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
+                          return Expanded(
+                              child: Text('Error: ${snapshot.error}'));
                         }
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,7 +267,8 @@ class _CuentaPageState extends State<CuentaPage> {
                           '◦ ${AppLocalizations.of(context)!.translate('language')}',
                           style: TextStyle(color: Colors.white)),
                       onTap: () {
-                        _showLanguageOptions(context); // Llama a la función para cambiar idioma
+                        _showLanguageOptions(
+                            context); // Llama a la función para cambiar idioma
                       },
                     ),
                     ListTile(
@@ -316,32 +318,38 @@ class _CuentaPageState extends State<CuentaPage> {
                     child: ElevatedButton(
                       onPressed: () async {
                         await usuarioService.cerrarSesion(context);
-
                         Navigator.of(context).pushAndRemoveUntil(
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              // Cambiar Offset a (-1.0, 0.0) para deslizar hacia la izquierda
-                              const begin = Offset(-1.0, 0.0);
-                              const end = Offset.zero;
-                              const curve = Curves.easeInOut;
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      LoginPage(),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                // Cambiar Offset a (-1.0, 0.0) para deslizar hacia la izquierda
+                                const begin = Offset(-1.0, 0.0);
+                                const end = Offset.zero;
+                                const curve = Curves.easeInOut;
 
-                              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                var tween = Tween(begin: begin, end: end)
+                                    .chain(CurveTween(curve: curve));
 
-                              return SlideTransition(
-                                position: animation.drive(tween),
-                                child: child,
-                              );
-                            },
-                            transitionDuration: const Duration(milliseconds: 250),
-                          ),
-                          (route) => false
-                        );
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                              transitionDuration:
+                                  const Duration(milliseconds: 250),
+                            ),
+                            (route) => false
+                            );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
-                        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 4.w),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 12.h, horizontal: 4.w),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.r),
                         ),
                       ),
                       child: const Text("Cerrar sesión",
@@ -351,7 +359,8 @@ class _CuentaPageState extends State<CuentaPage> {
                 ),
                 SizedBox(height: 30.h),
                 Align(
-                  alignment: Alignment.center, // Usa 'Alignment.center' en lugar de 'Center()'
+                  alignment: Alignment
+                      .center, // Usa 'Alignment.center' en lugar de 'Center()'
                   child: SizedBox(
                     width: 150.w,
                     child: const Divider(color: Colors.white),

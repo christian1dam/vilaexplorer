@@ -19,14 +19,17 @@ class UsuarioService extends ChangeNotifier {
   // String? get error => _error;
   // Usuario getUsuario() => allUserData;
 
-  Future<bool> signupUsuario(String nombre, String email, String password, String assertPassword) async {
-    
+  Future<bool> signupUsuario(String nombre, String email, String password,
+      String assertPassword) async {
     const String endpoint = '/auth/signup?rol=Cliente';
     late UsuarioAuth usuario;
 
     password != assertPassword
         ? throw InvalidPasswordException("Las contraseñas no coinciden")
-        : usuario = UsuarioAuth(username: nombre, email: email, password: password); //TODO -> SE DEBEN MANEJAR DESDE EL FORMULARIO
+        : usuario = UsuarioAuth(
+            username: nombre,
+            email: email,
+            password: password); //TODO -> SE DEBEN MANEJAR DESDE EL FORMULARIO
 
     try {
       final response = await _apiClient.post(endpoint, body: usuario.toMap());
@@ -40,7 +43,7 @@ class UsuarioService extends ChangeNotifier {
     return false;
   }
 
-  Future<void> loginUsuario(String email, String password) async {
+  Future<bool> loginUsuario(String email, String password) async {
     const String endpoint = '/auth/signin';
     UsuarioAuth usuario = UsuarioAuth(email: email, password: password);
 
@@ -58,10 +61,13 @@ class UsuarioService extends ChangeNotifier {
         await userPreferences.setUsername(data['username']);
         await userPreferences.setEmail(data['email']);
 
+        return true;
       }
     } catch (e) {
-      throw Exception("Excepción al iniciar sesión: $e");
+      debugPrint(e.toString());
+      throw Exception("Excepción al iniciar sesión");
     }
+    return false;
   }
 
   Future<void> cerrarSesion(BuildContext context) async {
@@ -69,6 +75,5 @@ class UsuarioService extends ChangeNotifier {
       Provider.of<PageProvider>(context, listen: false).clearScreen();
       await userPreferences.storage.deleteAll();
     }
-    return;
   }
 }

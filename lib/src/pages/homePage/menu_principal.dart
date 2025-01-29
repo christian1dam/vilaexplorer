@@ -60,7 +60,8 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                       spreadRadius: 1,
                       offset: Offset(0, 1),
                     ),
-                  ]),
+                  ],
+                ),
               height: 500.h,
               child: Column(
                 children: <Widget>[

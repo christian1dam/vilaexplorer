@@ -50,7 +50,7 @@ class UserPreferences {
 
   Future<bool> get sesion async {
     final estadoSesion = await storage.read(key: 'estadoSesion');
-    return estadoSesion == 'true';
+    return estadoSesion == 'true' ? true : false;
   }
 
   Future<String> get username async {

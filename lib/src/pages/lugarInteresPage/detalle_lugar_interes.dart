@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/models/tipo_entidad.dart';
+import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/favorito_service.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
@@ -280,13 +281,14 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                           ),
                         ),
                         onPressed: () {
-                          final mapViewState = mapViewKey.currentState;
-                          if (mapViewState != null) {
-                            mapViewState.getRouteTo(
+                          final mapProvider = Provider.of<MapStateProvider>(context, listen: false);
+                          if (mapProvider.currentLocation != null) {
+                            mapProvider.getRouteTo(
                               LatLng(
                                 _lugarDeInteres.coordenadas!.first.latitud!,
                                 _lugarDeInteres.coordenadas!.first.longitud!,
                               ),
+                              mapProvider.currentLocation!
                             );
                           } else {
                             debugPrint(

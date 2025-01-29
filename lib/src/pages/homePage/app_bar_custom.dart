@@ -26,15 +26,13 @@ class AppBarCustom extends StatelessWidget {
         padding: EdgeInsets.only(left: 5.w, right: 10.w),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 1.h),
-          decoration: BoxDecoration(
-              color: Color.fromARGB(255, 24, 24, 24),
+          decoration: BoxDecoration(color: Color.fromARGB(255, 24, 24, 24),
               borderRadius: BorderRadius.all(Radius.circular(15.r))),
           child: GestureDetector(
             onTap: () async {
               return showModalBottomSheet(
                 context: context,
-                sheetAnimationStyle:
-                    AnimationStyle(duration: Duration(milliseconds: 400)),
+                sheetAnimationStyle: AnimationStyle(duration: Duration(milliseconds: 400)),
                 builder: (BuildContext context) {
                   return MenuPrincipal();
                 },
