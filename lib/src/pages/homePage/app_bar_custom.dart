@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
-import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class AppBarCustom extends StatelessWidget {

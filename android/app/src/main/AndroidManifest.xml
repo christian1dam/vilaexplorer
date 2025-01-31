@@ -4,6 +4,9 @@
     <!-- Include only if your app benefits from precise location access. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <!-- Permission to access the internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    
     <application
         android:label="vilaexplorer"
         android:name="${applicationName}"

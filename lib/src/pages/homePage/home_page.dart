@@ -9,6 +9,7 @@ import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'package:vilaexplorer/src/pages/homePage/map_view.dart';
+import 'package:vilaexplorer/src/pages/homePage/routes.dart';
 import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.dart';
 import 'package:vilaexplorer/src/pages/lugarInteresPage/lugar_interes.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/detalle_fiesta_tradicion.dart';
@@ -100,6 +101,17 @@ class MyHomePage extends StatelessWidget {
             ),
           ),
 
+          // Página de rutas guardadas superpuesta al mapa
+          Positioned.fill(
+            child: Offstage(
+              offstage: pageProvider.currentPage != 'routes',
+              child: RoutesPage(
+                onClose: () => pageProvider.changePage('map'), // Volver al mapa al cerrar
+              ),
+            ),
+          ),
+
+
           if (pageProvider.selectedLugarInteres != null)
             Positioned.fill(
               child: Offstage(
@@ -130,23 +142,42 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
 
-          // FloatingActionButton para cambiar el estilo del mapa
-          if (pageProvider.currentPage == 'map')
-            Positioned(
-              bottom: 75.h,
-              right: 20.w,
-              child: FloatingActionButton(
-                backgroundColor: const Color.fromARGB(230, 50, 50, 50),
-                onPressed: () {
-                  pageProvider.toggleMapStyle();
-                },
-                tooltip: "Cambiar estilo del mapa",
-                child: const Icon(
-                  Icons.map,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+          // FloatingActionButton para guardar rutas
+if (pageProvider.currentPage == 'map')
+  Positioned(
+    bottom: 145.h, // Colocado encima del botón de cambiar estilo
+    right: 20.w,
+    child: FloatingActionButton(
+      backgroundColor: const Color.fromARGB(230, 50, 50, 50),
+      onPressed: () {
+        pageProvider.changePage('routes'); // Ir a la página de rutas guardadas
+      },
+      tooltip: "Guardar ruta",
+      child: const Icon(
+        Icons.route_rounded,
+        color: Colors.white,
+      ),
+    ),
+  ),
+
+// FloatingActionButton para cambiar el estilo del mapa
+if (pageProvider.currentPage == 'map')
+  Positioned(
+    bottom: 75.h,
+    right: 20.w,
+    child: FloatingActionButton(
+      backgroundColor: const Color.fromARGB(230, 50, 50, 50),
+      onPressed: () {
+        pageProvider.toggleMapStyle();
+      },
+      tooltip: "Cambiar estilo del mapa",
+      child: const Icon(
+        Icons.map,
+        color: Colors.white,
+      ),
+    ),
+  ),
+
         ],
       ),
     );

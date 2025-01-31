@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
+import 'package:vilaexplorer/src/pages/cuentaPage/contacto.dart';
+import 'package:vilaexplorer/src/pages/cuentaPage/editar_perfil.dart';
+import 'package:vilaexplorer/src/pages/cuentaPage/preguntas_frecuentes.dart';
+import 'package:vilaexplorer/src/pages/cuentaPage/privacidad.dart';
+import 'package:vilaexplorer/src/pages/cuentaPage/terminos_condiciones.dart';
 import 'package:vilaexplorer/src/pages/login_page.dart';
 
 class CuentaPage extends StatefulWidget {
@@ -94,6 +101,39 @@ class _CuentaPageState extends State<CuentaPage> {
     );
   }
 
+ void _showRedirectConfirmation(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.translate('redirect_warning')),
+          content: Text(AppLocalizations.of(context)!.translate('redirect_message')),
+          actions: <Widget>[
+            TextButton(
+              child: Text(AppLocalizations.of(context)!.translate('cancel')),
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el cuadro de diálogo
+              },
+            ),
+            TextButton(
+              child: Text(AppLocalizations.of(context)!.translate('accept')),
+              onPressed: () async {
+                Navigator.of(context).pop(); // Cierra el cuadro de diálogo
+                // Redirige al enlace de la ciudad
+                final url = Uri.parse('https://www.villajoyosa.com/');
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url);
+                } else {
+                  print('Could not launch $url');
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final usuarioService = Provider.of<UsuarioService>(context);
@@ -169,34 +209,13 @@ class _CuentaPageState extends State<CuentaPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  '${AppLocalizations.of(context)!.translate('password')}:',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-                const SizedBox(height: 5),
-                TextFormField(
-                  initialValue: usuarioService.allUserData.password,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    hintText: "******",
-                    hintStyle: TextStyle(color: Colors.white54),
-                    fillColor: Color.fromARGB(255, 47, 42, 42),
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                  ),
-                  style: const TextStyle(color: Colors.white),
-                ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 50),
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      // Lógica para editar el perfil
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => EditarPerfilPage()),
+                        );
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
@@ -211,7 +230,7 @@ class _CuentaPageState extends State<CuentaPage> {
                         style: TextStyle(color: Colors.white)),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 Text(
                   AppLocalizations.of(context)!.translate('help'),
                   style: TextStyle(
@@ -230,15 +249,24 @@ class _CuentaPageState extends State<CuentaPage> {
                       title: Text(
                           '◦ ${AppLocalizations.of(context)!.translate('frequent_questions')}',
                           style: TextStyle(color: Colors.white)),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => PreguntasFrecuentesPage()),
+                        );
+                      },
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text(
                           '◦ ${AppLocalizations.of(context)!.translate('contact')}',
                           style: TextStyle(color: Colors.white)),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => ContactoPage()),
+                        );
+                      },
                     ),
+
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -268,9 +296,24 @@ class _CuentaPageState extends State<CuentaPage> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text(
-                          '◦ ${AppLocalizations.of(context)!.translate('news')}',
+                          '◦ ${AppLocalizations.of(context)!.translate('terms_conditions')}',
                           style: TextStyle(color: Colors.white)),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => TerminosCondicionesPage()),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                          '◦ ${AppLocalizations.of(context)!.translate('privacy_policy')}',
+                          style: TextStyle(color: Colors.white)),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => PrivacidadPage()),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -291,20 +334,17 @@ class _CuentaPageState extends State<CuentaPage> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text(
-                          '◦ ${AppLocalizations.of(context)!.translate('terms_conditions')}',
+                          '◦ ${AppLocalizations.of(context)!.translate('news')}',
                           style: TextStyle(color: Colors.white)),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(
-                          '◦ ${AppLocalizations.of(context)!.translate('privacy_policy')}',
-                          style: TextStyle(color: Colors.white)),
-                      onTap: () {},
+                      onTap: () {
+                        _showRedirectConfirmation(context); // Llama a la función para mostrar el cuadro de diálogo
+                      },
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+
+
+                const SizedBox(height: 70),
                 Align(
                   alignment: Alignment.center,
                   child: SizedBox(
@@ -337,19 +377,19 @@ class _CuentaPageState extends State<CuentaPage> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        backgroundColor: const Color.fromARGB(255, 255, 99, 99),
                         padding: const EdgeInsets.symmetric(
                             vertical: 12, horizontal: 40),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      child: const Text("Cerrar sesión",
+                      child: Text(AppLocalizations.of(context)!.translate('signout'),
                           style: TextStyle(color: Colors.white)),
                     ),
                   ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 10),
                 Align(
                   alignment: Alignment
                       .center, // Usa 'Alignment.center' en lugar de 'Center()'
