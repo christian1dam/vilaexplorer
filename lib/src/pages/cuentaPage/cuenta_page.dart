@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
+import 'package:vilaexplorer/src/pages/cuentaPage/contacto.dart';
+import 'package:vilaexplorer/src/pages/cuentaPage/editar_perfil.dart';
+import 'package:vilaexplorer/src/pages/cuentaPage/preguntas_frecuentes.dart';
+import 'package:vilaexplorer/src/pages/cuentaPage/privacidad.dart';
+import 'package:vilaexplorer/src/pages/cuentaPage/terminos_condiciones.dart';
 import 'package:vilaexplorer/src/pages/login_page.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
@@ -90,6 +96,39 @@ class _CuentaPageState extends State<CuentaPage> {
       },
       leading: Image.asset(flagPath, height: 60.h, width: 60.w),
       title: Text(language, style: TextStyle(color: Colors.white)),
+    );
+  }
+
+ void _showRedirectConfirmation(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.translate('redirect_warning')),
+          content: Text(AppLocalizations.of(context)!.translate('redirect_message')),
+          actions: <Widget>[
+            TextButton(
+              child: Text(AppLocalizations.of(context)!.translate('cancel')),
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el cuadro de diálogo
+              },
+            ),
+            TextButton(
+              child: Text(AppLocalizations.of(context)!.translate('accept')),
+              onPressed: () async {
+                Navigator.of(context).pop(); // Cierra el cuadro de diálogo
+                // Redirige al enlace de la ciudad
+                final url = Uri.parse('https://www.villajoyosa.com/');
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url);
+                } else {
+                  print('Could not launch $url');
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -201,7 +240,9 @@ class _CuentaPageState extends State<CuentaPage> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      // Lógica para editar el perfil
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => EditarPerfilPage()),
+                        );
                     },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(
@@ -216,6 +257,7 @@ class _CuentaPageState extends State<CuentaPage> {
                         style: TextStyle(color: Colors.white)),
                   ),
                 ),
+                SizedBox(height: 20.h),
                 SizedBox(height: 20.h),
                 Text(
                   AppLocalizations.of(context)!.translate('help'),
@@ -235,15 +277,24 @@ class _CuentaPageState extends State<CuentaPage> {
                       title: Text(
                           '◦ ${AppLocalizations.of(context)!.translate('frequent_questions')}',
                           style: TextStyle(color: Colors.white)),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => PreguntasFrecuentesPage()),
+                        );
+                      },
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text(
                           '◦ ${AppLocalizations.of(context)!.translate('contact')}',
                           style: TextStyle(color: Colors.white)),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => ContactoPage()),
+                        );
+                      },
                     ),
+
                   ],
                 ),
                 SizedBox(height: 20.h),
@@ -273,9 +324,24 @@ class _CuentaPageState extends State<CuentaPage> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text(
-                          '◦ ${AppLocalizations.of(context)!.translate('news')}',
+                          '◦ ${AppLocalizations.of(context)!.translate('terms_conditions')}',
                           style: TextStyle(color: Colors.white)),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => TerminosCondicionesPage()),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                          '◦ ${AppLocalizations.of(context)!.translate('privacy_policy')}',
+                          style: TextStyle(color: Colors.white)),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => PrivacidadPage()),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -296,16 +362,11 @@ class _CuentaPageState extends State<CuentaPage> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text(
-                          '◦ ${AppLocalizations.of(context)!.translate('terms_conditions')}',
+                          '◦ ${AppLocalizations.of(context)!.translate('news')}',
                           style: TextStyle(color: Colors.white)),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(
-                          '◦ ${AppLocalizations.of(context)!.translate('privacy_policy')}',
-                          style: TextStyle(color: Colors.white)),
-                      onTap: () {},
+                      onTap: () {
+                        _showRedirectConfirmation(context); // Llama a la función para mostrar el cuadro de diálogo
+                      },
                     ),
                   ],
                 ),
@@ -344,19 +405,19 @@ class _CuentaPageState extends State<CuentaPage> {
                         await UserPreferences().storage.deleteAll();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        backgroundColor: const Color.fromARGB(255, 255, 99, 99),
                         padding: EdgeInsets.symmetric(
-                            vertical: 12.h, horizontal: 4.w),
+                            vertical: 12.h, horizontal: 40.w),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                       ),
-                      child: const Text("Cerrar sesión",
+                      child: Text(AppLocalizations.of(context)!.translate('signout'),
                           style: TextStyle(color: Colors.white)),
                     ),
                   ),
                 ),
-                SizedBox(height: 30.h),
+                SizedBox(height: 10.h),
                 Align(
                   alignment: Alignment
                       .center, // Usa 'Alignment.center' en lugar de 'Center()'

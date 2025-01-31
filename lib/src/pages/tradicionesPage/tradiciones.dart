@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
-import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
@@ -24,6 +23,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
   String? selectedFiesta;
   bool isSearchActive = false;
   TextEditingController searchController = TextEditingController();
+  int selectedFilter = 0; // Índice del filtro seleccionado
 
   @override
   void initState() {
@@ -45,6 +45,8 @@ class _TradicionesPageState extends State<TradicionesPage> {
       isSearchActive = !isSearchActive;
       if (!isSearchActive) {
         searchController.clear();
+        // Restablecer filtro a "Todo" si se cierra la búsqueda
+        selectedFilter = 0;
       }
     });
   }
@@ -102,7 +104,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
                   height: 600.h,
                   width: size.width,
                   decoration: BoxDecoration(
-                    color: Color.fromRGBO(32, 29, 29, 0.9),
+                    color: const Color.fromRGBO(32, 29, 29, 0.9),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20.r),
                       topRight: Radius.circular(20.r),
@@ -119,14 +121,16 @@ class _TradicionesPageState extends State<TradicionesPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
-                              child: Text(
-                                AppLocalizations.of(context)!
-                                    .translate('holidays_traditions'),
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontSize: 21.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 16.0), // Ajusta el espacio que quieras a la izquierda
+                                child: Text(
+                                  AppLocalizations.of(context)!.translate('holidays_traditions'),
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontSize: 21.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
@@ -147,7 +151,25 @@ class _TradicionesPageState extends State<TradicionesPage> {
                           ],
                         ),
                       ),
-                      if (isSearchActive)
+                      if (!isSearchActive)
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 2.h),
+                          margin: EdgeInsets.only(bottom: 10.h),
+                          width: size.width - 40.w,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 55, 55, 55),
+                            borderRadius: BorderRadius.all(Radius.circular(20.r)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _buildFilterButton('Todo', 0),
+                              _buildFilterButton('Populares', 1),
+                              _buildFilterButton('Cercanos', 2),
+                            ],
+                          ),
+                        )
+                      else
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.w),
                           child: TextField(
@@ -156,8 +178,9 @@ class _TradicionesPageState extends State<TradicionesPage> {
                             decoration: InputDecoration(
                               hintText: AppLocalizations.of(context)!
                                   .translate('search_traditions'),
-                              hintStyle: TextStyle(color: Colors.white54),
-                              fillColor: Color.fromARGB(255, 47, 42, 42),
+                              hintStyle: const TextStyle(color: Colors.white54),
+                              fillColor:
+                                  const Color.fromARGB(255, 47, 42, 42),
                               filled: true,
                               border: OutlineInputBorder(
                                 borderRadius:
@@ -166,29 +189,6 @@ class _TradicionesPageState extends State<TradicionesPage> {
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 5.h, horizontal: 10.w),
                             ),
-                          ),
-                        ),
-                      if (isSearchActive) SizedBox(height: 10.h),
-                      if (!isSearchActive)
-                        Container(
-                          padding: EdgeInsets.only(top: 2.h, bottom: 2.h),
-                          margin: EdgeInsets.only(bottom: 10.h),
-                          width: size.width - 40.w,
-                          height: 40.h,
-                          decoration: BoxDecoration(
-                              color: Color.fromRGBO(36, 36, 36, 1),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20.r))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              myBotonText(AppLocalizations.of(context)!
-                                  .translate('all')),
-                              myBotonText(AppLocalizations.of(context)!
-                                  .translate('popular')),
-                              myBotonText(AppLocalizations.of(context)!
-                                  .translate('nearby')),
-                            ],
                           ),
                         ),
                       Expanded(
@@ -219,26 +219,25 @@ class _TradicionesPageState extends State<TradicionesPage> {
     );
   }
 
-  //Necesario para hacer las traducciones
-  void _changeLanguage(BuildContext context, Locale locale) {
-    setState(() {
-      MyApp.setLocale(context, locale);
-    });
-  }
-
-  SizedBox myBotonText(String texto) {
-    return SizedBox(
-      width: 110.w,
-      child: TextButton(
-        onPressed: () {},
-        style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(
-            Color.fromRGBO(45, 45, 45, 1),
-          ),
+  Widget _buildFilterButton(String text, int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedFilter = index;
+          // Agregar lógica para filtrar las tradiciones según el botón seleccionado
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+        decoration: BoxDecoration(
+          color: selectedFilter == index
+              ? Colors.grey[700]
+              : const Color.fromARGB(255, 55, 55, 55),
+          borderRadius: BorderRadius.circular(20.r),
         ),
         child: Text(
-          texto,
-          style: TextStyle(color: Colors.white, fontSize: 13.sp),
+          text,
+          style: const TextStyle(color: Colors.white),
         ),
       ),
     );

@@ -10,7 +10,59 @@ class UsuarioService {
 
   final ApiClient _apiClient = ApiClient();
 
-  Future<bool> signupUsuario(String nombre, String email, String password,
+  Future<bool> editarNombre(String nuevoNombre) async {
+    const String endpoint = '/usuario/editar/nombre';
+
+    try {
+      final response = await _apiClient.put(
+        endpoint,
+        body: {'nombre': nuevoNombre},
+      );
+
+      if (response.statusCode == 200) {
+        await userPreferences.setUsername(nuevoNombre);
+        return true;
+      } else {
+        throw Exception(
+            "Ha habido un problema de conexión con el servidor, inténtelo más tarde.");
+      }
+    } catch (e) {
+      throw Exception(
+          "Ha habido un problema de conexión con el servidor, inténtelo más tarde.");
+    }
+  }
+
+  Future<bool> editarContrasenya(
+      String nuevaContrasenya, String actualContrasenya) async {
+    const String endpoint = '/usuario/editar/contrasenya';
+
+    if (nuevaContrasenya.isEmpty || actualContrasenya.isEmpty) {
+      throw Exception('Las contraseñas no pueden estar vacías');
+    } // TODO -> ESTO SE DEBE MANEJAR DESDE LA INTERFAZ Y NO DESDE LOS SERVICIOS
+
+    try {
+      final response = await _apiClient.put(
+        endpoint,
+        body: {
+          'contrasenya_actual': actualContrasenya,
+          'nueva_contrasenya': nuevaContrasenya,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // AHORA NO SE GUARDAN LAS CONTRASEÑAS DEL USUARIO EN EL CLIENTE
+        return true;
+      } else {
+        debugPrint('Error al actualizar la contraseña: ${response.body}');
+        throw Exception("Error al actualizar la contraseña: ${response.body}");
+      }
+    } catch (e) {
+      debugPrint('Excepción al actualizar la contraseña: $e');
+      throw Exception("Error al actualizar la contraseña: $e");
+    }
+  }
+
+  Future<bool> signUp(String nombre, String email, String password,
       String assertPassword) async {
     const String endpoint = '/auth/signup?rol=Cliente';
     late UsuarioAuth usuario;
@@ -34,7 +86,7 @@ class UsuarioService {
     return false;
   }
 
-  Future<bool> loginUsuario(String email, String password) async {
+  Future<bool> logIn(String email, String password) async {
     const String endpoint = '/auth/signin';
     UsuarioAuth usuario = UsuarioAuth(email: email, password: password);
 

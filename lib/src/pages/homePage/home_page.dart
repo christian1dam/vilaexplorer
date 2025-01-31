@@ -9,6 +9,7 @@ import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
 import 'package:vilaexplorer/src/pages/homePage/map_page.dart';
+import 'package:vilaexplorer/src/pages/homePage/routes.dart';
 import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.dart';
 import 'package:vilaexplorer/src/pages/lugarInteresPage/lugar_interes.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/detalle_fiesta_tradicion.dart';
@@ -46,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Stack(
         children: [
           BackgroundMap(),
-          
+
           if (isMapLoaded)
             Positioned(
               top: 0,
@@ -91,6 +92,17 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
 
+          // Página de rutas guardadas superpuesta al mapa
+          Positioned.fill(
+            child: Offstage(
+              offstage: pageProvider.currentPage != 'routes',
+              child: RoutesPage(
+                onClose: () =>
+                    pageProvider.changePage('map'), // Volver al mapa al cerrar
+              ),
+            ),
+          ),
+
           if (pageProvider.idLugarDeInteres != null)
             Positioned.fill(
               child: Offstage(
@@ -117,7 +129,27 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            
+
+
+          if (pageProvider.currentPage == 'map'&& pageProvider.idLugarDeInteres == null)
+            Positioned(
+              bottom: 145.h, // Colocado encima del botón de cambiar estilo
+              right: 20.w,
+              child: FloatingActionButton(
+                backgroundColor: const Color.fromARGB(230, 50, 50, 50),
+                onPressed: () {
+                  pageProvider.changePage(
+                      'routes'); // Ir a la página de rutas guardadas
+                },
+                tooltip: "Guardar ruta",
+                child: const Icon(
+                  Icons.route_rounded,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+
+
           if (pageProvider.currentPage == 'map' &&
               pageProvider.idLugarDeInteres == null)
             Positioned(

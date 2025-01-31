@@ -75,11 +75,6 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Container(
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(30, 30, 30, 1),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.r)),
-                              ),
                               margin: const EdgeInsets.only(top: 10),
                               width: MediaQuery.of(context).size.width * 0.5,
                               height: 35.h,

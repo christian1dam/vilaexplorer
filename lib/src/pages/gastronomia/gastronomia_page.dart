@@ -114,18 +114,17 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                                 ),
                                 SizedBox(width: 17.w),
                                 Container(
-                                  width: size.width * 0.38,
+                                  width: size.width * 0.45,
                                   height: 35.h,
                                   alignment: Alignment.center,
-                                  child: Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('gastronomy'),
+                                    child: Text(
+                                    AppLocalizations.of(context)!.translate('gastronomy'),
                                     style: TextStyle(
                                       fontSize: 23.sp,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
                                     ),
-                                  ),
+                                  ),                                  
                                 ),
                                 const Spacer(),
                                 Row(
