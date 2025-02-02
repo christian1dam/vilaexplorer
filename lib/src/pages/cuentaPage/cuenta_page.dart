@@ -5,7 +5,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
-import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/contacto.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/editar_perfil.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/preguntas_frecuentes.dart';
@@ -24,9 +23,6 @@ class CuentaPage extends StatefulWidget {
 class _CuentaPageState extends State<CuentaPage> {
   final _userData = UserPreferences();
   late Future<void> _userDataFuture;
-  late String username;
-  late String email;
-
   @override
   void initState() {
     super.initState();
@@ -34,8 +30,8 @@ class _CuentaPageState extends State<CuentaPage> {
   }
 
   Future<void> _loadUserData() async {
-    username = await _userData.username;
-    email = await _userData.email;
+    await _userData.username;
+    await _userData.email;
   }
 
   void _showLanguageOptions(BuildContext context) {
@@ -45,7 +41,7 @@ class _CuentaPageState extends State<CuentaPage> {
       backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical:20.h),
           decoration: BoxDecoration(
             color: Colors.grey[850]?.withOpacity(0.8),
             borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
@@ -135,6 +131,7 @@ class _CuentaPageState extends State<CuentaPage> {
   @override
   Widget build(BuildContext context) {
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
+    final prefsProvider = Provider.of<UserPreferences>(context);
     
     return Scaffold(
       appBar: AppBar(
@@ -151,7 +148,7 @@ class _CuentaPageState extends State<CuentaPage> {
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
               color: Colors.white,
-              fontFamily: 'Poppins',
+              
             ),
           ),
         ),
@@ -167,7 +164,7 @@ class _CuentaPageState extends State<CuentaPage> {
         color: const Color.fromRGBO(32, 29, 29, 1),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.symmetric(horizontal:16.w, vertical:16.h),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,13 +194,13 @@ class _CuentaPageState extends State<CuentaPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              username,
+                              prefsProvider.nombre,
                               style: TextStyle(
                                   fontSize: 20.sp, color: Colors.white),
                             ),
                             SizedBox(height: 5.h),
                             Text(
-                              email,
+                              prefsProvider.correo,
                               style: TextStyle(
                                   fontSize: 16.sp, color: Colors.white70),
                             ),
@@ -275,7 +272,7 @@ class _CuentaPageState extends State<CuentaPage> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text(
-                          '◦ ${AppLocalizations.of(context)!.translate('frequent_questions')}',
+                          AppLocalizations.of(context)!.translate('frequent_questions'),
                           style: TextStyle(color: Colors.white)),
                       onTap: () {
                         Navigator.of(context).push(
@@ -286,7 +283,7 @@ class _CuentaPageState extends State<CuentaPage> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text(
-                          '◦ ${AppLocalizations.of(context)!.translate('contact')}',
+                          AppLocalizations.of(context)!.translate('contact'),
                           style: TextStyle(color: Colors.white)),
                       onTap: () {
                         Navigator.of(context).push(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/src/widgets/footer.dart';
 
@@ -16,7 +17,7 @@ class TerminosCondicionesPage extends StatelessWidget {
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.white, // Título en blanco
-            fontFamily: 'Poppins',
+            
           ),
         ),
         centerTitle: true,
@@ -34,7 +35,7 @@ class TerminosCondicionesPage extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.symmetric(horizontal:16.w, vertical:16.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

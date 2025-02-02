@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/src/widgets/footer.dart';
 import 'cuenta_page.dart'; // Asegúrate de importar la página de cuenta
@@ -45,7 +46,7 @@ class _ContactoPageState extends State<ContactoPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => CuentaPage(onClose: () {})),
+              MaterialPageRoute(builder: (context) => CuentaPage()),
             );
           },
         ),
@@ -59,7 +60,7 @@ class _ContactoPageState extends State<ContactoPage> {
         children: [
           Container(
             color: const Color.fromRGBO(32, 29, 29, 1),
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.symmetric(horizontal:16.w, vertical:16.h),
             child: Form(
               key: _formKey,
               child: Column(

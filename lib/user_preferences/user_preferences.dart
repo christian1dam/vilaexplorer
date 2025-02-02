@@ -1,9 +1,16 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class UserPreferences {
+class UserPreferences extends ChangeNotifier{
   static final UserPreferences _instance = UserPreferences._internal();
   late final FlutterSecureStorage _storage;
   FlutterSecureStorage get storage => _storage;
+  String _nombre = '';
+  String _email = '';
+
+  String get nombre => _nombre;
+  String get correo => _email;
+
 
   factory UserPreferences() {
     return _instance;
@@ -15,6 +22,12 @@ class UserPreferences {
 
   UserPreferences._internal() {
     _storage = FlutterSecureStorage(aOptions: _getAndroidOptions());
+  }
+
+  Future<void> loadUserData() async {
+    _nombre = await _storage.read(key: 'username') ?? 'Usuario desconocido';
+    _email = await _storage.read(key: 'email') ?? 'Email no disponible';
+    notifyListeners();
   }
 
   Future<String> get typeToken async {
@@ -32,7 +45,7 @@ class UserPreferences {
   }
 
   Future<void> setToken(String token) async {
-    await _storage.write(key: 'token', value: token);
+    await _storage.write(key: 'token', value: token); 
   }
 
   Future<void> setId(int id) async {
@@ -60,6 +73,8 @@ class UserPreferences {
 
   Future<void> setUsername(String username) async {
     await _storage.write(key: 'username', value: username);
+    _nombre = username;
+    notifyListeners();
   }
 
     Future<String> get email async {
@@ -69,5 +84,7 @@ class UserPreferences {
 
   Future<void> setEmail(String email) async {
     await _storage.write(key: 'email', value: email);
+    _email = email;
+    notifyListeners();
   }
 }

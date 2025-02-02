@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/exception/invalid_password_exception.dart';
-import 'package:vilaexplorer/models/usuario/usuario_auth.dart';
+import 'package:vilaexplorer/models/usuario/usuario.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class UsuarioService {
@@ -10,66 +10,42 @@ class UsuarioService {
 
   final ApiClient _apiClient = ApiClient();
 
-  Future<bool> editarNombre(String nuevoNombre) async {
-    const String endpoint = '/usuario/editar/nombre';
-
+  Future<bool> actualizarUsuario(Usuario usuario) async {
+    final int userID = await userPreferences.id;
+    final String endpoint = '/usuario/update/$userID';
     try {
-      final response = await _apiClient.put(
-        endpoint,
-        body: {'nombre': nuevoNombre},
-      );
-
+      final response = await _apiClient.put(endpoint, body: usuario.toMap());
       if (response.statusCode == 200) {
-        await userPreferences.setUsername(nuevoNombre);
+        debugPrint("RESPUESTA AL PUT: ${jsonDecode(utf8.decode(response.bodyBytes))}");
+        final data = jsonDecode(utf8.decode(response.bodyBytes));
+        debugPrint("Valor de data['nombre']: ${data['nombre']}");
+        if (data['nombre'].toString().isNotEmpty) {
+          debugPrint("Nombre recibido: ${data['nombre']}"); 
+          await userPreferences.setUsername(data['nombre']);
+          debugPrint(await userPreferences.username);
+        }
+        if (data['email'] != null) {
+          await userPreferences.setEmail(data['email']);
+        }
         return true;
       } else {
-        throw Exception(
-            "Ha habido un problema de conexión con el servidor, inténtelo más tarde.");
+        debugPrint('Error al actualizar el usuario: ${response.body}');
+        throw Exception("Error al actualizar el usuario: ${response.body}");
       }
     } catch (e) {
-      throw Exception(
-          "Ha habido un problema de conexión con el servidor, inténtelo más tarde.");
-    }
-  }
-
-  Future<bool> editarContrasenya(
-      String nuevaContrasenya, String actualContrasenya) async {
-    const String endpoint = '/usuario/editar/contrasenya';
-
-    if (nuevaContrasenya.isEmpty || actualContrasenya.isEmpty) {
-      throw Exception('Las contraseñas no pueden estar vacías');
-    } // TODO -> ESTO SE DEBE MANEJAR DESDE LA INTERFAZ Y NO DESDE LOS SERVICIOS
-
-    try {
-      final response = await _apiClient.put(
-        endpoint,
-        body: {
-          'contrasenya_actual': actualContrasenya,
-          'nueva_contrasenya': nuevaContrasenya,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        // AHORA NO SE GUARDAN LAS CONTRASEÑAS DEL USUARIO EN EL CLIENTE
-        return true;
-      } else {
-        debugPrint('Error al actualizar la contraseña: ${response.body}');
-        throw Exception("Error al actualizar la contraseña: ${response.body}");
-      }
-    } catch (e) {
-      debugPrint('Excepción al actualizar la contraseña: $e');
-      throw Exception("Error al actualizar la contraseña: $e");
+      debugPrint('Excepción al actualizar el usuario: $e');
+      throw Exception("Error al actualizar el usuario: $e");
     }
   }
 
   Future<bool> signUp(String nombre, String email, String password,
       String assertPassword) async {
     const String endpoint = '/auth/signup?rol=Cliente';
-    late UsuarioAuth usuario;
+    late Usuario usuario;
 
     password != assertPassword
         ? throw InvalidPasswordException("Las contraseñas no coinciden")
-        : usuario = UsuarioAuth(
+        : usuario = Usuario(
             username: nombre,
             email: email,
             password: password); //TODO -> SE DEBEN MANEJAR DESDE EL FORMULARIO
@@ -88,11 +64,10 @@ class UsuarioService {
 
   Future<bool> logIn(String email, String password) async {
     const String endpoint = '/auth/signin';
-    UsuarioAuth usuario = UsuarioAuth(email: email, password: password);
+    Usuario usuario = Usuario(email: email, password: password);
 
     try {
-      final response =
-          await _apiClient.post(endpoint, body: usuario.loginRequest());
+      final response = await _apiClient.post(endpoint, body: usuario.toMap());
 
       if (response.statusCode == 200) {
         final data = jsonDecode(utf8.decode(response.bodyBytes));
@@ -109,6 +84,23 @@ class UsuarioService {
     } catch (e) {
       debugPrint(e.toString());
       throw Exception("Excepción al iniciar sesión");
+    }
+    return false;
+  }
+
+  Future<bool> validatePassword(String password) async {
+    final id = await UserPreferences().id;
+    final String endpoint = '/usuario/validatePassword';
+
+    Usuario usuario = Usuario(idUsuario:id, password: password);
+    try {
+      final response = await _apiClient.postAuth(endpoint, body: usuario.toMap());
+      if (response.statusCode == 200){
+        return jsonDecode(response.body);
+      } 
+    } catch (e) {
+      debugPrint(e.toString());
+      throw Exception("Excepcion al validar la contraseña $e");
     }
     return false;
   }

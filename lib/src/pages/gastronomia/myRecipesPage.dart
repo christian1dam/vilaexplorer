@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/models/gastronomia/plato.dart'; 
@@ -113,7 +114,7 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
     final descripcionController = TextEditingController(text: _platoSeleccionado!.descripcion);
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.symmetric(horizontal:16.w, vertical:16.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

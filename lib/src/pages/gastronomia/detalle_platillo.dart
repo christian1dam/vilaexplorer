@@ -7,7 +7,7 @@ const kButtonBackgroundColorSelected = Color.fromRGBO(32, 29, 29, 0.9);
 const kButtonBackgroundColorUnselected = Color.fromRGBO(45, 45, 45, 1);
 const kButtonTextStyle = TextStyle(
   color: Colors.white,
-  fontFamily: 'Poppins',
+  
   fontWeight: FontWeight.w300,
   fontSize: 18,
   decoration: TextDecoration.none,
@@ -15,13 +15,13 @@ const kButtonTextStyle = TextStyle(
 const kIngredientesTextStyle = TextStyle(
   fontSize: 16,
   color: Colors.white,
-  fontFamily: 'Poppins',
+  
   fontWeight: FontWeight.w300,
   decoration: TextDecoration.none,
 );
 const kTituloTextStyle = TextStyle(
   color: Colors.white,
-  fontFamily: 'Poppins',
+  
   fontWeight: FontWeight.bold,
   fontSize: 22,
   decoration: TextDecoration.none,

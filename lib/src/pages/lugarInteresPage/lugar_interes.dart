@@ -85,7 +85,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
-                                    fontFamily: 'Poppins',
+                                    
                                   ),
                                 ),
                               ),

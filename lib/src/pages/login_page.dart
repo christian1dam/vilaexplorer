@@ -7,7 +7,7 @@ import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
 import 'package:vilaexplorer/src/pages/passwordRecover_page.dart';
-import 'package:vilaexplorer/src/pages/register_page.dart';
+import 'package:vilaexplorer/src/pages/signup_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -66,7 +66,7 @@ class _LoginPageState extends State<LoginPage>
       );
       return false;
     } else {
-      return await usuarioService.loginUsuario(email, password);
+      return await usuarioService.logIn(email, password);
     }
   }
 
@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage>
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            fontFamily: 'Poppins',
+                            
                           ),
                         ),
                         TextSpan(
@@ -133,7 +133,7 @@ class _LoginPageState extends State<LoginPage>
                             fontSize: 24,
                             fontWeight: FontWeight.w200,
                             color: Colors.white,
-                            fontFamily: 'Poppins',
+                            
                           ),
                         ),
                       ],
@@ -199,7 +199,7 @@ class _LoginPageState extends State<LoginPage>
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      RegisterPage(),
+                                      SignUpPage(),
                               transitionsBuilder: (context, animation,
                                   secondaryAnimation, child) {
                                 const begin = Offset(-0.0, 1.0);
@@ -312,7 +312,7 @@ class _LoginPageState extends State<LoginPage>
       backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical:20.h),
           decoration: BoxDecoration(
             color: Colors.grey[850]?.withOpacity(0.8),
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

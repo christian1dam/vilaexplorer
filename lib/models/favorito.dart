@@ -1,6 +1,6 @@
 import 'dart:convert';
-
 import 'package:vilaexplorer/models/usuario/usuario.dart';
+
 
 class Favorito {
   int? idFavorito;

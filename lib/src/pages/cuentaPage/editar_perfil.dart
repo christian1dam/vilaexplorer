@@ -1,41 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:vilaexplorer/models/usuario/usuario.dart';
+import 'package:vilaexplorer/providers/edit_profile_provider.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/src/widgets/footer.dart';
+import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
-class EditarPerfilPage extends StatefulWidget {
+class EditarPerfilPage extends StatelessWidget {
   const EditarPerfilPage({super.key});
 
   @override
-  _EditarPerfilPageState createState() => _EditarPerfilPageState();
-}
-
-class _EditarPerfilPageState extends State<EditarPerfilPage> {
-  final _formKey = GlobalKey<FormState>();
-  String _nombre = '';
-  String _passwordActual = '';
-  String _nuevoPassword = '';
-  String _confirmarPassword = '';
-  String _password = '';
-  bool _isEditingName = true;
-
-  @override
   Widget build(BuildContext context) {
-    final usuarioService = Provider.of<UsuarioService>(context);
-    _nombre = usuarioService.allUserData.nombre!;
-    _password = usuarioService.allUserData.password!;
+    final usuarioService = UsuarioService();
+    final formProvider = Provider.of<EditProfileFormProvider>(context, listen: true); // PARA REPINTAR EL WIDGET DEBE ESTAR CONFIGURADO COMO TRUE
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(32, 29, 29, 1),
+        backgroundColor: const Color.fromARGB(255, 24, 24, 24),
         title: Text(
           AppLocalizations.of(context)!.translate('edit_profile'),
-          style: const TextStyle(
-            fontSize: 20,
+          style: TextStyle(
+            fontSize: 20.sp,
             fontWeight: FontWeight.bold,
             color: Colors.white,
-            fontFamily: 'Poppins',
           ),
         ),
         centerTitle: true,
@@ -44,16 +33,18 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
+
+      
       body: Container(
-        color: const Color.fromRGBO(32, 29, 29, 1),
-        padding: const EdgeInsets.all(16.0),
+        color: const Color.fromARGB(255, 24, 24, 24),
+        padding: EdgeInsets.symmetric(horizontal:16.w, vertical:16.h),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child: SingleChildScrollView(
                 child: Form(
-                  key: _formKey,
+                  key: formProvider.formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -61,16 +52,18 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           ElevatedButton(
-                            onPressed: () => setState(() => _isEditingName = true),
+                            onPressed: () => formProvider.isEditingName = true,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: _isEditingName ? Colors.green : Colors.grey,
+                              backgroundColor: formProvider.isEditingName ? Colors.green : Colors.grey,
+                              foregroundColor: Colors.white
                             ),
                             child: Text(AppLocalizations.of(context)!.translate('change_name')),
                           ),
                           ElevatedButton(
-                            onPressed: () => setState(() => _isEditingName = false),
+                            onPressed: () => formProvider.isEditingName = false,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: !_isEditingName ? Colors.green : Colors.grey,
+                              backgroundColor: formProvider.isEditingName ? Colors.grey : Colors.green,
+                              foregroundColor: Colors.white
                             ),
                             child: Text(AppLocalizations.of(context)!.translate('change_password')),
                           ),
@@ -78,52 +71,57 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
                       ),
                       const SizedBox(height: 20),
 
-                      if (_isEditingName) ...[
+                      if (formProvider.isEditingName) ...[
                         Text(
-                          '${AppLocalizations.of(context)!.translate('name')}:',
-                          style: const TextStyle(
-                            fontSize: 16,
+                          AppLocalizations.of(context)!.translate('name'),
+                          style: TextStyle(
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-                        const SizedBox(height: 5),
+                        SizedBox(height: 5.h),
                         TextFormField(
-                          initialValue: _nombre,
-                          decoration: const InputDecoration(
+                          initialValue: formProvider.username,
+                          decoration: InputDecoration(
                             hintText: 'Introduce tu nombre',
                             hintStyle: TextStyle(color: Colors.white54),
                             fillColor: Color.fromARGB(255, 47, 42, 42),
                             filled: true,
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderRadius: BorderRadius.all(Radius.circular(10.r)),
                             ),
                           ),
                           style: const TextStyle(color: Colors.white),
+                          
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Por favor ingresa un nombre';
                             }
                             return null;
                           },
-                          onChanged: (value) => _nombre = value,
+                          onChanged: (value) => formProvider.username = value,
                         ),
-                        const SizedBox(height: 20),
+
+                        SizedBox(height: 20.h),
 
                         Text(
-                          '${AppLocalizations.of(context)!.translate('current_password')}:',
-                          style: const TextStyle(
-                            fontSize: 16,
+                          AppLocalizations.of(context)!.translate('current_password'),
+                          style: TextStyle(
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-                        const SizedBox(height: 5),
+
+                        SizedBox(height: 5.h),
+
+
                         TextFormField(
                           obscureText: true,
                           decoration: const InputDecoration(
-                            hintText: 'Introduce tu contraseña actual',
-                            hintStyle: TextStyle(color: Colors.white54),
+                            hintText: 'Introduce tu contraseña',
+                            hintStyle: TextStyle(color: Color.fromARGB(161, 255, 255, 255)),
                             fillColor: Color.fromARGB(255, 47, 42, 42),
                             filled: true,
                             border: OutlineInputBorder(
@@ -137,23 +135,25 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
                             }
                             return null;
                           },
-                          onChanged: (value) => _passwordActual = value,
+                          onChanged: (value) => formProvider.currentPassword = value,
                         ),
-                      ] else ...[
+                      ] 
+                      
+                      else ...[
                         Text(
-                          '${AppLocalizations.of(context)!.translate('current_password')}:',
-                          style: const TextStyle(
-                            fontSize: 16,
+                          AppLocalizations.of(context)!.translate('current_password'),
+                          style: TextStyle(
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-                        const SizedBox(height: 5),
+                        SizedBox(height: 5.h),
                         TextFormField(
                           obscureText: true,
                           decoration: const InputDecoration(
                             hintText: 'Introduce tu contraseña actual',
-                            hintStyle: TextStyle(color: Colors.white54),
+                            hintStyle: TextStyle(color: Color.fromARGB(161, 255, 255, 255)),
                             fillColor: Color.fromARGB(255, 47, 42, 42),
                             filled: true,
                             border: OutlineInputBorder(
@@ -167,19 +167,22 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
                             }
                             return null;
                           },
-                          onChanged: (value) => _passwordActual = value,
+                          onChanged: (value) => formProvider.currentPassword = value,
                         ),
-                        const SizedBox(height: 20),
+
+                        SizedBox(height: 20.h),
 
                         Text(
                           '${AppLocalizations.of(context)!.translate('new_password')}:',
-                          style: const TextStyle(
-                            fontSize: 16,
+                          style: TextStyle(
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-                        const SizedBox(height: 5),
+
+                        SizedBox(height: 5.h),
+                        
                         TextFormField(
                           obscureText: true,
                           decoration: const InputDecoration(
@@ -191,69 +194,79 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
                               borderRadius: BorderRadius.all(Radius.circular(10)),
                             ),
                           ),
-                          style: const TextStyle(color: Colors.white),
-                          onChanged: (value) => _nuevoPassword = value,
+                          style: TextStyle(color: Colors.white),
+                          onChanged: (value) => formProvider.currentPassword = value,
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
 
                         Text(
-                          '${AppLocalizations.of(context)!.translate('confirm_password')}:',
-                          style: const TextStyle(
-                            fontSize: 16,
+                          AppLocalizations.of(context)!.translate('confirm_password'),
+                          style: TextStyle(
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-                        const SizedBox(height: 5),
+
+                        SizedBox(height: 5.h),
+
                         TextFormField(
                           obscureText: true,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: 'Confirma nueva contraseña',
                             hintStyle: TextStyle(color: Colors.white54),
                             fillColor: Color.fromARGB(255, 47, 42, 42),
                             filled: true,
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderRadius: BorderRadius.all(Radius.circular(10.r)),
                             ),
                           ),
                           style: const TextStyle(color: Colors.white),
                           validator: (value) {
-                            if (_nuevoPassword.isNotEmpty && value != _nuevoPassword) {
+                            if (  formProvider.newPassword.isNotEmpty &&  value != formProvider.newPassword) {
                               return 'Las contraseñas no coinciden';
                             }
                             return null;
                           },
-                          onChanged: (value) => _confirmarPassword = value,
+                          onChanged: (value) => formProvider.newPassword = value,
                         ),
                       ],
 
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
+
                       Center(
                         child: ElevatedButton(
                           onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              bool actualizado = false;
-                              if (_isEditingName) {
-                                actualizado = await usuarioService.editarNombreUsuario(_nombre);
-                              } else {
-                                actualizado = await usuarioService.editarContrasenyaUsuario(_nuevoPassword, _passwordActual);
+
+                            if (formProvider.isValidForm()) {
+                              formProvider.didUpdate = false;
+                              if (formProvider.isEditingName && await usuarioService.validatePassword(formProvider.currentPassword)) {
+                                debugPrint("SE HA ENTRADO A ACTUALIZAR NOMBRE PUT");
+                                debugPrint("NOMBRE: ${formProvider.username}");
+                                formProvider.didUpdate = await usuarioService.actualizarUsuario(Usuario(nombre: formProvider.username));
+                              } 
+                              else if(await usuarioService.validatePassword(formProvider.currentPassword)){
+                                debugPrint("ENTRA EN EL SEGUNDO IF !!!!!!!");
+                                formProvider.didUpdate = await usuarioService.actualizarUsuario(Usuario(password: formProvider.newPassword));
                               }
+                              
+
 
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(actualizado
+                                  content: Text( formProvider.didUpdate
                                       ? AppLocalizations.of(context)!.translate('profile_updated')
-                                      : AppLocalizations.of(context)!.translate('profile_update_failed')),
+                                      : AppLocalizations.of(context)!.translate('profile_update_failed'),),
                                 ),
                               );
-                              if (actualizado) Navigator.pop(context);
+                              if (formProvider.didUpdate) Navigator.pop(context);
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 40),
+                            padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 40.w),
                             backgroundColor: Colors.green,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(20.r),
                             ),
                           ),
                           child: Text(

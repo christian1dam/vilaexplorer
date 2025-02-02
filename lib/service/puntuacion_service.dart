@@ -6,6 +6,7 @@ import 'package:vilaexplorer/api/api_client.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/models/puntuacion.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
+
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 
 class PuntuacionService extends ChangeNotifier {
@@ -111,7 +112,6 @@ class PuntuacionService extends ChangeNotifier {
       }
       
     } else {
-
       final puntuacionModel = Puntuacion(
           idEntidad: idEntidad,
           puntuacion: puntuacion,

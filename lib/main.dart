@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:provider/provider.dart';
+import 'package:vilaexplorer/providers/edit_profile_provider.dart';
 import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/favorito_service.dart';
@@ -11,7 +12,6 @@ import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/service/puntuacion_service.dart';
 import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
-import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
@@ -56,6 +56,8 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PuntuacionService(), lazy: false),
         ChangeNotifierProvider(create: (_) => FavoritoService(), lazy: false),
         ChangeNotifierProvider(create: (_) => MapStateProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => EditProfileFormProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => UserPreferences(), lazy: false),
       ],
       child: const MyApp(),
     );

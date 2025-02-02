@@ -55,10 +55,9 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                   color: Color.fromARGB(255, 24, 24, 24),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color.fromARGB(255, 255, 255, 255),
-                      blurRadius: 10,
-                      spreadRadius: 1,
-                      offset: Offset(0, 1),
+                      color: const Color.fromARGB(255, 157, 157, 157),
+                      blurRadius: 50,
+                      blurStyle: BlurStyle.solid
                     ),
                   ],
                 ),
@@ -66,8 +65,6 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
               child: Column(
                 children: <Widget>[
                   BarraDeslizamiento(),
-
-                  const Spacer(),
 
                   SearchBar(
                     hintText:

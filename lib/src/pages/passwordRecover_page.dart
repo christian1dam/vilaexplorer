@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'dart:async';
 
@@ -58,22 +59,22 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
             alignment: Alignment.topRight, // Alinear contenido en la parte superior derecha
             children: [
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 30),
+                margin: EdgeInsets.symmetric(horizontal: 30.w),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 28, 28, 28),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const SizedBox(height: 40), // Espacio superior para la X
+                      SizedBox(height: 40.h), // Espacio superior para la X
                       Text(
                         AppLocalizations.of(context)!.translate('put_email'),
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

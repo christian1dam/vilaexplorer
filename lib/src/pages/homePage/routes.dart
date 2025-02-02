@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/src/widgets/loading.dart';
 
 class RoutesPage extends StatefulWidget {
@@ -49,6 +52,7 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final pageProvider = Provider.of<PageProvider>(context, listen: false);
     return DefaultTabController(
       length: 2, // Número de pestañas
       child: Scaffold(
@@ -57,7 +61,7 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              widget.onClose(); // Llamamos a la función onClose
+              pageProvider.clearScreen();
             },
           ),
           title: const Text(
@@ -100,7 +104,7 @@ class RutasPredefinidasTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: const Color.fromRGBO(32, 29, 29, 1),
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.symmetric(horizontal:16.w, vertical:16.h),
       child: ListView.builder(
         itemCount: rutasPredefinidas.length,
         itemBuilder: (context, index) {
@@ -160,7 +164,7 @@ class _RutasGuardadasTabState extends State<RutasGuardadasTab> {
   Widget build(BuildContext context) {
     return Container(
       color: const Color.fromRGBO(32, 29, 29, 1),
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.symmetric(horizontal:16.w, vertical:16.h),
       child: rutasGuardadas.isEmpty
           ? const Center(
               child: Text(

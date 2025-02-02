@@ -113,7 +113,7 @@ class _AddPlatoState extends State<AddPlato> {
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            fontFamily: 'Poppins',
+                            
                           ),
                         ),
                       ),
@@ -155,7 +155,7 @@ class _AddPlatoState extends State<AddPlato> {
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,
-              fontFamily: 'Poppins',
+              
             ),
           ),
         ),

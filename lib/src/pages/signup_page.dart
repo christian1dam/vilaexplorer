@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
-import 'package:vilaexplorer/models/usuario/usuario.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/src/pages/login_page.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage>
+class _SignUpPageState extends State<SignUpPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _rotationController;
   late Animation<double> _rotationAnimation;
@@ -68,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage>
     final String confirmPassword = _confirmPasswordController.text.trim();
 
     try {
-      if (await usuarioSerivce.signupUsuario(
+      if (await usuarioSerivce.signUp(
           name, email, password, confirmPassword)) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Usuario registrado exitosamente')),
@@ -140,7 +139,7 @@ class _RegisterPageState extends State<RegisterPage>
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            fontFamily: 'Poppins',
+                            
                           ),
                         ),
                         TextSpan(
@@ -149,7 +148,7 @@ class _RegisterPageState extends State<RegisterPage>
                             fontSize: 24,
                             fontWeight: FontWeight.w200,
                             color: Colors.white,
-                            fontFamily: 'Poppins',
+                            
                           ),
                         ),
                       ],
@@ -280,7 +279,7 @@ class _RegisterPageState extends State<RegisterPage>
       backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical:20.h),
           decoration: BoxDecoration(
             color: Colors.grey[850]?.withOpacity(0.8),
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

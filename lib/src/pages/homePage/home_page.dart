@@ -92,13 +92,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
 
-          // Página de rutas guardadas superpuesta al mapa
           Positioned.fill(
             child: Offstage(
               offstage: pageProvider.currentPage != 'routes',
               child: RoutesPage(
                 onClose: () =>
-                    pageProvider.changePage('map'), // Volver al mapa al cerrar
+                    pageProvider.changePage('map'),
               ),
             ),
           ),
@@ -130,16 +129,16 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
 
-
-          if (pageProvider.currentPage == 'map'&& pageProvider.idLugarDeInteres == null)
+          if (pageProvider.currentPage == 'map' &&
+              pageProvider.idLugarDeInteres == null)
             Positioned(
-              bottom: 145.h, // Colocado encima del botón de cambiar estilo
+              bottom: 145.h,
               right: 20.w,
               child: FloatingActionButton(
+                heroTag: "FAB-${UniqueKey()}",
                 backgroundColor: const Color.fromARGB(230, 50, 50, 50),
                 onPressed: () {
-                  pageProvider.changePage(
-                      'routes'); // Ir a la página de rutas guardadas
+                  pageProvider.changePage('routes');
                 },
                 tooltip: "Guardar ruta",
                 child: const Icon(
@@ -149,13 +148,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
 
-
           if (pageProvider.currentPage == 'map' &&
               pageProvider.idLugarDeInteres == null)
             Positioned(
               bottom: 75.h,
               right: 20.w,
               child: FloatingActionButton(
+                heroTag: "FAB-${UniqueKey()}",
                 backgroundColor: const Color.fromARGB(230, 50, 50, 50),
                 onPressed: () {
                   pageProvider.toggleMapStyle();

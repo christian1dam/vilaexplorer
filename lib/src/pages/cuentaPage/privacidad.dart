@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/src/widgets/footer.dart'; // Si estás usando traducciones
 
@@ -16,7 +17,7 @@ class PrivacidadPage extends StatelessWidget {
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.white,
-            fontFamily: 'Poppins',
+            
           ),
         ),
         centerTitle: true,
@@ -29,7 +30,7 @@ class PrivacidadPage extends StatelessWidget {
       ),
       body: Container(
         color: const Color.fromRGBO(32, 29, 29, 1), // Fondo oscuro en toda la página
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.symmetric(horizontal:16.w, vertical:16.h),
         child: Column(
           children: [
             Expanded(

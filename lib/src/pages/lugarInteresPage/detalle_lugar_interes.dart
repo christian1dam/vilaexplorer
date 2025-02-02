@@ -151,7 +151,7 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                           fontSize: 19.sp,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
-                                          fontFamily: 'Poppins',
+                                          
                                         ),
                                         textAlign: TextAlign.left,
                                       ),

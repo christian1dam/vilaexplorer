@@ -39,6 +39,7 @@ class AppBarCustom extends StatelessWidget {
           child: GestureDetector(
             onTap: () async {
               return showModalBottomSheet(
+                backgroundColor: Colors.transparent,
                 context: context,
                 sheetAnimationStyle: AnimationStyle(duration: Duration(milliseconds: 400)),
                 builder: (BuildContext context) {
