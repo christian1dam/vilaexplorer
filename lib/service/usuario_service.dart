@@ -7,7 +7,6 @@ import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class UsuarioService {
   final userPreferences = UserPreferences();
-
   final ApiClient _apiClient = ApiClient();
 
   Future<bool> actualizarUsuario(Usuario usuario) async {

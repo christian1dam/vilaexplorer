@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -19,11 +18,10 @@ class BackgroundMap extends StatefulWidget {
 }
 
 class _BackgroundMapState extends State<BackgroundMap> {
-  late final MapController _mapController;
   List<Marker> _markers = [];
-  final String accessToken = dotenv.env['MAPBOX_ACCESS_TOKEN'] ??
+  final String accessToken = dotenv.env['OPENROUTESERVICE_ACCESS_TOKEN'] ??
       (throw Exception(
-          'MAPBOX_ACCESS_TOKEN no está definido en el archivo .env'));
+          'OPENROUTESERVICE_ACCESS_TOKEN no está definido en el archivo .env'));
   final _tileProvider = FMTCTileProvider(
     stores: const {
       'VilaExplorerMapStore': BrowseStoreStrategy.readUpdateCreate
@@ -33,7 +31,6 @@ class _BackgroundMapState extends State<BackgroundMap> {
   @override
   void initState() {
     super.initState();
-    _mapController = MapController();
     _getCurrentLocation();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugPrint("LLAMANDO A LOADMARKERS");
@@ -47,7 +44,7 @@ class _BackgroundMapState extends State<BackgroundMap> {
         Provider.of<MapStateProvider>(context, listen: false);
     await mapStateProvider.getCurrentLocation();
     if (mapStateProvider.currentLocation != null) {
-      _mapController.move(mapStateProvider.currentLocation!, 16);
+      mapStateProvider.mapController.move(mapStateProvider.currentLocation!, 16);
     }
   }
 
@@ -98,15 +95,15 @@ class _BackgroundMapState extends State<BackgroundMap> {
   @override
   Widget build(BuildContext context) {
     final mapStateProvider = Provider.of<MapStateProvider>(context, listen:false);
-    final pageProvider = Provider.of<PageProvider>(context, listen:false);
+    final pageProvider = Provider.of<PageProvider>(context);
     return Stack(
       children: [
         Opacity(
           opacity: 1,
           child: FlutterMap(
-            mapController: _mapController,
+            mapController: mapStateProvider.mapController,
             options: MapOptions(
-                initialCenter: mapStateProvider.currentLocation ?? LatLng(0, 0),
+                initialCenter:  mapStateProvider.currentLocation ?? LatLng(0, 0),
                 initialZoom: 14,
                 minZoom: 4,
                 interactionOptions: const InteractionOptions(
@@ -118,11 +115,7 @@ class _BackgroundMapState extends State<BackgroundMap> {
             children: [
               TileLayer(
                 tileProvider: _tileProvider,
-                urlTemplate:
-                    'https://api.mapbox.com/styles/v1/${pageProvider.currentMapStyle}/tiles/{z}/{x}/{y}?access_token=$accessToken',
-                additionalOptions: {
-                  'access_token': accessToken,
-                },
+                urlTemplate: pageProvider.currentMapStyle,
               ),
               if (mapStateProvider.currentLocation != null)
                 CircleLayer(

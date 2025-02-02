@@ -6,7 +6,6 @@ import 'package:vilaexplorer/providers/edit_profile_provider.dart';
 import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/src/widgets/footer.dart';
-import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class EditarPerfilPage extends StatelessWidget {
   const EditarPerfilPage({super.key});
@@ -195,7 +194,7 @@ class EditarPerfilPage extends StatelessWidget {
                             ),
                           ),
                           style: TextStyle(color: Colors.white),
-                          onChanged: (value) => formProvider.currentPassword = value,
+                          onChanged: (value) => formProvider.newPassword = value,
                         ),
                         SizedBox(height: 20.h),
 
@@ -240,6 +239,7 @@ class EditarPerfilPage extends StatelessWidget {
 
                             if (formProvider.isValidForm()) {
                               formProvider.didUpdate = false;
+                              
                               if (formProvider.isEditingName && await usuarioService.validatePassword(formProvider.currentPassword)) {
                                 debugPrint("SE HA ENTRADO A ACTUALIZAR NOMBRE PUT");
                                 debugPrint("NOMBRE: ${formProvider.username}");

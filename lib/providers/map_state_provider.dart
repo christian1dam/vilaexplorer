@@ -1,20 +1,23 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:http/http.dart' as http;
+import 'package:vilaexplorer/api/api_client.dart';
 
 class MapStateProvider extends ChangeNotifier {
+  late final MapController _mapController = MapController();
+  final _apiClient = ApiClient();
   bool _isMapLoaded = false;
   LatLng? _currentLocation;
   List<LatLng> _routePoints = [];
-  final String accessToken = dotenv.env['MAPBOX_ACCESS_TOKEN'] ??
-      (throw Exception(
-          'MAPBOX_ACCESS_TOKEN no está definido en el archivo .env'));
+  LatLngBounds? _bounds;
+  LatLngBounds? get bounds => _bounds;
 
   LatLng? get currentLocation => _currentLocation;
+
+  MapController get mapController => _mapController;
 
   set setCurrentLocation(LatLng location) {
     _currentLocation = location;
@@ -36,21 +39,30 @@ class MapStateProvider extends ChangeNotifier {
   }
 
   Future<void> getRouteTo(LatLng destination, LatLng origin) async {
-    final response = await http.get(
-      Uri.parse(
-        'https://api.mapbox.com/directions/v5/mapbox/driving/${origin.longitude},${origin.latitude};${destination.longitude},${destination.latitude}?geometries=geojson&access_token=$accessToken',
-      ),
-    );
+    try {
+      final endpoint =
+          "/ruta/generarRuta?origenLat=${origin.latitude}&origenLng=${origin.longitude}&destinoLat=${destination.latitude}&destinoLng=${destination.longitude}";
 
-    if (response.statusCode == 200) {
+      final response = await _apiClient.get(endpoint);
+
       final data = json.decode(response.body);
-      final coordinates = data['routes'][0]['geometry']['coordinates'];
+
+      final coordinates = data['coordenadas'] as List;
       _routePoints = coordinates
-          .map<LatLng>((coord) => LatLng(coord[1], coord[0]))
+          .map<LatLng>((coord) => LatLng(coord['latitud'], coord['longitud']))
           .toList();
+
+      // Extraer bbox y actualizar los límites
+      final bbox = data['bbox'] as List;
+      if (bbox.length == 4) {
+        final southWest = LatLng(bbox[1], bbox[0]);
+        final northEast = LatLng(bbox[3], bbox[2]);
+        _bounds = LatLngBounds(southWest, northEast);
+        _mapController.fitCamera(CameraFit.bounds(bounds: _bounds!));
+      }
       notifyListeners();
-    } else {
-      throw Exception('Error al obtener la ruta: ${response.reasonPhrase}');
+    } catch (e) {
+      throw Exception('Error al obtener la ruta: $e');
     }
   }
 

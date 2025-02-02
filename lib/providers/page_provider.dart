@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class PageProvider extends ChangeNotifier {
   String currentPage = 'map';
-  String currentMapStyle = 'mapbox/streets-v11';
+  String currentMapStyle = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 
   String? selectedFiesta;
   int? idLugarDeInteres;
@@ -55,9 +55,10 @@ class PageProvider extends ChangeNotifier {
 
   // Cambiar el estilo del mapa
   void toggleMapStyle() {
-    currentMapStyle = currentMapStyle == 'mapbox/streets-v11'
-        ? 'mapbox/dark-v10'
-        : 'mapbox/streets-v11';
+    currentMapStyle =
+        currentMapStyle == 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+            ? 'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+            : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
     notifyListeners();
   }
 }
