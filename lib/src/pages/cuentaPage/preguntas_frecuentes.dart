@@ -6,7 +6,7 @@ import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 import 'cuenta_page.dart';
 
 class PreguntasFrecuentesPage extends StatelessWidget {
-  PreguntasFrecuentesPage({super.key});
+  const PreguntasFrecuentesPage({super.key});
 
   @override
   Widget build(BuildContext context) {

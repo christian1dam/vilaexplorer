@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
 
-// Definimos constantes para los estilos de los botones y textos
 const kButtonBackgroundColorSelected = Color.fromRGBO(32, 29, 29, 0.9);
 const kButtonBackgroundColorUnselected = Color.fromRGBO(45, 45, 45, 1);
 const kButtonTextStyle = TextStyle(
   color: Colors.white,
-  
   fontWeight: FontWeight.w300,
   fontSize: 18,
   decoration: TextDecoration.none,
@@ -15,13 +13,11 @@ const kButtonTextStyle = TextStyle(
 const kIngredientesTextStyle = TextStyle(
   fontSize: 16,
   color: Colors.white,
-  
   fontWeight: FontWeight.w300,
   decoration: TextDecoration.none,
 );
 const kTituloTextStyle = TextStyle(
   color: Colors.white,
-  
   fontWeight: FontWeight.bold,
   fontSize: 22,
   decoration: TextDecoration.none,
@@ -53,7 +49,6 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
     final size = MediaQuery.of(context).size;
 
     return GestureDetector(
-      // Cierra el widget cuando se toca fuera de la zona activa
       onTap: () {
         widget.closeWidget();
       },
@@ -70,7 +65,7 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
             ),
           ),
           child: GestureDetector(
-            onTap: () {}, // Evita que el toque en el contenedor interior cierre la página
+            onTap: () {},
             child: Column(
               children: [
                 Padding(
@@ -106,8 +101,8 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
-                _buildButtonRow(),
+                const SizedBox(height: 10),
+                _buildButtonRow(size),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
@@ -126,47 +121,63 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
     );
   }
 
-   void _changeLanguage(BuildContext context, Locale locale) {
-    setState(() {
-      MyApp.setLocale(context, locale);
-    });
-  }
-
-  Widget _buildButtonRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+  Widget _buildButtonRow(Size size) {
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 8),
+    margin: const EdgeInsets.symmetric(horizontal: 14), // Más margen horizontal para extender
+    decoration: BoxDecoration(
+      color: const Color.fromARGB(255, 55, 55, 55),
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildToggleButton(AppLocalizations.of(context)!.translate('ingredients'), showIngredientes, () {
-          setState(() {
-            showIngredientes = true;
-          });
-        }),
-        const SizedBox(width: 10),
-        _buildToggleButton(AppLocalizations.of(context)!.translate('recipe'), !showIngredientes, () {
-          setState(() {
-            showIngredientes = false;
-          });
-        }),
+        _buildToggleButton(
+          AppLocalizations.of(context)!.translate('ingredients'),
+          showIngredientes,
+          () {
+            setState(() {
+              showIngredientes = true;
+            });
+          },
+        ),
+        _buildToggleButton(
+          AppLocalizations.of(context)!.translate('recipe'),
+          !showIngredientes,
+          () {
+            setState(() {
+              showIngredientes = false;
+            });
+          },
+        ),
       ],
-    );
-  }
+    ),
+  );
+}
 
-  Widget _buildToggleButton(
-      String text, bool isSelected, VoidCallback onPressed) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected
-            ? kButtonBackgroundColorUnselected
-            : kButtonBackgroundColorSelected,
-        minimumSize: const Size(150, 50),
+Widget _buildToggleButton(String text, bool isSelected, VoidCallback onPressed) {
+  return Expanded(
+    child: GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10), // Ajusta para un gris claro más corto
+        margin: EdgeInsets.symmetric(horizontal: isSelected ? 5 : 0), // Márgenes más pequeños para el gris claro
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Colors.grey[700]
+              : const Color.fromARGB(255, 55, 55, 55),
+          borderRadius: BorderRadius.circular(17),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          text,
+          style: kButtonTextStyle,
+        ),
       ),
-      onPressed: onPressed,
-      child: Text(
-        text,
-        style: kButtonTextStyle,
-      ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildIngredientes() {
     return Text(

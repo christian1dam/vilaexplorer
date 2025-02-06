@@ -52,24 +52,19 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                     topLeft: Radius.circular(30.r),
                     topRight: Radius.circular(30.r),
                   ),
-                  color: Color.fromARGB(255, 24, 24, 24),
+                  color: const Color.fromARGB(255, 24, 24, 24),
                   boxShadow: [
                     BoxShadow(
                       color: const Color.fromARGB(255, 157, 157, 157),
                       blurRadius: 50,
-                      blurStyle: BlurStyle.solid
+                      blurStyle: BlurStyle.solid,
                     ),
                   ],
                 ),
-              height: 500.h,
+              height: 416.h,
               child: Column(
                 children: <Widget>[
-                  BarraDeslizamiento(),
-
-                  SearchBar(
-                    hintText:
-                        AppLocalizations.of(context)!.translate('mp_search'),
-                  ),
+                  const BarraDeslizamiento(),
 
                   Divider(height: 10.h, color: Colors.transparent),
 
@@ -79,7 +74,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ButtonMenuCustom(
-                        width: 120.w,
+                        width: 100.w,
                         textContent: AppLocalizations.of(context)!
                             .translate('traditions'),
                         svgPath: "lib/icon/tradiciones.svg",
@@ -89,7 +84,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                         },
                       ),
                       ButtonMenuCustom(
-                        width: 120.w,
+                        width: 100.w,
                         textContent: AppLocalizations.of(context)!
                             .translate('favorites'),
                         svgPath: "lib/icon/favoritos.svg",
@@ -99,7 +94,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                         },
                       ),
                       ButtonMenuCustom(
-                        width: 120.w,
+                        width: 100.w,
                         textContent: AppLocalizations.of(context)!
                             .translate('my_account'),
                         svgPath: "lib/icon/user_icon.svg",
@@ -119,7 +114,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ButtonMenuCustom(
-                        width: 180.w,
+                        width: 155.w,
                         textContent: AppLocalizations.of(context)!
                             .translate('gastronomy'),
                         svgPath: "lib/icon/gastronomia.svg",
@@ -129,7 +124,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                         },
                       ),
                       ButtonMenuCustom(
-                        width: 180.w,
+                        width: 155.w,
                         textContent:
                             AppLocalizations.of(context)!.translate('sights'),
                         svgPath: "lib/icon/monumentos.svg",
@@ -192,11 +187,11 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
   Widget _buildHistoriasSection(
       BuildContext context, Map<String, Map<String, String>> historiasMap) {
     return Container(
-      width: MediaQuery.of(context).size.width.w,
-      height: MediaQuery.of(context).size.height * 0.15.h,
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.15,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(13.r)),
-        color: Color.fromRGBO(39, 39, 39, 1),
+        color: const Color.fromRGBO(39, 39, 39, 1),
       ),
       padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 15.w),
       margin: EdgeInsets.only(left: 7.w, right: 7.w, bottom: 15.h),
@@ -207,14 +202,14 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
             children: [
               Text(
                 AppLocalizations.of(context)!.translate('near'),
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
                 AppLocalizations.of(context)!.translate('see_more'),
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.bold,
                 ),
@@ -289,57 +284,6 @@ class ButtonMenuCustom extends StatelessWidget {
   }
 }
 
-// Widget _crearBoton(double mywidth, String texto, String redirector,
-//     String imagePath, double tamanoTexto, BuildContext context) {
-//   return SizedBox(
-//     width: mywidth,
-//     height: 105.h,
-//     child: ElevatedButton(
-//       style: ElevatedButton.styleFrom(
-//         padding: EdgeInsets.only(left: 12.w, top: 15.h),
-//         foregroundColor: Colors.white,
-//         backgroundColor: const Color.fromRGBO(39, 39, 39, 0.92),
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(30.0.r),
-//         ),
-//         splashFactory: InkRipple.splashFactory,
-//         shadowColor: Colors.white.withOpacity(0.3),
-//       ),
-//       child: SizedBox(
-//         width: 100.w,
-//         height: double.infinity,
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             MySvgWidget(path: imagePath, width: 40.w, height: 40.h),
-//             Text(
-//               texto,
-//               style: TextStyle(fontSize: tamanoTexto * 17.sp),
-//             ),
-//           ],
-//         ),
-//       ),
-//       onPressed: () {
-//         if (redirector == "Favoritos" && onShowFavoritosPressed != null) {
-//           onShowFavoritosPressed!();
-//         } else if (redirector == "Gastronomia" &&
-//             onShowGastronomiaPressed != null) {
-//           onShowGastronomiaPressed!();
-//         } else if (redirector == "Tradiciones" &&
-//             onShowTradicionesPressed != null) {
-//           onShowTradicionesPressed!();
-//         } else if (redirector == "Cuenta" && onShowCuentaPressed != null) {
-//           onShowCuentaPressed!();
-//         } else if (redirector == "Monumentos" &&
-//             onShowMonumentosPressed != null) {
-//           onShowMonumentosPressed!();
-//         }
-//       },
-//     ),
-//   );
-// }
-
 class BarraDeslizamiento extends StatelessWidget {
   const BarraDeslizamiento({
     super.key,
@@ -364,7 +308,6 @@ class BarraDeslizamiento extends StatelessWidget {
   }
 }
 
-// Widget de SVG personalizado
 class MySvgWidget extends StatelessWidget {
   final String path;
   final double? height;
@@ -380,70 +323,5 @@ class MySvgWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(path, height: height?.h, width: width?.w);
-  }
-}
-
-class SearchBar extends StatelessWidget {
-  final String hintText;
-
-  const SearchBar({
-    super.key,
-    required this.hintText,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color.fromRGBO(39, 39, 39, 1).withOpacity(0.92),
-        borderRadius: BorderRadius.all(Radius.circular(30.r)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(top: 10.h, right: 10.w, bottom: 10.h),
-              child: SizedBox(
-                height: 40.h,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: TextFormField(
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 1.w),
-                      icon: Padding(
-                        padding:
-                            EdgeInsets.only(top: 7.h, left: 20.w, bottom: 5.h),
-                        child: SizedBox(
-                          width: 35.w,
-                          child: MySvgWidget(
-                            path: "lib/icon/lupa.svg",
-                            height: 24.h,
-                            width: 24.w,
-                          ),
-                        ),
-                      ),
-                      hintText: hintText,
-                      hintStyle: const TextStyle(
-                        color: Color.fromRGBO(255, 255, 255, 1),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0.r),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor:
-                          const Color.fromRGBO(39, 39, 39, 1).withOpacity(0.92),
-                    ),
-                    cursorColor: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

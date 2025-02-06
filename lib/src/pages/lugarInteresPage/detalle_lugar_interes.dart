@@ -10,7 +10,6 @@ import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/favorito_service.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/service/puntuacion_service.dart';
-import 'package:vilaexplorer/src/pages/homePage/map_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
