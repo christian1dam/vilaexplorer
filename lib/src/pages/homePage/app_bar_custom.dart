@@ -12,9 +12,10 @@ class AppBarCustom extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppBar(
           toolbarHeight: 120.h,
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.black87.withOpacity(0),
+          automaticallyImplyLeading: true,
+          backgroundColor: Colors.transparent,
           foregroundColor: Colors.white,
+          elevation: 0,
           title: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

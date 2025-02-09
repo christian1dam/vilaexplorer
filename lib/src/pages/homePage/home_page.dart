@@ -5,15 +5,10 @@ import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/cuenta_page.dart';
-import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
-import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
-import 'package:vilaexplorer/src/pages/homePage/map_page.dart';
+import 'package:vilaexplorer/src/pages/homePage/background_map.dart';
 import 'package:vilaexplorer/src/pages/homePage/routes.dart';
 import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.dart';
-import 'package:vilaexplorer/src/pages/lugarInteresPage/lugar_interes.dart';
-import 'package:vilaexplorer/src/pages/tradicionesPage/detalle_fiesta_tradicion.dart';
-import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -58,42 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
           Positioned.fill(
             child: Offstage(
-              offstage: pageProvider.currentPage != 'tradiciones',
-              child: TradicionesPage(
-                onFiestaSelected: (fiestaName) =>
-                    pageProvider.setFiesta(fiestaName),
-              ),
-            ),
-          ),
-
-          if (pageProvider.selectedFiesta != null)
-            Positioned.fill(
-              child: Offstage(
-                offstage: pageProvider.selectedFiesta == null,
-                child: DetalleFiestaTradicion(
-                  fiestaName: pageProvider.selectedFiesta ?? '',
-                ),
-              ),
-            ),
-
-          Positioned.fill(
-            child: Offstage(
-              offstage: pageProvider.currentPage != 'favoritos',
-              child: FavoritosPage(
-                onClose: () => pageProvider.changePage('map'),
-              ),
-            ),
-          ),
-
-          Positioned.fill(
-            child: Offstage(
-              offstage: pageProvider.currentPage != 'lugares de interés',
-              child: LugarDeInteresPage(),
-            ),
-          ),
-
-          Positioned.fill(
-            child: Offstage(
               offstage: pageProvider.currentPage != 'routes',
               child: RoutesPage(
                 onClose: () =>
@@ -101,33 +60,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-
-          if (pageProvider.idLugarDeInteres != null)
-            Positioned.fill(
-              child: Offstage(
-                offstage: pageProvider.idLugarDeInteres == null,
-                child: DetalleLugarInteres(
-                  lugarDeInteresID: pageProvider.idLugarDeInteres!,
-                ),
-              ),
-            ),
-
+          
           Positioned.fill(
             child: Offstage(
               offstage: pageProvider.currentPage != 'cuenta',
               child: CuentaPage(),
             ),
           ),
-
-          if (pageProvider.currentPage == 'gastronomia')
-            Positioned.fill(
-              child: Offstage(
-                offstage: pageProvider.currentPage != 'gastronomia',
-                child: GastronomiaPage(
-                  onCategoriaPlatoSelected: (plato) {},
-                ),
-              ),
-            ),
 
           if (pageProvider.currentPage == 'map' &&
               pageProvider.idLugarDeInteres == null)

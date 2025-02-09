@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
-import 'package:vilaexplorer/main.dart';
 
 const kButtonBackgroundColorSelected = Color.fromRGBO(32, 29, 29, 0.9);
 const kButtonBackgroundColorUnselected = Color.fromRGBO(45, 45, 45, 1);

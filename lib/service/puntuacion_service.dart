@@ -17,8 +17,7 @@ class PuntuacionService extends ChangeNotifier {
     required int idEntidad,
     required String tipoEntidad,
   }) async {
-    final endpoint =
-        "/puntuacion/usuario/$idUsuario/entidad/$tipoEntidad/$idEntidad";
+    final endpoint = "/puntuacion/usuario/$idUsuario/entidad/$tipoEntidad/$idEntidad";
 
     try {
       final response = await _apiClient.get(endpoint);

@@ -29,7 +29,8 @@ class _TradicionesPageState extends State<TradicionesPage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      Provider.of<TradicionesService>(context, listen: false).getAllTradiciones();
+      Provider.of<TradicionesService>(context, listen: false)
+          .getAllTradiciones();
     });
   }
 
@@ -85,135 +86,118 @@ class _TradicionesPageState extends State<TradicionesPage> {
           );
         }
 
-        return Stack(
-          children: [
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: GestureDetector(
-                onTap: () {
-                  if (isSearchActive) {
-                    setState(() {
-                      isSearchActive = false;
-                      searchController.clear();
-                    });
-                  }
-                },
-                child: Container(
-                  height: 600.h,
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    color: const Color.fromRGBO(32, 29, 29, 0.9),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20.r),
-                      topRight: Radius.circular(20.r),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      BarraDeslizamiento(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 8.h, horizontal: 8.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 16.0), // Ajusta el espacio que quieras a la izquierda
-                                child: Text(
-                                  AppLocalizations.of(context)!.translate('holidays_traditions'),
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontSize: 21.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                isSearchActive
-                                    ? Icons.arrow_back
-                                    : Icons.search,
+        return GestureDetector(
+          onTap: () {
+            if (isSearchActive) {
+              setState(() {
+                isSearchActive = false;
+                searchController.clear();
+              });
+            }
+          },
+          child: BackgroundBoxDecoration(
+            child: SizedBox(
+              height: 600.h,
+              child: Column(
+                children: [
+                  BarraDeslizamiento(),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                left:
+                                    16.0), // Ajusta el espacio que quieras a la izquierda
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('holidays_traditions'),
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 21.sp,
+                                fontWeight: FontWeight.w600,
                                 color: Colors.white,
                               ),
-                              onPressed: _toggleSearch,
-                            ),
-                            IconButton(
-                              icon:
-                                  const Icon(Icons.close, color: Colors.white),
-                              onPressed: () => pageProvider.changePage('map'),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (!isSearchActive)
-                        Container(
-                          padding: EdgeInsets.symmetric(vertical: 2.h),
-                          margin: EdgeInsets.only(bottom: 10.h),
-                          width: size.width - 40.w,
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 55, 55, 55),
-                            borderRadius: BorderRadius.all(Radius.circular(20.r)),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _buildFilterButton('Todo', 0),
-                              _buildFilterButton('Populares', 1),
-                              _buildFilterButton('Cercanos', 2),
-                            ],
-                          ),
-                        )
-                      else
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w),
-                          child: TextField(
-                            controller: searchController,
-                            style: const TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                              hintText: AppLocalizations.of(context)!
-                                  .translate('search_traditions'),
-                              hintStyle: const TextStyle(color: Colors.white54),
-                              fillColor:
-                                  const Color.fromARGB(255, 47, 42, 42),
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.r)),
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 5.h, horizontal: 10.w),
                             ),
                           ),
                         ),
-                      Expanded(
-                        child: ListView.builder(
-                          padding: EdgeInsets.all(0),
-                          itemCount: tradiciones.length,
-                          itemBuilder: (context, index) {
-                            final tradicion = tradiciones[index];
-                            return FiestaCard(
-                              nombre: tradicion.nombre,
-                              fecha: tradicion.fecha,
-                              imagen: provider
-                                  .getImageForTradicion(tradicion.imagen),
-                              detalleTap: () =>
-                                  _toggleContainer(tradicion.nombre),
-                            );
-                          },
+                        IconButton(
+                          icon: Icon(
+                            isSearchActive ? Icons.arrow_back : Icons.search,
+                            color: Colors.white,
+                          ),
+                          onPressed: _toggleSearch,
                         ),
-                      ),
-                    ],
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Colors.white),
+                          onPressed: () => pageProvider.changePage('map'),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                  if (!isSearchActive)
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 2.h),
+                      margin: EdgeInsets.only(bottom: 10.h),
+                      width: size.width - 40.w,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 55, 55, 55),
+                        borderRadius: BorderRadius.all(Radius.circular(20.r)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildFilterButton('Todo', 0),
+                          _buildFilterButton('Populares', 1),
+                          _buildFilterButton('Cercanos', 2),
+                        ],
+                      ),
+                    )
+                  else
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: TextField(
+                        controller: searchController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: AppLocalizations.of(context)!
+                              .translate('search_traditions'),
+                          hintStyle: const TextStyle(color: Colors.white54),
+                          fillColor: const Color.fromARGB(255, 47, 42, 42),
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.r)),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 5.h, horizontal: 10.w),
+                        ),
+                      ),
+                    ),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.all(0),
+                      itemCount: tradiciones.length,
+                      itemBuilder: (context, index) {
+                        final tradicion = tradiciones[index];
+                        return FiestaCard(
+                          nombre: tradicion.nombre,
+                          fecha: tradicion.fecha,
+                          imagen:
+                              provider.getImageForTradicion(tradicion.imagen),
+                          detalleTap: () => _toggleContainer(tradicion.nombre),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         );
       },
     );

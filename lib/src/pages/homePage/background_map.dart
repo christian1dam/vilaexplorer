@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
+import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.dart';
 
 class BackgroundMap extends StatefulWidget {
   const BackgroundMap({super.key});
@@ -44,7 +45,8 @@ class _BackgroundMapState extends State<BackgroundMap> {
         Provider.of<MapStateProvider>(context, listen: false);
     await mapStateProvider.getCurrentLocation();
     if (mapStateProvider.currentLocation != null) {
-      mapStateProvider.mapController.move(mapStateProvider.currentLocation!, 16);
+      mapStateProvider.mapController
+          .move(mapStateProvider.currentLocation!, 16);
     }
   }
 
@@ -60,8 +62,6 @@ class _BackgroundMapState extends State<BackgroundMap> {
               (coordenada) {
                 final iconData = _getIconForLugar(lugar.tipoLugar!.nombreTipo!);
                 final color = _getColorForLugar(lugar.tipoLugar!.nombreTipo!);
-                final pageProvider =
-                    Provider.of<PageProvider>(context, listen: false);
                 return Marker(
                   point: LatLng(coordenada.latitud!, coordenada.longitud!),
                   width: 40.w,
@@ -69,14 +69,25 @@ class _BackgroundMapState extends State<BackgroundMap> {
                   rotate: true,
                   child: Builder(
                     builder: (context) => IconButton(
-                      icon: Icon(
-                        iconData,
-                        color: color,
-                        size: 40.r,
-                      ),
-                      onPressed: () =>
-                          pageProvider.setLugarDeInteres(lugar.idLugarInteres!),
-                    ),
+                        icon: Icon(
+                          iconData,
+                          color: color,
+                          size: 40.r,
+                        ),
+                        onPressed: () async {
+                          return showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              scrollControlDisabledMaxHeightRatio: 470.h,
+                              sheetAnimationStyle: AnimationStyle(
+                                duration: Duration(milliseconds: 400),
+                              ),
+                              context: context,
+                              builder: (BuildContext context) {
+                                return DetalleLugarInteres(
+                                  lugarDeInteresID: lugar.idLugarInteres!,
+                                );
+                              });
+                        }),
                   ),
                 );
               },
@@ -94,7 +105,8 @@ class _BackgroundMapState extends State<BackgroundMap> {
 
   @override
   Widget build(BuildContext context) {
-    final mapStateProvider = Provider.of<MapStateProvider>(context, listen:false);
+    final mapStateProvider =
+        Provider.of<MapStateProvider>(context, listen: false);
     final pageProvider = Provider.of<PageProvider>(context);
     return Stack(
       children: [
@@ -103,7 +115,7 @@ class _BackgroundMapState extends State<BackgroundMap> {
           child: FlutterMap(
             mapController: mapStateProvider.mapController,
             options: MapOptions(
-                initialCenter:  mapStateProvider.currentLocation ?? LatLng(0, 0),
+                initialCenter: mapStateProvider.currentLocation ?? LatLng(0, 0),
                 initialZoom: 14,
                 minZoom: 4,
                 interactionOptions: const InteractionOptions(

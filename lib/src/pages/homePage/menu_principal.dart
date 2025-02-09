@@ -7,7 +7,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
+import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
+import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/history_page.dart';
+import 'package:vilaexplorer/src/pages/lugarInteresPage/lugar_interes.dart';
+import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
 
 class MenuPrincipal extends StatefulWidget {
   const MenuPrincipal({
@@ -28,9 +32,11 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
   }
 
   Future<Map<String, Map<String, String>>> _getHistorias() async {
-    final String response = await rootBundle.loadString('assets/historias.json');
+    final String response =
+        await rootBundle.loadString('assets/historias.json');
     final Map<String, dynamic> data = json.decode(response);
-    return data.map((key, value) => MapEntry(key, Map<String, String>.from(value)));
+    return data
+        .map((key, value) => MapEntry(key, Map<String, String>.from(value)));
   }
 
   @override
@@ -46,101 +52,127 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             final historiasMap = snapshot.data!;
-            return Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30.r),
-                    topRight: Radius.circular(30.r),
-                  ),
-                  color: const Color.fromARGB(255, 24, 24, 24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color.fromARGB(255, 157, 157, 157),
-                      blurRadius: 50,
-                      blurStyle: BlurStyle.solid,
+            return BackgroundBoxDecoration(
+              child: SizedBox(
+                height: 416.h,
+                child: Column(
+                  children: <Widget>[
+                    const BarraDeslizamiento(),
+
+                    Divider(height: 10.h, color: Colors.transparent),
+
+                    // Botones principales
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ButtonMenuCustom(
+                          width: 100.w,
+                          textContent: AppLocalizations.of(context)!
+                              .translate('traditions'),
+                          svgPath: "lib/icon/tradiciones.svg",
+                          onTap: () async {
+                            Navigator.pop(context);
+                            return showModalBottomSheet(
+                                backgroundColor: Colors.transparent,
+                                scrollControlDisabledMaxHeightRatio: 600.h,
+                                context: context,
+                                sheetAnimationStyle: AnimationStyle(
+                                    duration: Duration(milliseconds: 400)),
+                                builder: (BuildContext context) {
+                                  return TradicionesPage(
+                                    onFiestaSelected: (fiestaName) =>
+                                        pageProvider.setFiesta(fiestaName),
+                                  );
+                                });
+                          },
+                        ),
+                        ButtonMenuCustom(
+                          width: 100.w,
+                          textContent: AppLocalizations.of(context)!
+                              .translate('favorites'),
+                          svgPath: "lib/icon/favoritos.svg",
+                          onTap: () async {
+                            Navigator.pop(context);
+                            return showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              scrollControlDisabledMaxHeightRatio: 550.h,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return FavoritosPage();
+                              },
+                            );
+                          },
+                        ),
+                        ButtonMenuCustom(
+                          width: 100.w,
+                          textContent: AppLocalizations.of(context)!
+                              .translate('my_account'),
+                          svgPath: "lib/icon/user_icon.svg",
+                          onTap: () => {
+                            pageProvider.changePage("cuenta"),
+                            Navigator.pop(context)
+                          },
+                        ),
+                      ],
                     ),
+
+                    Divider(height: 10.h, color: Colors.transparent),
+
+                    // Segunda fila de botones
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ButtonMenuCustom(
+                          width: 155.w,
+                          textContent: AppLocalizations.of(context)!
+                              .translate('gastronomy'),
+                          svgPath: "lib/icon/gastronomia.svg",
+                          onTap: () {
+                            Navigator.pop(context);
+                            return showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              scrollControlDisabledMaxHeightRatio: 470.h,
+                              context: context,
+                              sheetAnimationStyle: AnimationStyle(
+                                  duration: Duration(milliseconds: 400)),
+                              builder: (BuildContext context) {
+                                return GastronomiaPage(
+                                  onCategoriaPlatoSelected: (plato) {},
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        ButtonMenuCustom(
+                          width: 155.w,
+                          textContent:
+                              AppLocalizations.of(context)!.translate('sights'),
+                          svgPath: "lib/icon/monumentos.svg",
+                          onTap: () async {
+                            Navigator.pop(context);
+                            return showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              scrollControlDisabledMaxHeightRatio: 470.h,
+                              context: context,
+                              sheetAnimationStyle: AnimationStyle(
+                                  duration: Duration(milliseconds: 400)),
+                              builder: (BuildContext context) {
+                                return LugarDeInteresPage();
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+
+                    Divider(height: 10.h, color: Colors.transparent),
+
+                    // Historias
+                    _buildHistoriasSection(context, historiasMap),
                   ],
                 ),
-              height: 416.h,
-              child: Column(
-                children: <Widget>[
-                  const BarraDeslizamiento(),
-
-                  Divider(height: 10.h, color: Colors.transparent),
-
-                  // Botones principales
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ButtonMenuCustom(
-                        width: 100.w,
-                        textContent: AppLocalizations.of(context)!
-                            .translate('traditions'),
-                        svgPath: "lib/icon/tradiciones.svg",
-                        onTap: () => {
-                          pageProvider.changePage('tradiciones'),
-                          Navigator.pop(context)
-                        },
-                      ),
-                      ButtonMenuCustom(
-                        width: 100.w,
-                        textContent: AppLocalizations.of(context)!
-                            .translate('favorites'),
-                        svgPath: "lib/icon/favoritos.svg",
-                        onTap: () => {
-                          pageProvider.changePage("favoritos"),
-                          Navigator.pop(context)
-                        },
-                      ),
-                      ButtonMenuCustom(
-                        width: 100.w,
-                        textContent: AppLocalizations.of(context)!
-                            .translate('my_account'),
-                        svgPath: "lib/icon/user_icon.svg",
-                        onTap: () => {
-                          pageProvider.changePage("cuenta"),
-                          Navigator.pop(context)
-                        },
-                      ),
-                    ],
-                  ),
-
-                  Divider(height: 10.h, color: Colors.transparent),
-
-                  // Segunda fila de botones
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ButtonMenuCustom(
-                        width: 155.w,
-                        textContent: AppLocalizations.of(context)!
-                            .translate('gastronomy'),
-                        svgPath: "lib/icon/gastronomia.svg",
-                        onTap: () => {
-                          pageProvider.changePage('gastronomia'),
-                          Navigator.pop(context)
-                        },
-                      ),
-                      ButtonMenuCustom(
-                        width: 155.w,
-                        textContent:
-                            AppLocalizations.of(context)!.translate('sights'),
-                        svgPath: "lib/icon/monumentos.svg",
-                        onTap: () => {
-                          pageProvider.changePage("monumentos"),
-                          Navigator.pop(context)
-                        },
-                      ),
-                    ],
-                  ),
-
-                  Divider(height: 10.h, color: Colors.transparent),
-
-                  // Historias
-                  _buildHistoriasSection(context, historiasMap),
-                ],
               ),
             );
           }
@@ -221,7 +253,8 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: historiasMap.keys.map((imageUrl) {
-                return _buildHistoriaItem(context, imageUrl, historiasMap[imageUrl]!, historiasMap);
+                return _buildHistoriaItem(
+                    context, imageUrl, historiasMap[imageUrl]!, historiasMap);
               }).toList(),
             ),
           ),
@@ -323,5 +356,31 @@ class MySvgWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(path, height: height?.h, width: width?.w);
+  }
+}
+
+class BackgroundBoxDecoration extends StatelessWidget {
+  final Widget child;
+  const BackgroundBoxDecoration({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30.r),
+          topRight: Radius.circular(30.r),
+        ),
+        color: const Color.fromARGB(255, 24, 24, 24),
+        boxShadow: [
+          BoxShadow(
+            color: const Color.fromARGB(255, 157, 157, 157),
+            blurRadius: 50,
+            blurStyle: BlurStyle.solid,
+          ),
+        ],
+      ),
+      child: child,
+    );
   }
 }

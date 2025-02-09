@@ -47,9 +47,9 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
 
   @override
   Widget build(BuildContext context) {
-    final gastronomiaService = Provider.of<GastronomiaService>(context);
-    final pageProvider = Provider.of<PageProvider>(context);
-    final size = MediaQuery.of(context).size;
+    final gastronomiaService =
+        Provider.of<GastronomiaService>(context, listen: false);
+    final pageProvider = Provider.of<PageProvider>(context, listen: false);
 
     final isLoading = gastronomiaService.isLoading;
     final platos = gastronomiaService.platos;
@@ -63,18 +63,9 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
           });
         }
       },
-      behavior: HitTestBehavior.opaque, // Permite que los hijos reciban eventos táctiles
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          height: size.height * 0.65,
-          decoration: BoxDecoration(
-            color: const Color.fromRGBO(32, 29, 29, 0.9),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.r),
-              topRight: Radius.circular(20.r),
-            ),
-          ),
+      child: BackgroundBoxDecoration(
+        child: SizedBox(
+          height: 470.h,
           child: isLoading
               ? const Center(
                   child: CircularProgressIndicator(
@@ -83,10 +74,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                 )
               : Column(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10.0.h),
-                      child: BarraDeslizamiento(),
-                    ),
+                    BarraDeslizamiento(),
                     _buildHeader(context, pageProvider),
                     if (isSearchActive) _buildSearchField(context),
                     _buildButton(context),
@@ -175,8 +163,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
         controller: searchController,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
-          hintText:
-              AppLocalizations.of(context)!.translate('search_recipe'),
+          hintText: AppLocalizations.of(context)!.translate('search_recipe'),
           hintStyle: const TextStyle(color: Colors.white54),
           fillColor: const Color.fromARGB(255, 47, 42, 42),
           filled: true,
@@ -220,201 +207,205 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
   }
 
   Widget _buildListView(List platos, GastronomiaService service) {
-  return ListView.builder(
-    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-    itemCount: platos.length,
-    itemBuilder: (context, index) {
-      final plato = platos[index];
-      return GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetallePlatillo(
-                platillo: plato.nombre,  // Nombre del plato
-                ingredientes: plato.ingredientes,  // Ingredientes del plato
-                receta: plato.receta,  // Receta del plato
-                closeWidget: () {
-                  Navigator.pop(context);  // Cierra la pantalla
-                },
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+      itemCount: platos.length,
+      itemBuilder: (context, index) {
+        final plato = platos[index];
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetallePlatillo(
+                  platillo: plato.nombre, // Nombre del plato
+                  ingredientes: plato.ingredientes, // Ingredientes del plato
+                  receta: plato.receta, // Receta del plato
+                  closeWidget: () {
+                    Navigator.pop(context); // Cierra la pantalla
+                  },
+                ),
               ),
-            ),
-          );
-        },
-        child: _buildPlatoCard(plato, service, index),
-      );
-    },
-  );
-}
+            );
+          },
+          child: _buildPlatoCard(plato, service, index),
+        );
+      },
+    );
+  }
 
-
-Widget _buildGridView(List platos, GastronomiaService service) {
-  return GridView.builder(
-    padding: EdgeInsets.all(8.0.h),
-    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 2, 
-      crossAxisSpacing: 8.0,
-      mainAxisSpacing: 8.0,
-      childAspectRatio: 1.0,
-    ),
-    itemCount: platos.length,
-    itemBuilder: (context, index) {
-      final plato = platos[index];
-      return GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetallePlatillo(
-                platillo: plato.nombre,  // Nombre del plato
-                ingredientes: plato.ingredientes,  // Ingredientes del plato
-                receta: plato.receta,  // Receta del plato
-                closeWidget: () {
-                  Navigator.pop(context);  // Cierra la pantalla
-                },
-              ),
-            ),
-          );
-        },
-        child: _buildGridPlatoCard(plato, service, index),
-      );
-    },
-  );
-}
-
-
-Widget _buildGridPlatoCard(dynamic plato, GastronomiaService service, int index) {
-  return Card(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10.r), // Bordes redondeados
-    ),
-    color: const Color.fromARGB(255, 47, 42, 42),
-    elevation: 4.0,
-    child: Padding(
-      padding: EdgeInsets.all(8.0.w), // Padding interno
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch, // Asegura que el contenido ocupe todo el ancho
-        children: [
-          // Imagen de los platos (cubre todo el cuadrado)
-          FutureBuilder<Widget>(
-            future: service.getImageForPlato(plato.imagenBase64, plato.imagen),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return SizedBox(
-                  width: double.infinity, // La imagen ocupa todo el ancho
-                  height: 90.h, // Ajusta la altura de la imagen para evitar el desbordamiento
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              } else if (snapshot.hasError) {
-                return Icon(Icons.broken_image, size: 50.r, color: Colors.grey);
-              } else if (snapshot.hasData) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(10.r),
-                  child: Container(
-                    width: double.infinity,  // La imagen ocupa todo el ancho
-                    height: 90.h, // Ajusta la altura para evitar el desbordamiento
-                    child: snapshot.data!,  // La imagen cargada
-                  ),
-                );
-              } else {
-                return Icon(Icons.image_not_supported, size: 50.r, color: Colors.grey);
-              }
-            },
-          ),
-          const SizedBox(height: 8.0), // Espacio entre imagen y nombre
-          // Nombre del plato
-          Container(
-  width: double.infinity,
-  padding: EdgeInsets.symmetric(vertical: 8.0.h, horizontal: 8.0.w),
-  decoration: BoxDecoration(
-    color: Colors.white, // Fondo blanco
-    borderRadius: BorderRadius.only(
-      bottomLeft: Radius.circular(10.r), // Esquina inferior izquierda redondeada
-      bottomRight: Radius.circular(10.r), // Esquina inferior derecha redondeada
-    ),
-  ),
-  child: Text(
-    plato.nombre,
-    style: TextStyle(
-      fontSize: 14.sp,
-      fontWeight: FontWeight.bold,
-      color: Colors.black,
-    ),
-    textAlign: TextAlign.center,
-    maxLines: 2,
-    overflow: TextOverflow.ellipsis,
-  ),
-)
-
-        ],
+  Widget _buildGridView(List platos, GastronomiaService service) {
+    return GridView.builder(
+      padding: EdgeInsets.all(8.0.h),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 8.0,
+        mainAxisSpacing: 8.0,
+        childAspectRatio: 1.0,
       ),
-    ),
-  );
-}
+      itemCount: platos.length,
+      itemBuilder: (context, index) {
+        final plato = platos[index];
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetallePlatillo(
+                  platillo: plato.nombre, // Nombre del plato
+                  ingredientes: plato.ingredientes, // Ingredientes del plato
+                  receta: plato.receta, // Receta del plato
+                  closeWidget: () {
+                    Navigator.pop(context); // Cierra la pantalla
+                  },
+                ),
+              ),
+            );
+          },
+          child: _buildGridPlatoCard(plato, service, index),
+        );
+      },
+    );
+  }
 
-
-
+  Widget _buildGridPlatoCard(
+      dynamic plato, GastronomiaService service, int index) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.r), // Bordes redondeados
+      ),
+      color: const Color.fromARGB(255, 47, 42, 42),
+      elevation: 4.0,
+      child: Padding(
+        padding: EdgeInsets.all(8.0.w), // Padding interno
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment
+              .stretch, // Asegura que el contenido ocupe todo el ancho
+          children: [
+            // Imagen de los platos (cubre todo el cuadrado)
+            FutureBuilder<Widget>(
+              future:
+                  service.getImageForPlato(plato.imagenBase64, plato.imagen),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return SizedBox(
+                    width: double.infinity, // La imagen ocupa todo el ancho
+                    height: 90
+                        .h, // Ajusta la altura de la imagen para evitar el desbordamiento
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.hasError) {
+                  return Icon(Icons.broken_image,
+                      size: 50.r, color: Colors.grey);
+                } else if (snapshot.hasData) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(10.r),
+                    child: Container(
+                      width: double.infinity, // La imagen ocupa todo el ancho
+                      height: 90
+                          .h, // Ajusta la altura para evitar el desbordamiento
+                      child: snapshot.data!, // La imagen cargada
+                    ),
+                  );
+                } else {
+                  return Icon(Icons.image_not_supported,
+                      size: 50.r, color: Colors.grey);
+                }
+              },
+            ),
+            const SizedBox(height: 8.0), // Espacio entre imagen y nombre
+            // Nombre del plato
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 8.0.h, horizontal: 8.0.w),
+              decoration: BoxDecoration(
+                color: Colors.white, // Fondo blanco
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(
+                      10.r), // Esquina inferior izquierda redondeada
+                  bottomRight: Radius.circular(
+                      10.r), // Esquina inferior derecha redondeada
+                ),
+              ),
+              child: Text(
+                plato.nombre,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildPlatoCard(dynamic plato, GastronomiaService service, int index) {
-  // Determina si la imagen estará a la izquierda o a la derecha
-  bool isImageLeft = index % 2 == 0;
+    // Determina si la imagen estará a la izquierda o a la derecha
+    bool isImageLeft = index % 2 == 0;
 
-  return Card(
-    margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h), // Espaciado
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20.r), // Esquinas redondeadas
-    ),
-    color: const Color.fromARGB(255, 47, 42, 42),
-    child: Padding(
-      padding: EdgeInsets.all(16.0.w), // Padding interno
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: isImageLeft
-            ? _buildCardContent(service, plato)
-            : _buildCardContent(service, plato).reversed.toList(),
+    return Card(
+      margin:
+          EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h), // Espaciado
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.r), // Esquinas redondeadas
       ),
-    ),
-  );
-}
-
-List<Widget> _buildCardContent(GastronomiaService service, dynamic plato) {
-  return [
-    FutureBuilder<Widget>(
-      future: service.getImageForPlato(plato.imagenBase64, plato.imagen),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return SizedBox(
-            width: 100.w, // Esto sigue siendo mientras carga
-            height: 100.h,
-            child: Center(child: CircularProgressIndicator()),
-          );
-        } else if (snapshot.hasError) {
-          return Icon(Icons.broken_image, size: 50.r, color: Colors.grey);
-        } else if (snapshot.hasData) {
-          // Aquí aumentamos el tamaño de la imagen cargada
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(10.r),
-            child: Container(
-              width: 100.w,  // Aumenta el tamaño de la imagen
-              height: 100.h, // Aumenta el tamaño de la imagen
-              child: snapshot.data!,  // La imagen cargada
-            ),
-          );
-        } else {
-          return Icon(Icons.image_not_supported, size: 50.r, color: Colors.grey);
-        }
-      },
-    ),
-    SizedBox(width: 16.w), // Espacio entre la imagen y el texto
-    Expanded(
-      child: Text(
-        plato.nombre,
-        style: TextStyle(color: Colors.white, fontSize: 18.sp),
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
+      color: const Color.fromARGB(255, 47, 42, 42),
+      child: Padding(
+        padding: EdgeInsets.all(16.0.w), // Padding interno
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: isImageLeft
+              ? _buildCardContent(service, plato)
+              : _buildCardContent(service, plato).reversed.toList(),
+        ),
       ),
-    ),
-  ];
-}
+    );
+  }
 
+  List<Widget> _buildCardContent(GastronomiaService service, dynamic plato) {
+    return [
+      FutureBuilder<Widget>(
+        future: service.getImageForPlato(plato.imagenBase64, plato.imagen),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SizedBox(
+              width: 100.w, // Esto sigue siendo mientras carga
+              height: 100.h,
+              child: Center(child: CircularProgressIndicator()),
+            );
+          } else if (snapshot.hasError) {
+            return Icon(Icons.broken_image, size: 50.r, color: Colors.grey);
+          } else if (snapshot.hasData) {
+            // Aquí aumentamos el tamaño de la imagen cargada
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(10.r),
+              child: Container(
+                width: 100.w, // Aumenta el tamaño de la imagen
+                height: 100.h, // Aumenta el tamaño de la imagen
+                child: snapshot.data!, // La imagen cargada
+              ),
+            );
+          } else {
+            return Icon(Icons.image_not_supported,
+                size: 50.r, color: Colors.grey);
+          }
+        },
+      ),
+      SizedBox(width: 16.w), // Espacio entre la imagen y el texto
+      Expanded(
+        child: Text(
+          plato.nombre,
+          style: TextStyle(color: Colors.white, fontSize: 18.sp),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ];
+  }
 }

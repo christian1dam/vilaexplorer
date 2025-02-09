@@ -128,7 +128,6 @@ class FavoritoService extends ChangeNotifier {
     if (favoritoExistente != null) {
       await eliminarFavorito(favoritoExistente.idFavorito!);
     } else {
-      final userID = await UserPreferences().id;
       final nuevoFavorito = Favorito(
         idEntidad: idEntidad,
         tipoEntidad: tipoEntidad,
