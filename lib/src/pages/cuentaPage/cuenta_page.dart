@@ -182,8 +182,7 @@ class _CuentaPageState extends State<CuentaPage> {
                     FutureBuilder(
                       future: _userDataFuture,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         }
                         if (snapshot.hasError) {
@@ -211,29 +210,7 @@ class _CuentaPageState extends State<CuentaPage> {
                   ],
                 ),
                 SizedBox(height: 20.h),
-                Text(
-                  '${AppLocalizations.of(context)!.translate('password')}:',
-                  style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-                SizedBox(height: 5.h),
-                TextFormField(
-                  initialValue: "*********",
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: "******",
-                    hintStyle: TextStyle(color: Colors.white54),
-                    fillColor: Color.fromARGB(255, 47, 42, 42),
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.r)),
-                    ),
-                  ),
-                  style: const TextStyle(color: Colors.white),
-                ),
-                SizedBox(height: 20.h),
+
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
@@ -254,7 +231,6 @@ class _CuentaPageState extends State<CuentaPage> {
                         style: TextStyle(color: Colors.white)),
                   ),
                 ),
-                SizedBox(height: 20.h),
                 SizedBox(height: 20.h),
                 Text(
                   AppLocalizations.of(context)!.translate('help'),
@@ -387,8 +363,7 @@ class _CuentaPageState extends State<CuentaPage> {
                                 const end = Offset.zero;
                                 const curve = Curves.easeInOut;
 
-                                var tween = Tween(begin: begin, end: end)
-                                    .chain(CurveTween(curve: curve));
+                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
                                 return SlideTransition(
                                   position: animation.drive(tween),

@@ -8,7 +8,6 @@ import 'package:vilaexplorer/src/pages/cuentaPage/cuenta_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
 import 'package:vilaexplorer/src/pages/homePage/background_map.dart';
 import 'package:vilaexplorer/src/pages/homePage/routes.dart';
-import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -95,9 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: FloatingActionButton(
                 heroTag: "FAB-${UniqueKey()}",
                 backgroundColor: const Color.fromARGB(230, 50, 50, 50),
-                onPressed: () {
-                  pageProvider.toggleMapStyle();
-                },
+                onPressed: () => mapProvider.toggleMapStyle(),
                 tooltip: "Cambiar estilo del mapa",
                 child: const Icon(
                   Icons.map,

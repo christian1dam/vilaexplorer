@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:latlong2/latlong.dart';
@@ -105,9 +106,8 @@ class _BackgroundMapState extends State<BackgroundMap> {
 
   @override
   Widget build(BuildContext context) {
-    final mapStateProvider =
-        Provider.of<MapStateProvider>(context, listen: false);
-    final pageProvider = Provider.of<PageProvider>(context);
+    final mapStateProvider = Provider.of<MapStateProvider>(context);
+    final pageProvider = Provider.of<PageProvider>(context, listen: false);
     return Stack(
       children: [
         Opacity(
@@ -126,8 +126,11 @@ class _BackgroundMapState extends State<BackgroundMap> {
                 }),
             children: [
               TileLayer(
-                tileProvider: _tileProvider,
-                urlTemplate: pageProvider.currentMapStyle,
+                reset: mapStateProvider.resetController.stream,
+                tileProvider: CancellableNetworkTileProvider(),
+                urlTemplate: mapStateProvider.currentMapStyle
+                    ? 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+                    : 'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
               ),
               if (mapStateProvider.currentLocation != null)
                 CircleLayer(

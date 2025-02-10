@@ -98,6 +98,10 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                               backgroundColor: Colors.transparent,
                               scrollControlDisabledMaxHeightRatio: 550.h,
                               context: context,
+                              sheetAnimationStyle: AnimationStyle(
+                                duration: Duration(milliseconds: 1500),
+                                reverseDuration: Duration(microseconds: 400)
+                              ) ,
                               builder: (BuildContext context) {
                                 return FavoritosPage();
                               },

@@ -66,277 +66,294 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
           );
         } else {
           _lugarDeInteres = lugarDeInteresService.lugarDeInteres;
-          return Stack(
-            children: [
-              Positioned(
-                bottom: 70.h,
-                left: 17.w,
-                child: Container(
-                  width: 351.w,
-                  height: size.height * 0.45.h,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(250, 66, 66, 66),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20.r),
-                      topRight: Radius.circular(20.r),
-                      bottomLeft: Radius.circular(20.r),
-                      bottomRight: Radius.circular(20.r),
+          return Container(
+            height: 508.1.h,
+            decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(20.r)
+            ),
+            child: Stack(
+              children: [
+                Positioned(
+                  bottom: 70.h,
+                  left: 17.w,
+                  child: Container(
+                    width: 351.w,
+                    height: size.height * 0.45.h,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 24, 24, 24),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.r),
+                        topRight: Radius.circular(20.r),
+                        bottomLeft: Radius.circular(20.r),
+                        bottomRight: Radius.circular(20.r),
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Imagen con título y botón de cerrar superpuestos
-                      Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20.r),
-                              topRight: Radius.circular(20.r),
-                            ),
-                            child: FadeInImage.assetNetwork(
-                              placeholder: 'assets/no-image.jpg',
-                              image: _lugarDeInteres.imagen!,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: 180.h,
-                              fadeInDuration: Duration(milliseconds: 400),
-                              imageErrorBuilder: (context, error, stackTrace) {
-                                return Image.asset(
-                                  "assets/no-image.jpg",
-                                  height: 180.h,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                );
-                              },
-                            ),
-                          ),
-
-                          // Gradiente y superposición para título y botón
-                          Container(
-                            height: 180.h, // Misma altura que la imagen
-                            decoration: BoxDecoration(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Imagen con título y botón de cerrar superpuestos
+                        Stack(
+                          children: [
+                            ClipRRect(
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(20.r),
                                 topRight: Radius.circular(20.r),
                               ),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.black.withOpacity(0.6.r),
-                                  Colors.transparent
-                                ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.center,
+                              child: FadeInImage.assetNetwork(
+                                placeholder: 'assets/no-image.jpg',
+                                image: _lugarDeInteres.imagen!,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: 180.h,
+                                fadeInDuration: Duration(milliseconds: 400),
+                                imageErrorBuilder:
+                                    (context, error, stackTrace) {
+                                  return Image.asset(
+                                    "assets/no-image.jpg",
+                                    height: 180.h,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
                               ),
                             ),
 
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 15.w,
-                                vertical: 15.h,
+                            // Gradiente y superposición para título y botón
+                            Container(
+                              height: 180.h, // Misma altura que la imagen
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20.r),
+                                  topRight: Radius.circular(20.r),
+                                ),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.black.withOpacity(0.6.r),
+                                    Colors.transparent
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.center,
+                                ),
                               ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  //TITULO
-                                  Expanded(
-                                    child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        _lugarDeInteres.nombreLugar ??
-                                            'Nombre no disponible',
-                                        style: TextStyle(
-                                          fontSize: 19.sp,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          
-                                        ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                  ),
-                                  GoBackAndCloseButton(
-                                    myIcono: Icons.arrow_back,
-                                    onPressed: () => pageProvider
-                                        .changePage('lugares de interés'),
-                                    margin: EdgeInsets.only(right: 5.w),
-                                  ),
-                                  GoBackAndCloseButton(
-                                    onPressed: pageProvider.clearScreen,
-                                    myIcono: Icons.close_outlined,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
 
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: EdgeInsets.all(16.r),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                IntrinsicHeight(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Flexible(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 15.w,
+                                  vertical: 15.h,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    //TITULO
+                                    Expanded(
+                                      child: Align(
+                                        alignment: Alignment.topLeft,
                                         child: Text(
                                           _lugarDeInteres.nombreLugar ??
-                                              'Descripción no disponible',
+                                              'Nombre no disponible',
                                           style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18.sp),
+                                            fontSize: 19.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                          textAlign: TextAlign.left,
                                         ),
                                       ),
-                                      SizedBox(
-                                        width: 4.w,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          RatingBar.builder(
-                                            itemSize: 23.r,
-                                            //TODO #2 refactorizar la pagina para que solamente se consuma el lugar de interes por servicio
-                                            //  HAY QUE ENCONTRAR EL LUGAR DE INTERES EN EL BUILD.
-                                            initialRating: _lugarDeInteres
-                                                .puntuacionMediaLugar!,
-                                            minRating: 1,
-                                            direction: Axis.horizontal,
-                                            allowHalfRating: false,
-                                            itemCount: 5,
-                                            itemPadding: EdgeInsets.symmetric(
-                                                horizontal: 1.0.w),
-                                            itemBuilder: (context, _) => Icon(
-                                              Icons.star,
-                                              color: Color.fromARGB(230, 255, 205, 0),
-                                            ),
-                                            onRatingUpdate: (rating) async {
-                                              await puntuacionService
-                                                  .gestionarPuntuacion(
-                                                      idUsuario: await userPreferences.id,
-                                                      idEntidad: _lugarDeInteres.idLugarInteres!,
-                                                      tipoEntidad: TipoEntidad.LUGAR_INTERES.name,
-                                                      puntuacion:rating.toInt(),
-                                                      context: context,
-                                                      );
-                                              debugPrint("Nueva calificación: $rating \n ${_lugarDeInteres.puntuacionMediaLugar}");
+                                    ),
+                                    GoBackAndCloseButton(
+                                      myIcono: Icons.arrow_back,
+                                      onPressed: () => pageProvider
+                                          .changePage('lugares de interés'),
+                                      margin: EdgeInsets.only(right: 5.w),
+                                    ),
+                                    GoBackAndCloseButton(
+                                      onPressed: pageProvider.clearScreen,
+                                      myIcono: Icons.close_outlined,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
 
-                                              setState(() {
-                                                _lugarDeInteres = lugarDeInteresService.lugarDeInteres;
-                                              });
-                                            },
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Padding(
+                              padding: EdgeInsets.all(16.r),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  IntrinsicHeight(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            _lugarDeInteres.nombreLugar ??
+                                                'Descripción no disponible',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18.sp),
                                           ),
-                                        ],
-                                      ),
-                                    ],
+                                        ),
+                                        SizedBox(
+                                          width: 4.w,
+                                        ),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            RatingBar.builder(
+                                              itemSize: 23.r,
+                                              //TODO #2 refactorizar la pagina para que solamente se consuma el lugar de interes por servicio
+                                              //  HAY QUE ENCONTRAR EL LUGAR DE INTERES EN EL BUILD.
+                                              initialRating: _lugarDeInteres
+                                                  .puntuacionMediaLugar!,
+                                              minRating: 1,
+                                              direction: Axis.horizontal,
+                                              allowHalfRating: false,
+                                              unratedColor: Colors.grey,
+                                              itemCount: 5,
+                                              itemPadding: EdgeInsets.symmetric(
+                                                  horizontal: 1.0.w),
+                                              itemBuilder: (context, _) => Icon(
+                                                Icons.star,
+                                                color: Color.fromARGB(
+                                                    230, 255, 255, 64),
+                                              ),
+                                              onRatingUpdate: (rating) async {
+                                                await puntuacionService
+                                                    .gestionarPuntuacion(
+                                                  idUsuario:
+                                                      await userPreferences.id,
+                                                  idEntidad: _lugarDeInteres
+                                                      .idLugarInteres!,
+                                                  tipoEntidad: TipoEntidad
+                                                      .LUGAR_INTERES.name,
+                                                  puntuacion: rating.toInt(),
+                                                  context: context,
+                                                );
+                                                debugPrint(
+                                                    "Nueva calificación: $rating \n ${_lugarDeInteres.puntuacionMediaLugar}");
+
+                                                setState(() {
+                                                  _lugarDeInteres =
+                                                      lugarDeInteresService
+                                                          .lugarDeInteres;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 10.h),
-                                Text(
-                                  "Comentarios",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold,
+                                  SizedBox(height: 10.h),
+                                  Text(
+                                    "Comentarios",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 8.h),
-                                // TODO #1 Aquí van las opiniones de los usuarios
-                              ],
+                                  SizedBox(height: 8.h),
+                                  // TODO #1 Aquí van las opiniones de los usuarios
+                                ],
+                              ),
                             ),
                           ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // Botones flotantes debajo del recuadro
+                Positioned(
+                  left: 16.w,
+                  right: 16.w,
+                  bottom: 16.h,
+                  child: Row(
+                    children: [
+                      // Botón de "Obtener ruta"
+                      Expanded(
+                        flex: 4, // 80% del espacio
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 1, 140, 241),
+                            elevation: 5.h,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                          ),
+                          onPressed: () {
+                            final mapProvider = Provider.of<MapStateProvider>(
+                                context,
+                                listen: false);
+                            if (mapProvider.currentLocation != null) {
+                              mapProvider.getRouteTo(
+                                  LatLng(
+                                    _lugarDeInteres.coordenadas!.first.latitud!,
+                                    _lugarDeInteres
+                                        .coordenadas!.first.longitud!,
+                                  ),
+                                  mapProvider.currentLocation!);
+                            } else {
+                              debugPrint(
+                                'No se pudo encontrar el estado de MapView.',
+                              );
+                            }
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'Obtener ruta',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.sp,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(width: 8.w),
+
+                      Expanded(
+                        flex: 1, // 20% del espacio
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromARGB(255, 24, 24, 24),
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                          ),
+                          child: favoritoService.esFavorito(
+                                  _lugarDeInteres.idLugarInteres!,
+                                  TipoEntidad.FIESTA_TRADICION)
+                              ? MySvgWidget(path: 'lib/icon/favoriteTrue.svg')
+                              : MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
+                          onPressed: () async {
+                            favoritoService.gestionarFavorito(
+                              idUsuario: await userPreferences.id,
+                              idEntidad: _lugarDeInteres.idLugarInteres!,
+                              tipoEntidad: TipoEntidad.FIESTA_TRADICION.name,
+                            );
+                          },
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              // Botones flotantes debajo del recuadro
-              Positioned(
-                left: 16.w,
-                right: 16.w,
-                bottom: 16.h,
-                child: Row(
-                  children: [
-                    // Botón de "Obtener ruta"
-                    Expanded(
-                      flex: 4, // 80% del espacio
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 1, 140, 241),
-                          elevation: 5.h,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                        ),
-                        onPressed: () {
-                          final mapProvider = Provider.of<MapStateProvider>(context, listen: false);
-                          if (mapProvider.currentLocation != null) {
-                            mapProvider.getRouteTo(
-                              LatLng(
-                                _lugarDeInteres.coordenadas!.first.latitud!,
-                                _lugarDeInteres.coordenadas!.first.longitud!,
-                              ),
-                              mapProvider.currentLocation!
-                            );
-                          } else {
-                            debugPrint(
-                              'No se pudo encontrar el estado de MapView.',
-                            );
-                          }
-
-                          pageProvider.clearScreen();
-                        },
-                        child: Text(
-                          'Obtener ruta',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(width: 8.w),
-
-                    Expanded(
-                      flex: 1, // 20% del espacio
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[800],
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                        ),
-                        child: favoritoService.esFavorito(
-                                _lugarDeInteres.idLugarInteres!,
-                                TipoEntidad.FIESTA_TRADICION)
-                            ? MySvgWidget(path: 'lib/icon/favoriteTrue.svg')
-                            : MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
-                        onPressed: () async {
-                          favoritoService.gestionarFavorito(
-                            idUsuario: await userPreferences.id,
-                            idEntidad: _lugarDeInteres.idLugarInteres!,
-                            tipoEntidad: TipoEntidad.FIESTA_TRADICION.name,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           );
         }
       },
@@ -363,7 +380,7 @@ class GoBackAndCloseButton extends StatelessWidget {
       child: Container(
         margin: margin,
         decoration: BoxDecoration(
-          color: const Color.fromARGB(245, 70, 68, 68),
+          color: Color.fromARGB(255, 24, 24, 24),
           borderRadius: BorderRadius.all(
             Radius.circular(10.r),
           ),
