@@ -24,6 +24,9 @@ class _BackgroundMapState extends State<BackgroundMap> {
   final String accessToken = dotenv.env['OPENROUTESERVICE_ACCESS_TOKEN'] ??
       (throw Exception(
           'OPENROUTESERVICE_ACCESS_TOKEN no está definido en el archivo .env'));
+  final String mapboxAT = dotenv.env['MAPBOX_ACCESS_TOKEN'] ??
+      (throw Exception(
+          'MABPOX_ACCESS_TOKEN no está definido en el archivo .env'));
   final _tileProvider = FMTCTileProvider(
     stores: const {
       'VilaExplorerMapStore': BrowseStoreStrategy.readUpdateCreate
@@ -129,8 +132,8 @@ class _BackgroundMapState extends State<BackgroundMap> {
                 reset: mapStateProvider.resetController.stream,
                 tileProvider: CancellableNetworkTileProvider(),
                 urlTemplate: mapStateProvider.currentMapStyle
-                    ? 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-                    : 'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+                    ? 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/tiles/{z}/{x}/{y}?access_token=$mapboxAT'
+                    : 'https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token=$mapboxAT',
               ),
               if (mapStateProvider.currentLocation != null)
                 CircleLayer(
