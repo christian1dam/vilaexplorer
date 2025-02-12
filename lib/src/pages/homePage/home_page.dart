@@ -35,13 +35,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final pageProvider = Provider.of<PageProvider>(context, listen: true);
     final mapProvider = Provider.of<MapStateProvider>(context, listen: true);
-    final isMapLoaded = mapProvider.isMapLoaded;
 
     return Scaffold(
       body: Stack(
         children: [
           BackgroundMap(),
-          if (isMapLoaded) ...[
+          if (mapProvider.mapController != null) ...[
             Positioned(
               top: 0,
               left: 0,
@@ -62,8 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: CuentaPage(),
               ),
             ),
-            if (pageProvider.currentPage == 'map' &&
-                pageProvider.idLugarDeInteres == null)
+            if (pageProvider.currentPage == 'map')
               Positioned(
                 bottom: 145.h,
                 right: 20.w,
@@ -80,8 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-            if (pageProvider.currentPage == 'map' &&
-                pageProvider.idLugarDeInteres == null)
+            if (pageProvider.currentPage == 'map')
               Positioned(
                 bottom: 75.h,
                 right: 20.w,

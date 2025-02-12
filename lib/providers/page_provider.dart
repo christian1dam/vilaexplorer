@@ -5,10 +5,6 @@ class PageProvider extends ChangeNotifier {
 
   String? selectedFiesta;
   int? idLugarDeInteres;
-  String? selectedCategory;
-  String? selectedPlatillo;
-  String? selectedIngredientes;
-  String? selectedReceta;
 
   void changePage(String page) {
     currentPage = page;
@@ -29,26 +25,9 @@ class PageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setCategory(String category) {
-    selectedCategory = category;
-    notifyListeners();
-  }
-
-  void setPlatillo(String platillo, String ingredientes, String receta) {
-    selectedPlatillo = platillo;
-    selectedIngredientes = ingredientes;
-    selectedReceta = receta;
-    notifyListeners();
-  }
-
   void clearScreen() {
     currentPage = 'map';
-    idLugarDeInteres = null;
     selectedFiesta = null;
-    selectedCategory = null;
-    selectedPlatillo = null;
-    selectedIngredientes = null;
-    selectedReceta = null;
     notifyListeners();
   }
 }

@@ -9,7 +9,6 @@ import 'package:vilaexplorer/api/api_client.dart';
 
 class MapStateProvider extends ChangeNotifier {
   final _apiClient = ApiClient();
-  bool _isMapLoaded = false;
   LatLng? _currentLocation;
   List<LatLng> _routePoints = [];
   LatLngBounds? _bounds;
@@ -19,7 +18,23 @@ class MapStateProvider extends ChangeNotifier {
   bool currentMapStyle = true;
   LatLng? get currentLocation => _currentLocation;
 
-  final StreamController<void> resetController = StreamController.broadcast();
+  MapController? _mapController;
+
+  MapController? get mapController => _mapController;
+
+  set setMapController(MapController mapController){
+    _mapController = mapController;
+    notifyListeners();
+  }
+
+  StreamController<void>? _resetController;
+
+  StreamController<void>? get resetController => _resetController; 
+
+  set setStreamController(StreamController<void> resetController){
+    _resetController = resetController;
+    notifyListeners();
+  }
 
   bool _focusCurrentLocation = false;
 
@@ -47,13 +62,6 @@ class MapStateProvider extends ChangeNotifier {
 
   set setCurrentLocationFocusMode(bool focus) {
     _focusCurrentLocation = focus;
-    notifyListeners();
-  }
-
-  bool get isMapLoaded => _isMapLoaded;
-
-  set setMapLoaded(bool isItLoaded) {
-    _isMapLoaded = isItLoaded;
     notifyListeners();
   }
 
@@ -101,7 +109,8 @@ class MapStateProvider extends ChangeNotifier {
    void toggleMapStyle() {
     debugPrint("SE HA ENTRADO A TOGGLEMAPSTYLE $currentMapStyle");
     currentMapStyle = !currentMapStyle;
-    resetController.add(null);
+    notifyListeners();
+    resetController!.add(null);
     notifyListeners();
   }
 }

@@ -25,14 +25,19 @@ class _BackgroundMapState extends State<BackgroundMap>
   static const _inProgressId = 'AnimatedMapController#MoveInProgress';
   static const _finishedId = 'AnimatedMapController#MoveFinished';
 
+
+
+  MapStateProvider? _mapStateProvider;
+  final StreamController<void> _resetController = StreamController.broadcast();
+  final MapController _mapController = MapController();
+
   List<Marker> _markers = [];
   final String _mapboxAT = dotenv.env['MAPBOX_ACCESS_TOKEN']!;
-  // final _tileProvider = FMTCTileProvider(
-  //   stores: const {
-  //     'VilaExplorerMapStore': BrowseStoreStrategy.readUpdateCreate
-  //   },
-  // );
-  final MapController _mapController = MapController();
+  final _tileProvider = FMTCTileProvider(
+    stores: const {
+      'VilaExplorerMapStore': BrowseStoreStrategy.readUpdateCreate
+    },
+  );
 
   @override
   void initState() {
@@ -41,12 +46,12 @@ class _BackgroundMapState extends State<BackgroundMap>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugPrint("LLAMANDO A LOADMARKERS");
       _drawMarkers();
-      Provider.of<MapStateProvider>(context, listen: false).setMapLoaded = true;
     });
   }
 
   Future<void> _getCurrentLocation() async {
-    final mapStateProvider = Provider.of<MapStateProvider>(context, listen: false);
+    final mapStateProvider =
+        Provider.of<MapStateProvider>(context, listen: false);
     await mapStateProvider.getCurrentLocation();
   }
 
@@ -121,10 +126,15 @@ class _BackgroundMapState extends State<BackgroundMap>
         }
 
         return GestureDetector(
-          onDoubleTap: () => mapStateProvider.setCurrentLocationFocusMode = true,
+          onDoubleTap: () =>
+              mapStateProvider.setCurrentLocationFocusMode = true,
           child: FlutterMap(
             mapController: _mapController,
             options: MapOptions(
+                onMapReady: () {
+                  mapStateProvider.setMapController = _mapController;
+                  mapStateProvider.setStreamController = _resetController;
+                },
                 initialCenter: mapStateProvider.currentLocation ?? LatLng(0, 0),
                 initialZoom: 14,
                 minZoom: 4,
@@ -136,8 +146,8 @@ class _BackgroundMapState extends State<BackgroundMap>
                 }),
             children: [
               TileLayer(
-                reset: mapStateProvider.resetController.stream,
-                tileProvider: CancellableNetworkTileProvider(),
+                reset: _resetController.stream,
+                tileProvider: mapStateProvider.currentMapStyle ? CancellableNetworkTileProvider() : _tileProvider,
                 userAgentPackageName: 'com.example.vilaexplorer',
                 urlTemplate: mapStateProvider.currentMapStyle
                     ? 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/tiles/{z}/{x}/{y}?access_token=$_mapboxAT'
@@ -176,6 +186,19 @@ class _BackgroundMapState extends State<BackgroundMap>
         );
       },
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _mapStateProvider = Provider.of<MapStateProvider>(context, listen: false);
+  }
+
+  @override
+  void dispose() {
+    _mapStateProvider?.mapController?.dispose();
+    _mapStateProvider?.resetController?.close();
+    super.dispose();
   }
 
   void _fitCameraToRoute(List<LatLng> routePoints) {
@@ -313,4 +336,4 @@ final _animatedMoveTileUpdateTransformer =
   } else {
     sink.add(updateEvent);
   }
-});
+}); 
