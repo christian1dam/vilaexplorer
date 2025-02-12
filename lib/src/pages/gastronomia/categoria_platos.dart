@@ -35,7 +35,7 @@ class CategoriaPlatos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: _loadDishes(),

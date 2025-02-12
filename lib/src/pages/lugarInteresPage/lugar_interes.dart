@@ -63,7 +63,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                       alignment: Alignment.centerLeft,
                       child: Container(
                         margin: const EdgeInsets.only(top: 10),
-                        width: MediaQuery.of(context).size.width * 0.5,
+                        width: MediaQuery.sizeOf(context).width * 0.5,
                         height: 35.h,
                         child: const Center(
                           child: Text(

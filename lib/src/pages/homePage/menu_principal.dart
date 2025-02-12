@@ -223,8 +223,8 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
   Widget _buildHistoriasSection(
       BuildContext context, Map<String, Map<String, String>> historiasMap) {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.15,
+      width: MediaQuery.sizeOf(context).width,
+      height: MediaQuery.sizeOf(context).height * 0.15,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(13.r)),
         color: const Color.fromRGBO(39, 39, 39, 1),

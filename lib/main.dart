@@ -137,7 +137,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<Widget> _checkEstadoSesion() async {
-    // bool sesion = ;
     debugPrint("ESTADO DE LA SESION DEL USUARIO: ${await UserPreferences().sesion}");
     return await UserPreferences().sesion ? MyHomePage() : SplashPage();
   }

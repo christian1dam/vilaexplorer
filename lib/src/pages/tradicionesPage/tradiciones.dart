@@ -54,7 +54,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
 
     return Consumer<TradicionesService>(

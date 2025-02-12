@@ -3,37 +3,50 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:vilaexplorer/api/api_client.dart';
 
 class MapStateProvider extends ChangeNotifier {
-  late final MapController _mapController = MapController();
   final _apiClient = ApiClient();
   bool _isMapLoaded = false;
   LatLng? _currentLocation;
   List<LatLng> _routePoints = [];
   LatLngBounds? _bounds;
   LatLngBounds? get bounds => _bounds;
-
-  final StreamController<void> resetController = StreamController.broadcast();
+  bool _focusRoute = false;
+  bool get focusRoute => _focusRoute;
   bool currentMapStyle = true;
-
-
   LatLng? get currentLocation => _currentLocation;
 
-  MapController get mapController => _mapController;
+  final StreamController<void> resetController = StreamController.broadcast();
+
+  bool _focusCurrentLocation = false;
+
+  bool get focusCurrentLocation => _focusCurrentLocation;
+
 
   set setCurrentLocation(LatLng location) {
     _currentLocation = location;
+    _focusCurrentLocation = true;
     notifyListeners();
   }
 
   List<LatLng> get routePoints => _routePoints;
 
-  void setRoutePoints(List<LatLng> points) {
+  set setRoutePoints(List<LatLng> points) {
     _routePoints = points;
+    _focusRoute = true;
+    notifyListeners();
+  }
+
+  void setRouteFocusMode() {
+    _focusRoute = false;
+    notifyListeners(); 
+  }
+
+  set setCurrentLocationFocusMode(bool focus) {
+    _focusCurrentLocation = focus;
     notifyListeners();
   }
 
@@ -55,21 +68,10 @@ class MapStateProvider extends ChangeNotifier {
 
       final features = data['features'] as List;
       final coordinates = features.first['geometry']['coordinates'] as List;
-
-      _routePoints = coordinates
-          .map<LatLng>((coord) => LatLng(coord[1], coord[0]))
-          .toList();
-
-      final bbox = data['bbox'] as List;
-
-      if (bbox.length == 4) {
-        final southWest = LatLng(bbox[1], bbox[0]);
-        final northEast = LatLng(bbox[3], bbox[2]);
-        _bounds = LatLngBounds(southWest, northEast);
-        _mapController.fitCamera(
-            CameraFit.bounds(bounds: _bounds!, padding: EdgeInsets.all(40.r)));
-      }
-
+      
+      setRoutePoints = coordinates.map<LatLng>((coord) => LatLng(coord[1], coord[0])).toList();
+    
+      _bounds = LatLngBounds.fromPoints(_routePoints);
       notifyListeners();
     } catch (e) {
       throw Exception('Error al obtener la ruta: $e');
@@ -92,7 +94,7 @@ class MapStateProvider extends ChangeNotifier {
       locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     );
 
-    _currentLocation = LatLng(position.latitude, position.longitude);
+    setCurrentLocation = LatLng(position.latitude, position.longitude);
     notifyListeners();
   }
 

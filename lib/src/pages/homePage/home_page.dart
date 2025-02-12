@@ -41,67 +41,62 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Stack(
         children: [
           BackgroundMap(),
-
-          if (isMapLoaded)
+          if (isMapLoaded) ...[
             Positioned(
               top: 0,
               left: 0,
               right: 0,
               child: AppBarCustom(),
             ),
-
-          Positioned.fill(
-            child: Offstage(
-              offstage: pageProvider.currentPage != 'routes',
-              child: RoutesPage(
-                onClose: () =>
-                    pageProvider.changePage('map'),
-              ),
-            ),
-          ),
-          
-          Positioned.fill(
-            child: Offstage(
-              offstage: pageProvider.currentPage != 'cuenta',
-              child: CuentaPage(),
-            ),
-          ),
-
-          if (pageProvider.currentPage == 'map' &&
-              pageProvider.idLugarDeInteres == null)
-            Positioned(
-              bottom: 145.h,
-              right: 20.w,
-              child: FloatingActionButton(
-                heroTag: "FAB-${UniqueKey()}",
-                backgroundColor: const Color.fromARGB(230, 50, 50, 50),
-                onPressed: () {
-                  pageProvider.changePage('routes');
-                },
-                tooltip: "Guardar ruta",
-                child: const Icon(
-                  Icons.route_rounded,
-                  color: Colors.white,
+            Positioned.fill(
+              child: Offstage(
+                offstage: pageProvider.currentPage != 'routes',
+                child: RoutesPage(
+                  onClose: () => pageProvider.changePage('map'),
                 ),
               ),
             ),
-
-          if (pageProvider.currentPage == 'map' &&
-              pageProvider.idLugarDeInteres == null)
-            Positioned(
-              bottom: 75.h,
-              right: 20.w,
-              child: FloatingActionButton(
-                heroTag: "FAB-${UniqueKey()}",
-                backgroundColor: const Color.fromARGB(230, 50, 50, 50),
-                onPressed: () => mapProvider.toggleMapStyle(),
-                tooltip: "Cambiar estilo del mapa",
-                child: const Icon(
-                  Icons.map,
-                  color: Colors.white,
-                ),
+            Positioned.fill(
+              child: Offstage(
+                offstage: pageProvider.currentPage != 'cuenta',
+                child: CuentaPage(),
               ),
             ),
+            if (pageProvider.currentPage == 'map' &&
+                pageProvider.idLugarDeInteres == null)
+              Positioned(
+                bottom: 145.h,
+                right: 20.w,
+                child: FloatingActionButton(
+                  heroTag: "FAB-${UniqueKey()}",
+                  backgroundColor: const Color.fromARGB(230, 50, 50, 50),
+                  onPressed: () {
+                    pageProvider.changePage('routes');
+                  },
+                  tooltip: "Guardar ruta",
+                  child: const Icon(
+                    Icons.route_rounded,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            if (pageProvider.currentPage == 'map' &&
+                pageProvider.idLugarDeInteres == null)
+              Positioned(
+                bottom: 75.h,
+                right: 20.w,
+                child: FloatingActionButton(
+                  heroTag: "FAB-${UniqueKey()}",
+                  backgroundColor: const Color.fromARGB(230, 50, 50, 50),
+                  onPressed: () => mapProvider.toggleMapStyle(),
+                  tooltip: "Cambiar estilo del mapa",
+                  child: const Icon(
+                    Icons.map,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+          ]
         ],
       ),
     );

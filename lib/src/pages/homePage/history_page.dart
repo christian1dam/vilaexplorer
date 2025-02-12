@@ -162,7 +162,7 @@ class _HistoriaScreenState extends State<HistoriaScreen>
             ),
             Positioned(
               bottom: 50,
-              left: MediaQuery.of(context).size.width / 2 - 100,
+              left: MediaQuery.sizeOf(context).width / 2 - 100,
               child: Column(
                 children: [
                   AnimatedBuilder(

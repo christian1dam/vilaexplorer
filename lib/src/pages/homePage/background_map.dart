@@ -19,19 +19,20 @@ class BackgroundMap extends StatefulWidget {
   _BackgroundMapState createState() => _BackgroundMapState();
 }
 
-class _BackgroundMapState extends State<BackgroundMap> {
+class _BackgroundMapState extends State<BackgroundMap>
+    with TickerProviderStateMixin {
+  static const _startedId = 'AnimatedMapController#MoveStarted';
+  static const _inProgressId = 'AnimatedMapController#MoveInProgress';
+  static const _finishedId = 'AnimatedMapController#MoveFinished';
+
   List<Marker> _markers = [];
-  final String accessToken = dotenv.env['OPENROUTESERVICE_ACCESS_TOKEN'] ??
-      (throw Exception(
-          'OPENROUTESERVICE_ACCESS_TOKEN no está definido en el archivo .env'));
-  final String mapboxAT = dotenv.env['MAPBOX_ACCESS_TOKEN'] ??
-      (throw Exception(
-          'MABPOX_ACCESS_TOKEN no está definido en el archivo .env'));
-  final _tileProvider = FMTCTileProvider(
-    stores: const {
-      'VilaExplorerMapStore': BrowseStoreStrategy.readUpdateCreate
-    },
-  );
+  final String _mapboxAT = dotenv.env['MAPBOX_ACCESS_TOKEN']!;
+  // final _tileProvider = FMTCTileProvider(
+  //   stores: const {
+  //     'VilaExplorerMapStore': BrowseStoreStrategy.readUpdateCreate
+  //   },
+  // );
+  final MapController _mapController = MapController();
 
   @override
   void initState() {
@@ -45,13 +46,8 @@ class _BackgroundMapState extends State<BackgroundMap> {
   }
 
   Future<void> _getCurrentLocation() async {
-    final mapStateProvider =
-        Provider.of<MapStateProvider>(context, listen: false);
+    final mapStateProvider = Provider.of<MapStateProvider>(context, listen: false);
     await mapStateProvider.getCurrentLocation();
-    if (mapStateProvider.currentLocation != null) {
-      mapStateProvider.mapController
-          .move(mapStateProvider.currentLocation!, 16);
-    }
   }
 
   void _drawMarkers() {
@@ -73,25 +69,27 @@ class _BackgroundMapState extends State<BackgroundMap> {
                   rotate: true,
                   child: Builder(
                     builder: (context) => IconButton(
-                        icon: Icon(
-                          iconData,
-                          color: color,
-                          size: 40.r,
-                        ),
-                        onPressed: () async {
-                          return showModalBottomSheet(
-                              backgroundColor: Colors.transparent,
-                              scrollControlDisabledMaxHeightRatio: 470.h,
-                              sheetAnimationStyle: AnimationStyle(
-                                duration: Duration(milliseconds: 400),
-                              ),
-                              context: context,
-                              builder: (BuildContext context) {
-                                return DetalleLugarInteres(
-                                  lugarDeInteresID: lugar.idLugarInteres!,
-                                );
-                              });
-                        }),
+                      icon: Icon(
+                        iconData,
+                        color: color,
+                        size: 40.r,
+                      ),
+                      onPressed: () async {
+                        return showModalBottomSheet(
+                          backgroundColor: Colors.transparent,
+                          scrollControlDisabledMaxHeightRatio: 470.h,
+                          sheetAnimationStyle: AnimationStyle(
+                            duration: Duration(milliseconds: 400),
+                          ),
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DetalleLugarInteres(
+                              lugarDeInteresID: lugar.idLugarInteres!,
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
                 );
               },
@@ -109,14 +107,23 @@ class _BackgroundMapState extends State<BackgroundMap> {
 
   @override
   Widget build(BuildContext context) {
-    final mapStateProvider = Provider.of<MapStateProvider>(context);
-    final pageProvider = Provider.of<PageProvider>(context, listen: false);
-    return Stack(
-      children: [
-        Opacity(
-          opacity: 1,
+    Provider.of<PageProvider>(context, listen: false);
+    return Consumer2<MapStateProvider, PageProvider>(
+      builder: (context, mapStateProvider, pageProvider, child) {
+        if (mapStateProvider.focusRoute) {
+          _fitCameraToRoute(mapStateProvider.routePoints);
+          Future.microtask(() => mapStateProvider.setRouteFocusMode());
+        }
+
+        if (context.mounted && mapStateProvider.focusCurrentLocation) {
+          _animatedMapMove(mapStateProvider.currentLocation!, 12);
+          Future.microtask(() => mapStateProvider.setCurrentLocationFocusMode = false);
+        }
+
+        return GestureDetector(
+          onDoubleTap: () => mapStateProvider.setCurrentLocationFocusMode = true,
           child: FlutterMap(
-            mapController: mapStateProvider.mapController,
+            mapController: _mapController,
             options: MapOptions(
                 initialCenter: mapStateProvider.currentLocation ?? LatLng(0, 0),
                 initialZoom: 14,
@@ -131,16 +138,19 @@ class _BackgroundMapState extends State<BackgroundMap> {
               TileLayer(
                 reset: mapStateProvider.resetController.stream,
                 tileProvider: CancellableNetworkTileProvider(),
+                userAgentPackageName: 'com.example.vilaexplorer',
                 urlTemplate: mapStateProvider.currentMapStyle
-                    ? 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/tiles/{z}/{x}/{y}?access_token=$mapboxAT'
-                    : 'https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token=$mapboxAT',
+                    ? 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/tiles/{z}/{x}/{y}?access_token=$_mapboxAT'
+                    : 'https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token=$_mapboxAT',
+                tileUpdateTransformer: _animatedMoveTileUpdateTransformer,
+                panBuffer: 0,
               ),
               if (mapStateProvider.currentLocation != null)
                 CircleLayer(
                   circles: [
                     CircleMarker(
                       point: mapStateProvider.currentLocation!,
-                      color: Colors.blue.withOpacity(0.5),
+                      color: const Color.fromARGB(134, 33, 149, 243),
                       borderStrokeWidth: 2.r,
                       borderColor: Colors.blue,
                       radius: 10.r,
@@ -152,17 +162,27 @@ class _BackgroundMapState extends State<BackgroundMap> {
                 PolylineLayer(
                   polylines: [
                     Polyline(
+                      gradientColors: [
+                        const Color.fromARGB(255, 0, 140, 255),
+                        const Color.fromARGB(255, 0, 78, 147)
+                      ],
                       points: mapStateProvider.routePoints,
-                      color: Colors.blue,
                       strokeWidth: 4.0,
                     ),
                   ],
                 ),
             ],
           ),
-        ),
-      ],
+        );
+      },
     );
+  }
+
+  void _fitCameraToRoute(List<LatLng> routePoints) {
+    final bounds = LatLngBounds.fromPoints(routePoints);
+    final cameraFit =
+        CameraFit.bounds(bounds: bounds).fit(_mapController.camera);
+    _animatedMapMove(cameraFit.center, cameraFit.zoom - 0.5);
   }
 
   _getIconForLugar(String tipoLugar) {
@@ -203,17 +223,94 @@ class _BackgroundMapState extends State<BackgroundMap> {
     }
   }
 
-  void getRouteTo(LatLng destination, BuildContext context) {
-    if (context.mounted) {
-      final mapStateProvider =
-          Provider.of<MapStateProvider>(context, listen: false);
-      if (mapStateProvider.currentLocation != null) {
-        mapStateProvider.getRouteTo(
-            destination, mapStateProvider.currentLocation!);
+  void _animatedMapMove(LatLng destLocation, double destZoom) {
+    debugPrint("SE HA ENTRADO A ANIMATED MAP MOVE");
+    // Create some tweens. These serve to split up the transition from one location to another.
+    // In our case, we want to split the transition be<tween> our current map center and the destination.
+    final camera = _mapController.camera;
+    final latTween = Tween<double>(
+        begin: camera.center.latitude, end: destLocation.latitude);
+    final lngTween = Tween<double>(
+        begin: camera.center.longitude, end: destLocation.longitude);
+    final zoomTween = Tween<double>(begin: camera.zoom, end: destZoom);
+
+    // Create a animation controller that has a duration and a TickerProvider.
+    final controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+    // The animation determines what path the animation will take. You can try different Curves values, although I found
+    // fastOutSlowIn to be my favorite.
+    final Animation<double> animation =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+
+    // Note this method of encoding the target destination is a workaround.
+    // When proper animated movement is supported (see #1263) we should be able
+    // to detect an appropriate animated movement event which contains the
+    // target zoom/center.
+    final startIdWithTarget =
+        '$_startedId#${destLocation.latitude},${destLocation.longitude},$destZoom';
+    bool hasTriggeredMove = false;
+
+    controller.addListener(() {
+      final String id;
+      if (animation.value == 1.0) {
+        id = _finishedId;
+      } else if (!hasTriggeredMove) {
+        id = startIdWithTarget;
       } else {
-        debugPrint(
-            'No se puede obtener la ruta: ubicación actual no disponible.');
+        id = _inProgressId;
       }
-    }
+
+      hasTriggeredMove |= _mapController.move(
+        LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
+        zoomTween.evaluate(animation),
+        id: id,
+      );
+    });
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.dispose();
+      } else if (status == AnimationStatus.dismissed) {
+        controller.dispose();
+      }
+    });
+
+    controller.forward();
   }
 }
+
+/// Causes tiles to be prefetched at the target location and disables pruning
+/// whilst animating movement. When proper animated movement is added (see
+/// #1263) we should just detect the appropriate AnimatedMove events and
+/// use their target zoom/center.
+final _animatedMoveTileUpdateTransformer =
+    TileUpdateTransformer.fromHandlers(handleData: (updateEvent, sink) {
+  final mapEvent = updateEvent.mapEvent;
+
+  final id = mapEvent is MapEventMove ? mapEvent.id : null;
+  if (id?.startsWith(_BackgroundMapState._startedId) ?? false) {
+    final parts = id!.split('#')[2].split(',');
+    final lat = double.parse(parts[0]);
+    final lon = double.parse(parts[1]);
+    final zoom = double.parse(parts[2]);
+
+    // When animated movement starts load tiles at the target location and do
+    // not prune. Disabling pruning means existing tiles will remain visible
+    // whilst animating.
+    sink.add(
+      updateEvent.loadOnly(
+        loadCenterOverride: LatLng(lat, lon),
+        loadZoomOverride: zoom,
+      ),
+    );
+  } else if (id == _BackgroundMapState._inProgressId) {
+    // Do not prune or load whilst animating so that any existing tiles remain
+    // visible. A smarter implementation may start pruning once we are close to
+    // the target zoom/location.
+  } else if (id == _BackgroundMapState._finishedId) {
+    // We already prefetched the tiles when animation started so just prune.
+    sink.add(updateEvent.pruneOnly());
+  } else {
+    sink.add(updateEvent);
+  }
+});

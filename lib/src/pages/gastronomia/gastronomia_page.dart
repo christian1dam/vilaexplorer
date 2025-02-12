@@ -98,7 +98,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
   }
 
   Widget _buildHeader(BuildContext context, PageProvider pageProvider) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
       child: Row(

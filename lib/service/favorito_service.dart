@@ -8,7 +8,6 @@ import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/models/tipo_entidad.dart';
 import 'package:vilaexplorer/models/tradiciones/tradiciones.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
-import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class FavoritoService extends ChangeNotifier {
   final ApiClient _apiClient = ApiClient();

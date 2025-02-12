@@ -99,7 +99,7 @@ class _SignUpPageState extends State<SignUpPage>
               child: Image.asset(
                 'assets/images/fondoVilaBN.png',
                 fit: BoxFit.cover,
-                height: MediaQuery.of(context).size.height * 0.4,
+                height: MediaQuery.sizeOf(context).height * 0.4,
                 width: double.infinity,
               ),
             ),
@@ -109,7 +109,7 @@ class _SignUpPageState extends State<SignUpPage>
             child: Column(
               children: [
                 // Espacio superior del 30% de la pantalla
-                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
 
                 // Hero con rotación
                 Hero(
@@ -187,7 +187,7 @@ class _SignUpPageState extends State<SignUpPage>
                     _confirmPasswordController),
 
                 // Espacio desde el fondo del 10%
-                SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.10),
 
                 Spacer(),
                 // Botones de registro y entrar

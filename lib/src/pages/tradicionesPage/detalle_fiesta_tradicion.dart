@@ -12,7 +12,7 @@ class DetalleFiestaTradicion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
     final tradicionesService = Provider.of<TradicionesService>(context, listen: false);
     final Tradiciones tradicion = tradicionesService.todasLasTradiciones!.firstWhere((element) => element.nombre == fiestaName);
@@ -23,7 +23,7 @@ class DetalleFiestaTradicion extends StatelessWidget {
         width: size.width,
         height: size.height * 0.6,
         padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
+        decoration: const BoxDecoration(  
           color: Color.fromRGBO(32, 29, 29, 0.9),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),

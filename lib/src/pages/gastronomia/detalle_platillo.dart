@@ -45,7 +45,7 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     return GestureDetector(
       onTap: () {
