@@ -26,21 +26,15 @@ class LugarDeInteresService with ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> fetchLugaresDeInteresActivos() async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
-
     try {
       final response = await _apiClient.get('/lugar_interes/activos');
       final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
-      _lugaresDeInteres =
-          data.map((json) => LugarDeInteres.fromMap(json)).toList();
+      if (data.hashCode == 200) {
+        _lugaresDeInteres = data.map((json) => LugarDeInteres.fromMap(json)).toList();
+        notifyListeners();
+      }
     } catch (error) {
-      _errorMessage = 'Error al cargar los luzgares de interés activos: $error';
-    } finally {
-      _isLoading = false;
-      debugPrint("SE HA ACTUALIZADO LA PUNTUACIÓN");
-      notifyListeners();
+      throw Exception(error);
     }
   }
 

@@ -14,6 +14,7 @@ import 'package:vilaexplorer/src/pages/login_page.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class CuentaPage extends StatefulWidget {
+  static const String route = "cuentaPage";
   const CuentaPage({super.key});
 
   @override
@@ -155,9 +156,7 @@ class _CuentaPageState extends State<CuentaPage> {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            pageProvider.changePage('map');
-          },
+          onPressed: () => Navigator.of(context).pop()
         ),
       ),
       body: Container(

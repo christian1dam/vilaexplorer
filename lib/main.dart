@@ -13,6 +13,7 @@ import 'package:vilaexplorer/service/puntuacion_service.dart';
 import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vilaexplorer/src/pages/cuentaPage/cuenta_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/routes.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
@@ -130,6 +131,8 @@ class _MyAppState extends State<MyApp> {
                       const TradicionesPage(),
                   RoutesPage.route: (BuildContext context) =>
                       const RoutesPage(),
+                  CuentaPage.route: (BuildContext context) =>
+                      const CuentaPage(),
                 },
                 locale: _locale,
                 supportedLocales: const [
@@ -160,8 +163,10 @@ class _MyAppState extends State<MyApp> {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           home: Scaffold(
-            body:
-                Center(child: CircularProgressIndicator(color: Colors.white,)), // Pantalla de carga
+            body: Center(
+                child: CircularProgressIndicator(
+              color: Colors.white,
+            )), // Pantalla de carga
           ),
         );
       },

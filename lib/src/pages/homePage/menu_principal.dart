@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
+import 'package:vilaexplorer/src/pages/cuentaPage/cuenta_page.dart';
 import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/history_page.dart';
@@ -117,10 +118,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                           textContent: AppLocalizations.of(context)!
                               .translate('my_account'),
                           svgPath: "lib/icon/user_icon.svg",
-                          onTap: () => {
-                            pageProvider.changePage("cuenta"),
-                            Navigator.pop(context)
-                          },
+                          onTap: () => Navigator.pushReplacementNamed(context, CuentaPage.route)
                         ),
                       ],
                     ),

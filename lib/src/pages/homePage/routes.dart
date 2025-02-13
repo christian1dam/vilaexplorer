@@ -62,7 +62,7 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              Navigator.of(context).pushReplacementNamed(MyHomePage.route);
+              Navigator.pop(context);
             },
           ),
           title: const Text(
