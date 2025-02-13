@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
-import 'package:vilaexplorer/main.dart';
 import 'package:vilaexplorer/models/gastronomia/plato.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/models/tradiciones/tradiciones.dart';
@@ -237,30 +236,6 @@ class _FavoritosPageState extends State<FavoritosPage> {
           );
         }
       },
-    );
-  }
-
-  void _changeLanguage(BuildContext context, Locale locale) {
-    setState(() {
-      MyApp.setLocale(context, locale);
-    });
-  }
-
-  SizedBox MyBotonText(String texto) {
-    return SizedBox(
-      width: 117,
-      child: TextButton(
-        onPressed: () {},
-        style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(
-            const Color.fromRGBO(45, 45, 45, 1),
-          ),
-        ),
-        child: Text(
-          texto,
-          style: const TextStyle(color: Colors.white),
-        ),
-      ),
     );
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
-import 'package:vilaexplorer/models/gastronomia/plato.dart'; 
+import 'package:vilaexplorer/models/gastronomia/plato.dart';
 
 class MyRecipesPage extends StatefulWidget {
   const MyRecipesPage({super.key});
@@ -12,15 +12,15 @@ class MyRecipesPage extends StatefulWidget {
 }
 
 class _MyRecipesPageState extends State<MyRecipesPage> {
-  Plato? _platoSeleccionado;  // Variable para almacenar el plato seleccionado
+  Plato? _platoSeleccionado;
+  Future<void>? _recetasDelUsuarioFuture;
 
   @override
   void initState() {
     super.initState();
-    // Obtener las recetas del usuario actual
-    final gastronomiaService =
-        Provider.of<GastronomiaService>(context, listen: false);
-    gastronomiaService.fetchUserRecipes();
+    _recetasDelUsuarioFuture =
+        Provider.of<GastronomiaService>(context, listen: false)
+            .fetchUserRecipes();
   }
 
   @override
@@ -29,92 +29,109 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
     final platos = gastronomiaService.platos;
     final isLoading = gastronomiaService.isLoading;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_platoSeleccionado != null ? _platoSeleccionado!.nombre : 'Mis Recetas'),
-        backgroundColor: const Color.fromRGBO(32, 29, 29, 0.9),
-        foregroundColor: const Color.fromRGBO(255, 255, 255, 0.898),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      backgroundColor: const Color.fromRGBO(32, 29, 29, 0.9),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _platoSeleccionado == null
-              ? platos == null || platos.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No hay recetas disponibles.',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.all(8.0),
-                      itemCount: platos.length,
-                      itemBuilder: (context, index) {
-                        final plato = platos[index];
-                        return Card(
-                          color: const Color.fromARGB(255, 47, 42, 42),
-                          child: ListTile(
-                            leading: FutureBuilder<Widget>(
-                              future: gastronomiaService.getImageForPlato(
-                                plato.imagenBase64,
-                                plato.imagen,
-                              ),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return const SizedBox(
-                                    width: 50,
-                                    height: 50,
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else if (snapshot.hasError) {
-                                  return const Icon(
-                                    Icons.broken_image,
-                                    size: 50,
-                                    color: Colors.grey,
-                                  );
-                                } else {
-                                  return snapshot.data!;
-                                }
-                              },
+    return FutureBuilder(
+      future: _recetasDelUsuarioFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(_platoSeleccionado != null
+                  ? _platoSeleccionado!.nombre
+                  : 'Mis Recetas'),
+              backgroundColor: const Color.fromRGBO(32, 29, 29, 0.9),
+              foregroundColor: const Color.fromRGBO(255, 255, 255, 0.898),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+            backgroundColor: const Color.fromRGBO(32, 29, 29, 0.9),
+            body: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _platoSeleccionado == null
+                    ? platos == null || platos.isEmpty
+                        ? const Center(
+                            child: Text(
+                              'No hay recetas disponibles.',
+                              style: TextStyle(color: Colors.white),
                             ),
-                            title: Text(
-                              plato.nombre,
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            subtitle: Text(
-                              plato.descripcion,
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                            trailing: IconButton(
-                              icon: const Icon(
-                                Icons.edit,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _platoSeleccionado = plato;  // Al seleccionar el plato, lo almacenamos
-                                });
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                    )
-              : _buildEditForm(gastronomiaService), // Mostrar el formulario de edición
+                          )
+                        : ListView.builder(
+                            padding: const EdgeInsets.all(8.0),
+                            itemCount: platos.length,
+                            itemBuilder: (context, index) {
+                              final plato = platos[index];
+                              return Card(
+                                color: const Color.fromARGB(255, 47, 42, 42),
+                                child: ListTile(
+                                  leading: FutureBuilder<Widget>(
+                                    future: gastronomiaService.getImageForPlato(
+                                      plato.imagenBase64,
+                                      plato.imagen,
+                                    ),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const SizedBox(
+                                          width: 50,
+                                          height: 50,
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        return const Icon(
+                                          Icons.broken_image,
+                                          size: 50,
+                                          color: Colors.grey,
+                                        );
+                                      } else {
+                                        return snapshot.data!;
+                                      }
+                                    },
+                                  ),
+                                  title: Text(
+                                    plato.nombre,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                  subtitle: Text(
+                                    plato.descripcion,
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                  trailing: IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _platoSeleccionado =
+                                            plato; // Al seleccionar el plato, lo almacenamos
+                                      });
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                    : _buildEditForm(
+                        gastronomiaService), // Mostrar el formulario de edición
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 
   // Método para construir el formulario de edición
   Widget _buildEditForm(GastronomiaService gastronomiaService) {
-    final nombreController = TextEditingController(text: _platoSeleccionado!.nombre);
-    final descripcionController = TextEditingController(text: _platoSeleccionado!.descripcion);
+    final nombreController =
+        TextEditingController(text: _platoSeleccionado!.nombre);
+    final descripcionController =
+        TextEditingController(text: _platoSeleccionado!.descripcion);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal:16.w, vertical:16.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -155,7 +172,8 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
                   // Guardar cambios (si es necesario)
                   setState(() {
                     _platoSeleccionado!.nombre = nombreController.text;
-                    _platoSeleccionado!.descripcion = descripcionController.text;
+                    _platoSeleccionado!.descripcion =
+                        descripcionController.text;
                     // Llamar a un método de GastronomiaService si necesitas actualizar la receta en el servidor
                   });
                 },
@@ -164,7 +182,7 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    _platoSeleccionado = null;  // Volver al listado de recetas
+                    _platoSeleccionado = null; // Volver al listado de recetas
                   });
                 },
                 child: const Text('Cancelar'),

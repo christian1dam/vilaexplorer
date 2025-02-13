@@ -16,17 +16,6 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
 
-    // // Espera 3 segundos y luego redirige a la LoginPage
-    // Future.delayed(Duration(milliseconds: 1000), () {
-    //   Navigator.pushReplacement(
-    //     context,
-    //     PageRouteBuilder(
-    //       transitionDuration: Duration(milliseconds: 1500), // Duración de la transición
-    //       pageBuilder: (_, __, ___) => const LoginPage(),
-    //     ),
-    //   );
-    // });
-
     Future.delayed(Duration(milliseconds: 200), (){
       _opacity = 1.0;
     });

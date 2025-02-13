@@ -14,9 +14,7 @@ class LugarDeInteresService with ChangeNotifier {
 
   set setLugarDeInteres(LugarDeInteres lugar) {
     _lugarDeInteresActual = lugar;
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      notifyListeners();
-    });
+    notifyListeners();
   }
 
   bool _isLoading = false;
@@ -28,9 +26,10 @@ class LugarDeInteresService with ChangeNotifier {
   Future<void> fetchLugaresDeInteresActivos() async {
     try {
       final response = await _apiClient.get('/lugar_interes/activos');
+      if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
-      if (data.hashCode == 200) {
         _lugaresDeInteres = data.map((json) => LugarDeInteres.fromMap(json)).toList();
+            debugPrint("SE HAN OBTENIDO LOS LUGAREES DE INTERES $_lugaresDeInteres");
         notifyListeners();
       }
     } catch (error) {

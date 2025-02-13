@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/src/widgets/footer.dart';
-import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 import 'cuenta_page.dart';
 
 class PreguntasFrecuentesPage extends StatelessWidget {
@@ -10,7 +9,6 @@ class PreguntasFrecuentesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userData = UserPreferences();
     final preguntasFrecuentes = [
       {
         "pregunta": AppLocalizations.of(context)!.translate('how_to_recover_password'),

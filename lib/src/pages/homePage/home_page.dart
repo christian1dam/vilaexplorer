@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         Provider.of<LugarDeInteresService>(context, listen: false)
             .fetchLugaresDeInteresActivos();
     final currentLocation = _getCurrentLocation();
-    return Future.wait([lugaresDeInteres, currentLocation]);
+    return Future.wait([currentLocation, lugaresDeInteres]);
   }
 
   Future<void> _getCurrentLocation() async {
@@ -61,8 +61,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   void _drawMarkers() {
     try {
-      final lugaresDeInteresService =
-          Provider.of<LugarDeInteresService>(context, listen: false);
+      final lugaresDeInteresService = Provider.of<LugarDeInteresService>(context, listen: false);
       final markers = lugaresDeInteresService.lugaresDeInteres
           .where((lugar) =>
               lugar.coordenadas != null && lugar.coordenadas!.isNotEmpty)
@@ -147,9 +146,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       options: MapOptions(
                         onMapReady: () {
                           mapStateProvider.setMapController = _mapController;
-                          mapStateProvider.setStreamController =
-                              _resetController;
-                          _drawMarkers();
+                          mapStateProvider.setStreamController = _resetController;
+                            _drawMarkers();
                         },
                         initialCenter:
                             mapStateProvider.currentLocation ?? LatLng(0, 0),

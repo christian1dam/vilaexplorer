@@ -49,27 +49,17 @@ class GastronomiaService extends ChangeNotifier {
   }
 
   Future<void> fetchUserRecipes() async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-
-    final idUsuario = await UserPreferences().id; // Obtienes el idUsuario de la sesión.
+    final idUsuario = await UserPreferences().id;
 
     try {
-      // Realizas la consulta a la API para obtener las recetas del usuario autenticado.
-      final response =
-          await _apiClient.get('/plato/misRecetas?autorID=$idUsuario');
+      final response = await _apiClient.get('/plato/misRecetas?autorID=$idUsuario');
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
-        // Asignas las recetas obtenidas a la lista _platos
         _platos = data.map((json) => Plato.fromMap(json)).toList();
-      } else {
-        _error = 'Error: ${response.statusCode} - ${response.reasonPhrase}';
-      }
+      } 
     } catch (e) {
-      _error = 'Error al obtener tus recetas: $e';
+      throw Exception(e);
     } finally {
-      _isLoading = false;
       notifyListeners();
     }
   }
