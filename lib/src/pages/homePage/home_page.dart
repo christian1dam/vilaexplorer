@@ -10,6 +10,7 @@ import 'package:vilaexplorer/src/pages/homePage/background_map.dart';
 import 'package:vilaexplorer/src/pages/homePage/routes.dart';
 
 class MyHomePage extends StatefulWidget {
+  static const String route = 'homePage';
   const MyHomePage({super.key});
 
   @override
@@ -40,60 +41,56 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Stack(
         children: [
           BackgroundMap(),
-          if (mapProvider.mapController != null) ...[
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: AppBarCustom(),
-            ),
-            Positioned.fill(
-              child: Offstage(
-                offstage: pageProvider.currentPage != 'routes',
-                child: RoutesPage(
-                  onClose: () => pageProvider.changePage('map'),
-                ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: AppBarCustom(),
+          ),
+          Positioned.fill(
+            child: Offstage(
+              offstage: pageProvider.currentPage != 'routes',
+              child: RoutesPage(
+                onClose: () => pageProvider.changePage('map'),
               ),
             ),
-            Positioned.fill(
-              child: Offstage(
-                offstage: pageProvider.currentPage != 'cuenta',
-                child: CuentaPage(),
+          ),
+          Positioned.fill(
+            child: Offstage(
+              offstage: pageProvider.currentPage != 'cuenta',
+              child: CuentaPage(),
+            ),
+          ),
+          Positioned(
+            bottom: 145.h,
+            right: 20.w,
+            child: FloatingActionButton(
+              heroTag: "FAB-${UniqueKey()}",
+              backgroundColor: const Color.fromARGB(230, 50, 50, 50),
+              onPressed: () {
+                Navigator.of(context).pushNamed(RoutesPage.route);
+              },
+              tooltip: "Guardar ruta",
+              child: const Icon(
+                Icons.route_rounded,
+                color: Colors.white,
               ),
             ),
-            if (pageProvider.currentPage == 'map')
-              Positioned(
-                bottom: 145.h,
-                right: 20.w,
-                child: FloatingActionButton(
-                  heroTag: "FAB-${UniqueKey()}",
-                  backgroundColor: const Color.fromARGB(230, 50, 50, 50),
-                  onPressed: () {
-                    pageProvider.changePage('routes');
-                  },
-                  tooltip: "Guardar ruta",
-                  child: const Icon(
-                    Icons.route_rounded,
-                    color: Colors.white,
-                  ),
-                ),
+          ),
+          Positioned(
+            bottom: 75.h,
+            right: 20.w,
+            child: FloatingActionButton(
+              heroTag: "FAB-${UniqueKey()}",
+              backgroundColor: const Color.fromARGB(230, 50, 50, 50),
+              onPressed: () => mapProvider.toggleMapStyle(),
+              tooltip: "Cambiar estilo del mapa",
+              child: const Icon(
+                Icons.map,
+                color: Colors.white,
               ),
-            if (pageProvider.currentPage == 'map')
-              Positioned(
-                bottom: 75.h,
-                right: 20.w,
-                child: FloatingActionButton(
-                  heroTag: "FAB-${UniqueKey()}",
-                  backgroundColor: const Color.fromARGB(230, 50, 50, 50),
-                  onPressed: () => mapProvider.toggleMapStyle(),
-                  tooltip: "Cambiar estilo del mapa",
-                  child: const Icon(
-                    Icons.map,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-          ]
+            ),
+          ),
         ],
       ),
     );

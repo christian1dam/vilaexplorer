@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
+import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
 import 'package:vilaexplorer/src/widgets/loading.dart';
 
 class RoutesPage extends StatefulWidget {
-  final Function onClose;
+  static const String route = 'routesPage';
 
-  const RoutesPage({super.key, required this.onClose});
+  final Function? onClose;
+
+  const RoutesPage({super.key, this.onClose});
 
   @override
   _RoutesPageState createState() => _RoutesPageState();
@@ -37,21 +40,20 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
   }
 
   void _showLoadingLogo() {
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (context) => const Loading(imagePath: 'assets/images/VilaExplorer.png'),
-  );
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) =>
+          const Loading(imagePath: 'assets/images/VilaExplorer.png'),
+    );
 
-  Future.delayed(const Duration(milliseconds: 1500), () {
-    Navigator.of(context).pop();
-  });
-}
-
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      Navigator.of(context).pop();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final pageProvider = Provider.of<PageProvider>(context, listen: false);
     return DefaultTabController(
       length: 2, // Número de pestañas
       child: Scaffold(
@@ -60,7 +62,7 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              pageProvider.clearScreen();
+              Navigator.of(context).pushReplacementNamed(MyHomePage.route);
             },
           ),
           title: const Text(
@@ -71,7 +73,8 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
           bottom: TabBar(
             indicatorColor: Colors.white, // Línea de selección blanca
             labelColor: Colors.white, // Color del texto seleccionado
-            unselectedLabelColor: Colors.grey, // Color del texto no seleccionado
+            unselectedLabelColor:
+                Colors.grey, // Color del texto no seleccionado
             tabs: const [
               Tab(text: "Rutas Predefinidas"),
               Tab(text: "Rutas Guardadas"),
@@ -103,7 +106,7 @@ class RutasPredefinidasTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: const Color.fromRGBO(32, 29, 29, 1),
-      padding: EdgeInsets.symmetric(horizontal:16.w, vertical:16.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       child: ListView.builder(
         itemCount: rutasPredefinidas.length,
         itemBuilder: (context, index) {
@@ -163,7 +166,7 @@ class _RutasGuardadasTabState extends State<RutasGuardadasTab> {
   Widget build(BuildContext context) {
     return Container(
       color: const Color.fromRGBO(32, 29, 29, 1),
-      padding: EdgeInsets.symmetric(horizontal:16.w, vertical:16.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       child: rutasGuardadas.isEmpty
           ? const Center(
               child: Text(

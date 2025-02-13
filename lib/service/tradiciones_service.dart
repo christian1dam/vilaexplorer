@@ -7,7 +7,6 @@ import 'package:vilaexplorer/models/tradiciones/tradiciones.dart';
 class TradicionesService extends ChangeNotifier {
   final ApiClient _apiClient = ApiClient();
 
-  // Estado local
   List<Tradiciones>? _todasLasTradiciones;
   Tradiciones? _tradicionSeleccionada;
   String? _error;
@@ -19,11 +18,8 @@ class TradicionesService extends ChangeNotifier {
   String? get error => _error;
   bool get isLoading => _isLoading;
 
-  // Métodos públicos para manejar el estado
-
-  // Obtener todas las tradiciones
   Future<void> getAllTradiciones() async {
-    await _executeWithLoading(() async {
+    try {
       final response = await _apiClient.get('/fiesta_tradicion/activas');
       if (response.statusCode == 200) {
         final List<dynamic> tradicionesList = json.decode(utf8.decode(response.bodyBytes));
@@ -31,7 +27,12 @@ class TradicionesService extends ChangeNotifier {
             .map((tradicion) => Tradiciones.fromMap(tradicion))
             .toList();
       }
-    }, onError: 'Error al obtener tradiciones');
+      debugPrint("SE HAN OBTENIDO TODAS LAS TRADICIONES");
+      notifyListeners();
+    } catch (e) {
+      debugPrint("EXCEPCION EN GET_ALL_TRADICIONES $e");
+      throw Exception(e);
+    }
   }
 
   // Obtener una tradición por ID
@@ -51,7 +52,8 @@ class TradicionesService extends ChangeNotifier {
       final response =
           await _apiClient.get('/fiesta_tradicion/buscar?keyword=$keyword');
       if (response.statusCode == 200) {
-        final List<dynamic> tradicionesList = json.decode(utf8.decode(response.bodyBytes));
+        final List<dynamic> tradicionesList =
+            json.decode(utf8.decode(response.bodyBytes));
         _todasLasTradiciones = tradicionesList
             .map((tradicion) => Tradiciones.fromMap(tradicion))
             .toList();

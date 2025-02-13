@@ -1,29 +1,29 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class FiestaCard extends StatelessWidget {
-  final String nombre;
-  final String fecha;
-  final Image imagen; 
-  final VoidCallback detalleTap; // Callback
+  final String? nombre;
+  final String? fecha;
+  final Image? imagen;
+  final VoidCallback? detalleTap;
 
   const FiestaCard({
     super.key,
-    required this.nombre,
-    required this.fecha,
-    required this.imagen,
-    required this.detalleTap,
+    this.nombre,
+    this.fecha,
+    this.imagen,
+    this.detalleTap,
   });
 
   @override
   Widget build(BuildContext context) {
-
     return Card(
       color: Colors.grey[850],
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(15.r),
       ),
       child: Column(
         children: [
@@ -32,22 +32,29 @@ class FiestaCard extends StatelessWidget {
             child: Stack(
               children: [
                 SizedBox(
-                  height: 200,
+                  height: 200.h,
                   width: double.infinity,
                   child: ClipRRect(
                     borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(15)),
-                    child: FadeInImage(placeholder: AssetImage("assets/no-image.jpg"), image: imagen.image, fit: BoxFit.cover,),
+                        BorderRadius.vertical(top: Radius.circular(15.r)),
+                    child: imagen != null
+                        ? FadeInImage(
+                            placeholder: AssetImage("assets/no-image.jpg"),
+                            image: imagen!.image,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset("assets/no-image.jpg"),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(top: 10, left: 10),
+                  padding: EdgeInsets.only(top: 10.h, left: 10.w),
                   width: double.infinity,
-                  height: 50,
-                  decoration: const BoxDecoration(
+                  height: 50.h,
+                  decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15)),
+                      topLeft: Radius.circular(15.r),
+                      topRight: Radius.circular(15.r),
+                    ),
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -57,38 +64,117 @@ class FiestaCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  child: Text(
-                    nombre,
-                    style: const TextStyle(
-                        fontSize: 25,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
+                  child: nombre != null
+                      ? Text(
+                          nombre!,
+                          style: TextStyle(
+                              fontSize: 25.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        )
+                      : SizedBox(
+                          width: 20.w,
+                          height: 10.h,
+                        ),
                 ),
               ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+            padding: EdgeInsets.only(left: 8.w, bottom: 8.h),
             child: Container(
               width: double.infinity,
-              height: 50,
-              padding: const EdgeInsets.only(top: 10),
+              height: 50.h,
+              padding: EdgeInsets.only(top: 10.h),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 11.0),
+                padding: EdgeInsets.symmetric(horizontal: 11.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      fecha,
-                      style: const TextStyle(
-                          color: Color.fromRGBO(224, 120, 62, 1), fontSize: 16),
-                    ),
+                    fecha != null
+                        ? Text(
+                            fecha!,
+                            style: TextStyle(
+                                color: Color.fromRGBO(224, 120, 62, 1),
+                                fontSize: 16.sp),
+                          )
+                        : SizedBox(width: 20.w, height: 10.h),
                     GestureDetector(
                       child:
                           const MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
                       onTap: () => {},
                     )
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class FiestaCardShimmer extends StatelessWidget {
+  const FiestaCardShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.grey[850],
+      margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.r),
+      ),
+      child: Column(
+        children: [
+          Shimmer.fromColors(
+            baseColor: const Color.fromARGB(255, 194, 194, 194),
+            highlightColor: const Color.fromARGB(211, 255, 255, 255),
+            child: Container(
+              height: 200.h,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.vertical(top: Radius.circular(15.r)),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 8.w, bottom: 8.h, top: 10.h),
+            child: Container(
+              width: double.infinity,
+              height: 50.h,
+              padding: EdgeInsets.only(top: 10.h),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 11.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Shimmer.fromColors(
+                      baseColor: const Color.fromARGB(255, 194, 194, 194),
+                      highlightColor: const Color.fromARGB(211, 255, 255, 255),
+                      child: Container(
+                        width: 150.w,
+                        height: 20.h,
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.r))),
+                      ),
+                    ),
+                    Shimmer.fromColors(
+                      baseColor: const Color.fromARGB(255, 194, 194, 194),
+                      highlightColor: const Color.fromARGB(211, 255, 255, 255),
+                      child: Container(
+                        width: 100.w,
+                        height: 20.h,
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.r))),
+                      ),
+                    ),
                   ],
                 ),
               ),

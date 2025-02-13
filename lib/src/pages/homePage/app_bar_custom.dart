@@ -11,21 +11,21 @@ class AppBarCustom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-          toolbarHeight: 120.h,
-          automaticallyImplyLeading: true,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: _contentAppBar(context),
-              ),
-              _searchBar(context),
-            ],
+      toolbarHeight: 120.h,
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.transparent,
+      foregroundColor: Colors.white,
+      elevation: 0,
+      title: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: _contentAppBar(context),
           ),
+          _searchBar(context),
+        ],
+      ),
     );
   }
 
@@ -35,14 +35,20 @@ class AppBarCustom extends StatelessWidget {
         padding: EdgeInsets.only(left: 5.w, right: 10.w),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 1.h),
-          decoration: BoxDecoration(color: Color.fromARGB(255, 24, 24, 24),
+          decoration: BoxDecoration(
+              color: Color.fromARGB(255, 24, 24, 24),
               borderRadius: BorderRadius.all(Radius.circular(15.r))),
           child: GestureDetector(
             onTap: () async {
               return showModalBottomSheet(
                 backgroundColor: Colors.transparent,
                 context: context,
-                sheetAnimationStyle: AnimationStyle(duration: Duration(milliseconds: 400)),
+                isScrollControlled: true,
+                isDismissible: true,
+                enableDrag: true,
+                sheetAnimationStyle: AnimationStyle(
+                    duration: Duration(milliseconds: 400),
+                    reverseDuration: Duration(milliseconds: 300)),
                 builder: (BuildContext context) {
                   return MenuPrincipal();
                 },
@@ -124,10 +130,12 @@ class AppBarCustom extends StatelessWidget {
             Expanded(
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)!.translate('mp_search'),
+                  hintText:
+                      AppLocalizations.of(context)!.translate('mp_search'),
                   hintStyle: TextStyle(color: Colors.white),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                 ),
                 style: TextStyle(color: Colors.white),
               ),

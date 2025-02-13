@@ -67,26 +67,29 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ButtonMenuCustom(
-                          width: 100.w,
-                          textContent: AppLocalizations.of(context)!
-                              .translate('traditions'),
-                          svgPath: "lib/icon/tradiciones.svg",
-                          onTap: () async {
-                            Navigator.pop(context);
-                            return showModalBottomSheet(
+                            width: 100.w,
+                            textContent: AppLocalizations.of(context)!
+                                .translate('traditions'),
+                            svgPath: "lib/icon/tradiciones.svg",
+                            onTap: () {
+                              Navigator.pop(context);
+                              showModalBottomSheet(
                                 backgroundColor: Colors.transparent,
-                                scrollControlDisabledMaxHeightRatio: 600.h,
                                 context: context,
+                                isScrollControlled: true,
+                                isDismissible: true,
+                                enableDrag: true,
+                                scrollControlDisabledMaxHeightRatio: 600.h,
                                 sheetAnimationStyle: AnimationStyle(
-                                    duration: Duration(milliseconds: 400)),
+                                  duration: Duration(milliseconds: 400)),
                                 builder: (BuildContext context) {
                                   return TradicionesPage(
                                     onFiestaSelected: (fiestaName) =>
                                         pageProvider.setFiesta(fiestaName),
                                   );
-                                });
-                          },
-                        ),
+                                },
+                              );
+                            }),
                         ButtonMenuCustom(
                           width: 100.w,
                           textContent: AppLocalizations.of(context)!
@@ -96,12 +99,13 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                             Navigator.pop(context);
                             return showModalBottomSheet(
                               backgroundColor: Colors.transparent,
-                              scrollControlDisabledMaxHeightRatio: 550.h,
                               context: context,
+                              isScrollControlled: true,
+                              isDismissible: true,
+                              enableDrag: true,
+                              scrollControlDisabledMaxHeightRatio: 550.h,
                               sheetAnimationStyle: AnimationStyle(
-                                duration: Duration(milliseconds: 1500),
-                                reverseDuration: Duration(microseconds: 400)
-                              ) ,
+                                  duration: Duration(milliseconds: 400)),
                               builder: (BuildContext context) {
                                 return FavoritosPage();
                               },

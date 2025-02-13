@@ -14,6 +14,8 @@ import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
+import 'package:vilaexplorer/src/pages/homePage/routes.dart';
+import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 import 'src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
@@ -48,15 +50,19 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => TradicionesService(), lazy: false),
-        ChangeNotifierProvider(create: (_) => GastronomiaService(), lazy: false),
+        ChangeNotifierProvider(
+            create: (_) => TradicionesService(), lazy: false),
+        ChangeNotifierProvider(
+            create: (_) => GastronomiaService(), lazy: false),
         ChangeNotifierProvider(create: (_) => TipoPlatoService(), lazy: false),
         ChangeNotifierProvider(create: (_) => PageProvider(), lazy: false),
-        ChangeNotifierProvider(create: (_) => LugarDeInteresService(), lazy: false),
+        ChangeNotifierProvider(
+            create: (_) => LugarDeInteresService(), lazy: false),
         ChangeNotifierProvider(create: (_) => PuntuacionService(), lazy: false),
         ChangeNotifierProvider(create: (_) => FavoritoService(), lazy: false),
         ChangeNotifierProvider(create: (_) => MapStateProvider(), lazy: false),
-        ChangeNotifierProvider(create: (_) => EditProfileFormProvider(), lazy: false),
+        ChangeNotifierProvider(
+            create: (_) => EditProfileFormProvider(), lazy: false),
         ChangeNotifierProvider(create: (_) => UserPreferences(), lazy: false),
       ],
       child: const MyApp(),
@@ -97,47 +103,74 @@ class _MyAppState extends State<MyApp> {
     return FutureBuilder(
       future: _splashOrHomeFuture,
       builder: (context, snapshot) {
-        return ScreenUtilInit(
-          designSize: const Size(384, 857),
-          minTextAdapt: true,
-          splitScreenMode: true,
-          builder: (context, child) {
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Vila Explorer',
-              theme: ThemeData(primarySwatch: Colors.blue),
-              home: snapshot.data,
-              locale: _locale, // Define el idioma actual
-              supportedLocales: const [
-                Locale('en'),
-                Locale('es'),
-                Locale('ca'),
-                Locale('zh'),
-                Locale('fr'),
-              ],
-              localizationsDelegates: const [
-                AppLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              localeResolutionCallback: (locale, supportedLocales) {
-                for (var supportedLocale in supportedLocales) {
-                  if (supportedLocale.languageCode == locale?.languageCode) {
-                    return supportedLocale;
+        if (snapshot.hasData) {
+          return ScreenUtilInit(
+            designSize: const Size(384, 857),
+            minTextAdapt: true,
+            splitScreenMode: true,
+            builder: (context, child) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'Vila Explorer',
+                theme: ThemeData(primarySwatch: Colors.blue),
+                initialRoute: '/',
+                onGenerateRoute: (settings) {
+                  if (settings.name == '/') {
+                    return MaterialPageRoute(
+                        builder: (context) => snapshot.data!);
+                  } else {
+                    return null;
                   }
-                }
-                return supportedLocales.first;
-              },
-            );
-          },
+                },
+                home: snapshot.data,
+                routes: {
+                  MyHomePage.route: (BuildContext context) =>
+                      const MyHomePage(),
+                  TradicionesPage.route: (BuildContext context) =>
+                      const TradicionesPage(),
+                  RoutesPage.route: (BuildContext context) =>
+                      const RoutesPage(),
+                },
+                locale: _locale,
+                supportedLocales: const [
+                  Locale('en'),
+                  Locale('es'),
+                  Locale('ca'),
+                  Locale('zh'),
+                  Locale('fr'),
+                ],
+                localizationsDelegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                localeResolutionCallback: (locale, supportedLocales) {
+                  for (var supportedLocale in supportedLocales) {
+                    if (supportedLocale.languageCode == locale?.languageCode) {
+                      return supportedLocale;
+                    }
+                  }
+                  return supportedLocales.first;
+                },
+              );
+            },
+          );
+        }
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+            body:
+                Center(child: CircularProgressIndicator(color: Colors.white,)), // Pantalla de carga
+          ),
         );
-      }
+      },
     );
   }
 
   Future<Widget> _checkEstadoSesion() async {
-    debugPrint("ESTADO DE LA SESION DEL USUARIO: ${await UserPreferences().sesion}");
+    debugPrint(
+        "ESTADO DE LA SESION DEL USUARIO: ${await UserPreferences().sesion}");
     return await UserPreferences().sesion ? MyHomePage() : SplashPage();
   }
 }

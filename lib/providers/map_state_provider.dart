@@ -49,6 +49,15 @@ class MapStateProvider extends ChangeNotifier {
 
   List<LatLng> get routePoints => _routePoints;
 
+  bool _mapLoaded = false;
+
+  bool get mapLoaded => _mapLoaded;
+
+  set setMapLoaded(bool setMapLoaded) {
+    _mapLoaded = setMapLoaded;
+    notifyListeners();
+  }
+
   set setRoutePoints(List<LatLng> points) {
     _routePoints = points;
     _focusRoute = true;
