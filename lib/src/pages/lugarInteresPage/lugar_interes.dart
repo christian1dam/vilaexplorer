@@ -14,6 +14,7 @@ class LugarDeInteresPage extends StatefulWidget {
 }
 
 class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
+  Future<void>? _lugaresDeInteresFuture;
   String? selectedLugarInteres;
   bool isSearchActive = false;
   TextEditingController searchController = TextEditingController();
@@ -23,9 +24,9 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<LugarDeInteresService>().fetchLugaresDeInteresActivos();
-    });
+    _lugaresDeInteresFuture =
+        Provider.of<LugarDeInteresService>(context, listen: false)
+            .fetchLugaresDeInteresActivos();
   }
 
   void _toggleSearch() {
@@ -44,7 +45,6 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
     final lugarDeInteresService =
         Provider.of<LugarDeInteresService>(context, listen: false);
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
-    final lugaresDeInteres = lugarDeInteresService.lugaresDeInteres;
 
     return BackgroundBoxDecoration(
       child: SizedBox(
@@ -52,7 +52,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
         child: Column(
           children: [
             BarraDeslizamiento(),
-      
+
             Padding(
               padding: EdgeInsets.all(8.0.h),
               child: Row(
@@ -126,9 +126,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                           child: TextField(
                             controller: searchController,
                             style: const TextStyle(color: Colors.white),
-                            onChanged: (query) {
-                              lugarDeInteresService.searchLugarDeInteres(query);
-                            },
+                            onChanged: (query) {},
                             decoration: InputDecoration(
                               hintText: 'Buscar lugares de interés...',
                               hintStyle: const TextStyle(color: Colors.white54),
@@ -149,43 +147,39 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
               ),
             ),
             Expanded(
-              child: Builder(
-                builder: (context) {
-                  if (lugarDeInteresService.isLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-      
-                  if (lugarDeInteresService.errorMessage != null) {
-                    return Center(
-                      child: Text(
-                        lugarDeInteresService.errorMessage!,
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    );
-                  }
-      
-                  if (lugaresDeInteres.isEmpty) {
+              child: FutureBuilder(
+                future: _lugaresDeInteresFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    final lugaresDeInteres = lugarDeInteresService.lugaresDeInteres;
+                    if (lugaresDeInteres.isEmpty) {
                     return const Center(
                       child: Text(
-                        "No se encontraron monumentos",
+                        "No se encontraron lugares de interés",
                         style: TextStyle(color: Colors.white),
                       ),
                     );
                   }
-      
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(0),
+                      itemCount: lugaresDeInteres.length,
+                      itemBuilder: (context, index) {
+                        final lugarDeInteres = lugaresDeInteres[index];
+                        return LugarDeInteresTarjeta(
+                          lugarDeInteres: lugarDeInteres,
+                          abrirTarjeta: () => pageProvider.setLugarDeInteres(
+                            lugarDeInteres.idLugarInteres!,
+                          ),
+                        );
+                      },
+                    );
+                  }
+                  
                   return ListView.builder(
                     padding: const EdgeInsets.all(0),
-                    itemCount: lugaresDeInteres.length,
+                    itemCount: 5,
                     itemBuilder: (context, index) {
-                      final lugarDeInteres = lugaresDeInteres[index];
-                      return LugarDeInteresTarjeta(
-                        lugarDeInteres: lugarDeInteres,
-                        abrirTarjeta: () => pageProvider.setLugarDeInteres(
-                          lugarDeInteres.idLugarInteres!,
-                        ),
-                      );
+                      return Center(child: CircularProgressIndicator(),);
                     },
                   );
                 },

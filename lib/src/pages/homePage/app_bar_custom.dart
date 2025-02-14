@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
+import 'package:vilaexplorer/src/pages/search/search_delegate.dart';
 
 class AppBarCustom extends StatelessWidget {
   const AppBarCustom({
@@ -128,7 +129,12 @@ class AppBarCustom extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
+              flex: 5,
               child: TextField(
+                onTap: () => showSearch(
+                  context: context,
+                  delegate: LugarDeInteresDelegate(),
+                ),
                 decoration: InputDecoration(
                   hintText:
                       AppLocalizations.of(context)!.translate('mp_search'),
@@ -140,11 +146,8 @@ class AppBarCustom extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.search, color: Colors.white),
-              onPressed: () {
-                // Add search functionality here
-              },
+            Expanded(
+              child: Icon(Icons.search, color: Colors.white),
             ),
           ],
         ),

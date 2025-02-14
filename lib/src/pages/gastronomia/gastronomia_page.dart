@@ -22,6 +22,8 @@ class GastronomiaPage extends StatefulWidget {
 }
 
 class _GastronomiaPageState extends State<GastronomiaPage> {
+  Future<void>? _fetchPlatosFuture;
+
   String? selectedCategory;
   String? selectedDishType;
   bool isSearchActive = false;
@@ -31,9 +33,8 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      Provider.of<GastronomiaService>(context, listen: false).fetchAllPlatos();
-    });
+    _fetchPlatosFuture = Provider.of<GastronomiaService>(context, listen: false)
+        .fetchAllPlatos();
   }
 
   void _toggleSearch() {
@@ -54,78 +55,86 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
     final isLoading = gastronomiaService.isLoading;
     final platos = gastronomiaService.platos;
 
-    return GestureDetector(
-      onTap: () {
-        if (isSearchActive) {
-          setState(() {
-            isSearchActive = false;
-            searchController.clear();
-          });
-        }
-      },
-      child: BackgroundBoxDecoration(
-        child: SizedBox(
-          height: 470.h,
-          child: isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
+    return FutureBuilder(
+        future: _fetchPlatosFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return GestureDetector(
+              onTap: () {
+                if (isSearchActive) {
+                  setState(() {
+                    isSearchActive = false;
+                    searchController.clear();
+                  });
+                }
+              },
+              child: BackgroundBoxDecoration(
+                child: SizedBox(
+                  height: 470.h,
+                  child: Column(
+                    children: [
+                      Expanded(child: BarraDeslizamiento()),
+                      Expanded(child: _buildHeader(context, pageProvider)),
+                      if (isSearchActive) Expanded(child: _buildSearchField(context)),
+                      Expanded(child: _buildButton(context)),
+                      Expanded(
+                        flex: 5,
+                        child: platos == null
+                            ? const Center(
+                                child: Text(
+                                  "No hay platos disponibles",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              )
+                            : isGridView
+                                ? _buildGridView(platos, gastronomiaService)
+                                : _buildListView(platos, gastronomiaService),
+                      ),
+                    ],
                   ),
-                )
-              : Column(
-                  children: [
-                    BarraDeslizamiento(),
-                    _buildHeader(context, pageProvider),
-                    if (isSearchActive) _buildSearchField(context),
-                    _buildButton(context),
-                    Expanded(
-                      child: platos == null
-                          ? const Center(
-                              child: Text(
-                                "No hay platos disponibles",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            )
-                          : isGridView
-                              ? _buildGridView(platos, gastronomiaService)
-                              : _buildListView(platos, gastronomiaService),
-                    ),
-                  ],
                 ),
-        ),
-      ),
-    );
+              ),
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.white,
+            ),
+          );
+        });
   }
 
   Widget _buildHeader(BuildContext context, PageProvider pageProvider) {
-    final size = MediaQuery.sizeOf(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: _toggleSearch,
-          ),
-          IconButton(
-            icon: Icon(
-              isGridView ? Icons.list : Icons.grid_on,
-              color: Colors.white,
+          Expanded(
+            child: IconButton(
+              alignment: Alignment.centerRight,
+              icon: const Icon(Icons.search, color: Colors.white),
+              onPressed: _toggleSearch,
             ),
-            onPressed: () {
-              setState(() {
-                isGridView = !isGridView;
-              });
-            },
           ),
-          SizedBox(width: 17.w),
-          Container(
-            width: size.width * 0.45,
-            height: 35.h,
-            alignment: Alignment.center,
+          Expanded(
+            child: IconButton(
+              alignment: Alignment.centerLeft,
+              icon: Icon(
+                isGridView ? Icons.list : Icons.grid_on,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                setState(() {
+                  isGridView = !isGridView;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            flex: 3,
             child: Text(
               AppLocalizations.of(context)!.translate('gastronomy'),
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 23.sp,
                 fontWeight: FontWeight.bold,
@@ -133,23 +142,21 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
               ),
             ),
           ),
-          const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.add, color: Colors.white),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AddPlato(),
-                ),
-              );
-            },
+          Expanded(
+            child: IconButton(
+              alignment: Alignment.centerRight,
+              icon: const Icon(Icons.add, color: Colors.white),
+              onPressed: () => Navigator.pushNamed(context, AddPlato.route)
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.close, color: Colors.white),
-            onPressed: () {
-              pageProvider.changePage('map');
-            },
+          Expanded(
+            child: IconButton(
+              alignment: Alignment.centerLeft,
+              icon: const Icon(Icons.close, color: Colors.white),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
           ),
         ],
       ),

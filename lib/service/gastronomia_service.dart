@@ -22,29 +22,18 @@ class GastronomiaService extends ChangeNotifier {
   String? get error => _error;
   bool get isLoading => _isLoading;
 
-  // Método para obtener todos los platos con manejo de estado
   Future<void> fetchAllPlatos() async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-
     try {
       final response = await _apiClient.get('/plato/aprobados');
       debugPrint('Response status: ${response.statusCode}');
       debugPrint('Response body: ${response.body}');
-
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
         _platos = data.map((json) => Plato.fromMap(json)).toList();
-      } else {
-        _error = 'Error: ${response.statusCode} - ${response.reasonPhrase}';
+        notifyListeners();
       }
     } catch (e) {
-      _error = 'Error al obtener los platos: $e';
-      debugPrint('Exception: $e');
-    } finally {
-      _isLoading = false;
-      notifyListeners();
+      throw Exception(e);
     }
   }
 

@@ -46,9 +46,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   Future<List<void>> _fetchData() async {
-    final lugaresDeInteres =
-        Provider.of<LugarDeInteresService>(context, listen: false)
-            .fetchLugaresDeInteresActivos();
+    final lugaresDeInteres = Provider.of<LugarDeInteresService>(context, listen: false).fetchLugaresDeInteresActivos();
     final currentLocation = _getCurrentLocation();
     return Future.wait([currentLocation, lugaresDeInteres]);
   }

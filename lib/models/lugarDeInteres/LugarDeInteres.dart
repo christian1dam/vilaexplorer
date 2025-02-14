@@ -13,6 +13,7 @@ class LugarDeInteres {
     bool? activo;
     TipoLugar? tipoLugar;
     List<Coordenada>? coordenadas;
+    String? uniqueId;
 
     LugarDeInteres({
         this.idLugarInteres,
@@ -24,6 +25,7 @@ class LugarDeInteres {
         this.activo,
         this.tipoLugar,
         this.coordenadas,
+        this.uniqueId,
     });
 
     factory LugarDeInteres.fromJson(String str) => LugarDeInteres.fromMap(json.decode(str));

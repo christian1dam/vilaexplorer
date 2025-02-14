@@ -9,6 +9,7 @@ import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/src/widgets/product_image.dart';
 
 class AddPlato extends StatefulWidget {
+  static const String route = "AddPlato";
   const AddPlato({super.key});
 
   @override

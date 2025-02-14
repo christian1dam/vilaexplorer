@@ -1,10 +1,18 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:vilaexplorer/api/api_client.dart';
+import 'package:vilaexplorer/helpers/debouncer.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 
 class LugarDeInteresService with ChangeNotifier {
   final ApiClient _apiClient = ApiClient();
+
+  final StreamController<List<LugarDeInteres>> _sugestionsStreamController = StreamController.broadcast();
+  Stream<List<LugarDeInteres>> get suggestionStream => _sugestionsStreamController.stream;
+    final debouncer = Debouncer(
+    duration: const Duration(milliseconds: 500),
+  );
 
   List<LugarDeInteres> _lugaresDeInteres = [];
   List<LugarDeInteres> get lugaresDeInteres => _lugaresDeInteres;
@@ -17,19 +25,13 @@ class LugarDeInteresService with ChangeNotifier {
     notifyListeners();
   }
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-
-  String? _errorMessage;
-  String? get errorMessage => _errorMessage;
-
   Future<void> fetchLugaresDeInteresActivos() async {
     try {
       final response = await _apiClient.get('/lugar_interes/activos');
       if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
-        _lugaresDeInteres = data.map((json) => LugarDeInteres.fromMap(json)).toList();
-            debugPrint("SE HAN OBTENIDO LOS LUGAREES DE INTERES $_lugaresDeInteres");
+        final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+        _lugaresDeInteres =data.map((json) => LugarDeInteres.fromMap(json)).toList();
+        debugPrint("SE HAN OBTENIDO LOS LUGAREES DE INTERES $_lugaresDeInteres");
         notifyListeners();
       }
     } catch (error) {
@@ -40,45 +42,42 @@ class LugarDeInteresService with ChangeNotifier {
   Future<void> fetchLugarDeInteresById(int id) async {
     try {
       final response = await _apiClient.get('/lugar_interes/detalle/$id');
-      final Map<String, dynamic> data =
-          jsonDecode(utf8.decode(response.bodyBytes));
-
-      debugPrint("SE HA OBTENIDO EL LUGAR DE INTERES DE LA BD");
-      _lugarDeInteresActual = LugarDeInteres.fromMap(data);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(utf8.decode(response.bodyBytes));
+        debugPrint("SE HA OBTENIDO EL LUGAR DE INTERES DE LA BD");
+        _lugarDeInteresActual = LugarDeInteres.fromMap(data);
+        notifyListeners();
+      }
     } catch (e) {
       throw Exception("Error al obtener el lugar de interés: $e");
     }
   }
 
-  Future<void> searchLugarDeInteres(String keyword) async {
-    await _executeWithLoading(() async {
-      final response =
-          await _apiClient.get('/lugar_interes/buscar?keyword=$keyword');
-      if (response.statusCode == 200) {
-        final List<dynamic> lugaresDeInteresList =
-            json.decode(utf8.decode(response.bodyBytes));
-        _lugaresDeInteres = lugaresDeInteresList
-            .map((lugarInteres) => LugarDeInteres.fromMap(lugarInteres))
-            .toList();
-      }
-    }, onError: 'Error al buscar lugares de interés');
-  }
-
-  Future<void> _executeWithLoading(Future<void> Function() action,
-      {required String onError}) async {
-    _setLoading(true);
+  Future<List<LugarDeInteres>> searchLugarDeInteres(String query) async {
     try {
-      await action();
-      _errorMessage = null;
+      final response = await _apiClient.get('/lugar_interes/buscar?keyword=$query');
+        debugPrint("status RESPONSE SEARCH: ${response.statusCode.toString()}");
+        if(response.statusCode == 204) return [];
+        final List<dynamic> lugaresDeInteresList = json.decode(utf8.decode(response.bodyBytes));
+        return lugaresDeInteresList.map((lugarInteres) => LugarDeInteres.fromMap(lugarInteres)).toList();
     } catch (e) {
-      _errorMessage = '$onError: $e';
-    } finally {
-      _setLoading(false);
+      throw Exception(e);
     }
   }
 
-  void _setLoading(bool value) {
-    _isLoading = value;
-    notifyListeners();
+  void getSuggestionsByQuery(String searchTerm) {
+    debouncer.value = '';
+    debouncer.onValue = (value) async {
+      debugPrint('Tenemos valor a buscar: $value');
+      final results = await searchLugarDeInteres(value);
+      _sugestionsStreamController.add(results);
+    };
+
+    final timer = Timer.periodic(const Duration(milliseconds: 300), (_) {
+      debouncer.value = searchTerm;
+    });
+
+    Future.delayed(const Duration(milliseconds: 301))
+        .then((_) => timer.cancel());
   }
 }
