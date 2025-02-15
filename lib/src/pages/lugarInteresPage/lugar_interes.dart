@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:provider/provider.dart';
@@ -65,9 +66,9 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                         margin: const EdgeInsets.only(top: 10),
                         width: MediaQuery.sizeOf(context).width * 0.5,
                         height: 35.h,
-                        child: const Center(
+                        child: Center(
                           child: Text(
-                            'Lugares de Interés',
+                            AppLocalizations.of(context)!.translate('sights'),
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -114,9 +115,9 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                _buildFilterButton('Todo', 0),
-                                _buildFilterButton('Populares', 1),
-                                _buildFilterButton('Cercanos', 2),
+                                _buildFilterButton(AppLocalizations.of(context)!.translate('all'), 0),
+                                _buildFilterButton(AppLocalizations.of(context)!.translate('popular'), 1),
+                                _buildFilterButton(AppLocalizations.of(context)!.translate('nearby'), 2),
                               ],
                             ),
                           ),
@@ -130,7 +131,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                               lugarDeInteresService.searchLugarDeInteres(query);
                             },
                             decoration: InputDecoration(
-                              hintText: 'Buscar lugares de interés...',
+                              hintText: "${AppLocalizations.of(context)!.translate('search_poi')}...",
                               hintStyle: const TextStyle(color: Colors.white54),
                               fillColor: const Color.fromARGB(255, 47, 42, 42),
                               filled: true,
@@ -167,9 +168,9 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                   }
       
                   if (lugaresDeInteres.isEmpty) {
-                    return const Center(
+                    return Center(
                       child: Text(
-                        "No se encontraron monumentos",
+                        AppLocalizations.of(context)!.translate('no_poi_available'),
                         style: TextStyle(color: Colors.white),
                       ),
                     );

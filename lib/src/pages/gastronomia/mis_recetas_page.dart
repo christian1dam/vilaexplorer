@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/models/gastronomia/plato.dart'; 
 
@@ -119,15 +120,15 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Editar Plato',
+            AppLocalizations.of(context)!.translate('edit_dish'),
             style: TextStyle(color: Colors.white, fontSize: 24),
           ),
           const SizedBox(height: 16),
           TextField(
             controller: nombreController,
             style: const TextStyle(color: Colors.white),
-            decoration: const InputDecoration(
-              labelText: 'Nombre del Plato',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.translate('dish_name'),
               labelStyle: TextStyle(color: Colors.white),
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.white),
@@ -138,8 +139,8 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
           TextField(
             controller: descripcionController,
             style: const TextStyle(color: Colors.white),
-            decoration: const InputDecoration(
-              labelText: 'Descripción',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.translate('description'),
               labelStyle: TextStyle(color: Colors.white),
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.white),
@@ -159,7 +160,7 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
                     // Llamar a un método de GastronomiaService si necesitas actualizar la receta en el servidor
                   });
                 },
-                child: const Text('Guardar'),
+                child: Text(AppLocalizations.of(context)!.translate('save')),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -167,7 +168,7 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
                     _platoSeleccionado = null;  // Volver al listado de recetas
                   });
                 },
-                child: const Text('Cancelar'),
+                child: Text(AppLocalizations.of(context)!.translate('cancel')),
               ),
             ],
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
@@ -73,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () {
                     pageProvider.changePage('routes');
                   },
-                  tooltip: "Guardar ruta",
+                  tooltip: AppLocalizations.of(context)!.translate('save_route'),
                   child: const Icon(
                     Icons.route_rounded,
                     color: Colors.white,
@@ -89,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   heroTag: "FAB-${UniqueKey()}",
                   backgroundColor: const Color.fromARGB(230, 50, 50, 50),
                   onPressed: () => mapProvider.toggleMapStyle(),
-                  tooltip: "Cambiar estilo del mapa",
+                  tooltip: AppLocalizations.of(context)!.translate('change_map_style'),
                   child: const Icon(
                     Icons.map,
                     color: Colors.white,

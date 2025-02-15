@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:vilaexplorer/l10n/app_localizations.dart';
 
 const kContainerColor = Color.fromRGBO(45, 45, 45, 1);
 const kBackgroundOverlayColor = Color.fromRGBO(32, 29, 29, 0.9);
@@ -140,7 +141,7 @@ class CategoriaPlatos extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSectionTitle('Ingredientes:'),
+                  _buildSectionTitle("${AppLocalizations.of(context)!.translate('ingredients')}:"),
                   Text(
                     dish['ingredients'],
                     style: const TextStyle(
@@ -150,7 +151,7 @@ class CategoriaPlatos extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  _buildSectionTitle('Receta:'),
+                  _buildSectionTitle("${AppLocalizations.of(context)!.translate('recipe')}:"),
                   Text(
                     dish['recipe'],
                     style: const TextStyle(

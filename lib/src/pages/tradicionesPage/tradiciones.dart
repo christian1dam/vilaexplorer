@@ -151,9 +151,9 @@ class _TradicionesPageState extends State<TradicionesPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          _buildFilterButton('Todo', 0),
-                          _buildFilterButton('Populares', 1),
-                          _buildFilterButton('Cercanos', 2),
+                          _buildFilterButton(AppLocalizations.of(context)!.translate('all'), 0),
+                          _buildFilterButton(AppLocalizations.of(context)!.translate('popular'), 1),
+                          _buildFilterButton(AppLocalizations.of(context)!.translate('nearby'), 2),
                         ],
                       ),
                     )
@@ -164,8 +164,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
                         controller: searchController,
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)!
-                              .translate('search_traditions'),
+                          hintText: AppLocalizations.of(context)!.translate('search_traditions'),
                           hintStyle: const TextStyle(color: Colors.white54),
                           fillColor: const Color.fromARGB(255, 47, 42, 42),
                           filled: true,

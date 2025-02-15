@@ -68,8 +68,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                       children: [
                         ButtonMenuCustom(
                           width: 100.w,
-                          textContent: AppLocalizations.of(context)!
-                              .translate('traditions'),
+                          textContent: AppLocalizations.of(context)!.translate('traditions'),
                           svgPath: "lib/icon/tradiciones.svg",
                           onTap: () async {
                             Navigator.pop(context);
@@ -89,8 +88,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                         ),
                         ButtonMenuCustom(
                           width: 100.w,
-                          textContent: AppLocalizations.of(context)!
-                              .translate('favorites'),
+                          textContent: AppLocalizations.of(context)!.translate('favorites'),
                           svgPath: "lib/icon/favoritos.svg",
                           onTap: () async {
                             Navigator.pop(context);
@@ -110,8 +108,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                         ),
                         ButtonMenuCustom(
                           width: 100.w,
-                          textContent: AppLocalizations.of(context)!
-                              .translate('my_account'),
+                          textContent: AppLocalizations.of(context)!.translate('my_account'),
                           svgPath: "lib/icon/user_icon.svg",
                           onTap: () => {
                             pageProvider.changePage("cuenta"),
@@ -130,8 +127,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                       children: [
                         ButtonMenuCustom(
                           width: 155.w,
-                          textContent: AppLocalizations.of(context)!
-                              .translate('gastronomy'),
+                          textContent: AppLocalizations.of(context)!.translate('gastronomy'),
                           svgPath: "lib/icon/gastronomia.svg",
                           onTap: () {
                             Navigator.pop(context);
