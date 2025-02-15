@@ -7,10 +7,9 @@ import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
-import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
-import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
+import 'package:vilaexplorer/service/weather_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'package:vilaexplorer/src/pages/homePage/routes.dart';
@@ -18,7 +17,8 @@ import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.da
 
 class MyHomePage extends StatefulWidget {
   static const String route = 'homePage';
-  final LugarDeInteres? lugarDeInteres;
+  
+  final dynamic lugarDeInteres;
   const MyHomePage({super.key, this.lugarDeInteres});
 
   @override
@@ -30,7 +30,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   static const _inProgressId = 'AnimatedMapController#MoveInProgress';
   static const _finishedId = 'AnimatedMapController#MoveFinished';
 
-  Future<List<void>>? _fetchDataFuture;
+  Future<List<dynamic>>? _fetchDataFuture;
   MapStateProvider? _mapStateProvider;
   final StreamController<void> _resetController = StreamController.broadcast();
   final MapController _mapController = MapController();
@@ -49,18 +49,16 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     _fetchDataFuture = _fetchData();
   }
 
-  Future<List<void>> _fetchData() async {
-    final lugaresDeInteres =
-        Provider.of<LugarDeInteresService>(context, listen: false)
-            .fetchLugaresDeInteresActivos();
+  Future<List<dynamic>> _fetchData() async {
+    final lugaresDeInteres = Provider.of<LugarDeInteresService>(context, listen: false).fetchLugaresDeInteresActivos();
     final currentLocation = _getCurrentLocation();
-    return Future.wait([currentLocation, lugaresDeInteres]);
-  }
+    Future<Weather> weather = WeatherService().fetchWeather();
+    return Future.wait([lugaresDeInteres, currentLocation, weather]);
+    }
 
   Future<void> _getCurrentLocation() async {
-    final mapStateProvider =
-        Provider.of<MapStateProvider>(context, listen: false);
-    await mapStateProvider.getCurrentLocation();
+    final mapStateProvider = Provider.of<MapStateProvider>(context, listen: false);
+    return mapStateProvider.getCurrentLocation();
   }
 
   void _drawMarkers() {
@@ -123,6 +121,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         future: _fetchDataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
+            Weather weather = snapshot.data![2];
             return Scaffold(
               body: Consumer<MapStateProvider>(
                 builder: (context, mapStateProvider, child) {
@@ -256,7 +255,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           top: 0,
                           left: 0,
                           right: 0,
-                          child: AppBarCustom(),
+                          child: AppBarCustom(weatherData: weather),
                         ),
                         Positioned(
                           bottom: 145.h,
