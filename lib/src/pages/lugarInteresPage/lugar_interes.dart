@@ -24,9 +24,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
   @override
   void initState() {
     super.initState();
-    _lugaresDeInteresFuture =
-        Provider.of<LugarDeInteresService>(context, listen: false)
-            .fetchLugaresDeInteresActivos();
+    _lugaresDeInteresFuture = Provider.of<LugarDeInteresService>(context, listen: false).fetchLugaresDeInteresActivos();
   }
 
   void _toggleSearch() {
@@ -80,7 +78,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                   ),
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.white),
-                    onPressed: () => pageProvider.changePage('map'),
+                    onPressed: () => Navigator.pop(context),
                   ),
                 ],
               ),

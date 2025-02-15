@@ -92,31 +92,30 @@ class _LugarDeInteresItem extends StatelessWidget {
       height: 70,
       width: 100,
       child: ListTile(
-        leading: Hero(
-          tag: lugarDeInteres.uniqueId!,
-          child: FadeInImage(
-            placeholder: AssetImage('assets/no-image.jpg'),
-            image: NetworkImage(lugarDeInteres.imagen!),
-            width: 50,
-            fit: BoxFit.contain,
-            imageErrorBuilder: (context, error, stackTrace) {
-              return Image.asset(
-                "assets/no-image.jpg",
-                width: 50,
-                fit: BoxFit.cover,
-              );
-            },
+          leading: Hero(
+            tag: lugarDeInteres.uniqueId!,
+            child: FadeInImage(
+              placeholder: AssetImage('assets/no-image.jpg'),
+              image: NetworkImage(lugarDeInteres.imagen!),
+              width: 50,
+              fit: BoxFit.contain,
+              imageErrorBuilder: (context, error, stackTrace) {
+                return Image.asset(
+                  "assets/no-image.jpg",
+                  width: 50,
+                  fit: BoxFit.cover,
+                );
+              },
+            ),
           ),
-        ),
-        title: Text(lugarDeInteres.nombreLugar!),
-        subtitle: Text(lugarDeInteres.descripcion!),
-        onTap: () {
-          debugPrint(lugarDeInteres.toString());
-          Navigator.pop(context);
-          mapProvider.lugarDeInteres = lugarDeInteres;
-          mapProvider.focusPOI = true;
-        } 
-      ),
+          title: Text(lugarDeInteres.nombreLugar!),
+          subtitle: Text(lugarDeInteres.descripcion!),
+          onTap: () {
+            debugPrint(lugarDeInteres.toString());
+            Navigator.pop(context);
+            mapProvider.lugarDeInteres = lugarDeInteres;
+            mapProvider.focusPOI = true;
+          }),
     );
   }
 }

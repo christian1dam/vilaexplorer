@@ -81,10 +81,6 @@ class AppBarCustom extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
             child: Row(
               children: [
-                Padding(
-                  padding: EdgeInsets.only(right: 10.w),
-                  child: MySvgWidget(path: 'lib/icon/location.svg'),
-                ),
                 Text(
                   AppLocalizations.of(context)!.translate('villajoyosa'),
                   style: TextStyle(

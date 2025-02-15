@@ -270,16 +270,14 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                   ),
                 ),
               ),
-              // Botones flotantes debajo del recuadro
               Positioned(
                 left: 16.w,
                 right: 16.w,
                 bottom: 16.h,
                 child: Row(
                   children: [
-                    // Botón de "Obtener ruta"
                     Expanded(
-                      flex: 4, // 80% del espacio
+                      flex: 4,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -290,10 +288,9 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                           ),
                         ),
                         onPressed: () {
-                          final mapProvider = Provider.of<MapStateProvider>(
-                              context,
-                              listen: false);
+                          final mapProvider = Provider.of<MapStateProvider>(context, listen: false);
                           if (mapProvider.currentLocation != null) {
+                          mapProvider.showRoute = true;
                             mapProvider.getRouteTo(
                                 LatLng(
                                   _lugarDeInteres.coordenadas!.first.latitud!,
@@ -301,11 +298,7 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                       .coordenadas!.first.longitud!,
                                 ),
                                 mapProvider.currentLocation!);
-                          } else {
-                            debugPrint(
-                              'No se pudo encontrar el estado de MapView.',
-                            );
-                          }
+                          } 
                           Navigator.pop(context);
                         },
                         child: Text(

@@ -11,6 +11,7 @@ import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
+import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'package:vilaexplorer/src/pages/homePage/routes.dart';
 import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.dart';
 
@@ -27,7 +28,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   static const _startedId = 'AnimatedMapController#MoveStarted';
   static const _inProgressId = 'AnimatedMapController#MoveInProgress';
   static const _finishedId = 'AnimatedMapController#MoveFinished';
-  LugarDeInteres? _lugarDeInteres;
 
   Future<List<void>>? _fetchDataFuture;
   MapStateProvider? _mapStateProvider;
@@ -46,7 +46,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _fetchDataFuture = _fetchData();
-    _lugarDeInteres = widget.lugarDeInteres;
   }
 
   Future<List<void>> _fetchData() async {
@@ -135,7 +134,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
                   if (context.mounted &&
                       mapStateProvider.focusCurrentLocation) {
-                    _animatedMapMove(mapStateProvider.currentLocation!, 12);
+                    _animatedMapMove(mapStateProvider.currentLocation!,
+                        _mapController.camera.zoom);
                     Future.microtask(
                       () =>
                           mapStateProvider.setCurrentLocationFocusMode = false,
@@ -169,8 +169,18 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   }
 
                   return GestureDetector(
-                    onDoubleTap: () =>
-                        mapStateProvider.setCurrentLocationFocusMode = true,
+                    onDoubleTapDown: (TapDownDetails tapDownDetails) {
+                      final RenderBox renderBox =
+                          context.findRenderObject() as RenderBox;
+                      final Offset localOffset = renderBox
+                          .globalToLocal(tapDownDetails.globalPosition);
+                      final LatLng zonaTap = _mapController.camera
+                          .screenOffsetToLatLng(localOffset);
+
+                      double newZoom =
+                          (_mapController.camera.zoom + 1.5).clamp(4, 18.0);
+                      _animatedMapMove(zonaTap, newZoom);
+                    },
                     child: FlutterMap(
                       mapController: _mapController,
                       options: MapOptions(
@@ -187,6 +197,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         interactionOptions: const InteractionOptions(
                           flags: ~InteractiveFlag.doubleTapZoom,
                         ),
+                        onTap: (tapPosition, point) {
+                          FocusScopeNode currentFocus = FocusScope.of(context);
+                          if (!currentFocus.hasPrimaryFocus) {
+                            currentFocus.unfocus();
+                          }
+                        },
                       ),
                       children: [
                         TileLayer(
@@ -215,19 +231,26 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             ],
                           ),
                         MarkerLayer(markers: _markers),
-                        if (mapStateProvider.routePoints.isNotEmpty)
-                          PolylineLayer(
-                            polylines: [
-                              Polyline(
-                                gradientColors: [
-                                  const Color.fromARGB(255, 0, 140, 255),
-                                  const Color.fromARGB(255, 0, 78, 147)
-                                ],
-                                points: mapStateProvider.routePoints,
-                                strokeWidth: 4.0,
-                              ),
-                            ],
+                        Visibility(
+                          visible: mapStateProvider.showRoute,
+                          child: GestureDetector(
+                            onLongPress: () => mapStateProvider.showRoute = false,
+                            child: PolylineLayer(
+                              minimumHitbox: 20,
+                              simplificationTolerance: 0.01,
+                              polylines: [
+                                Polyline(
+                                  gradientColors: [
+                                    const Color.fromARGB(255, 0, 140, 255),
+                                    const Color.fromARGB(255, 0, 78, 147)
+                                  ],
+                                  points: mapStateProvider.routePoints,
+                                  strokeWidth: 4.0,
+                                ),
+                              ],
+                            ),
                           ),
+                        ),
                         Positioned(
                           top: 0,
                           left: 0,
@@ -265,6 +288,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                               color: Colors.white,
                             ),
                           ),
+                        ),
+                        Positioned(
+                          bottom: 75.h,
+                          right: 90.w,
+                          child: FloatingActionButton(
+                              heroTag: "FAB-${UniqueKey()}",
+                              backgroundColor:
+                                  const Color.fromARGB(230, 50, 50, 50),
+                              onPressed: () => mapStateProvider
+                                  .setCurrentLocationFocusMode = true,
+                              tooltip: "Volver a mi ubicación",
+                              child:
+                                  MySvgWidget(path: 'lib/icon/location.svg')),
                         ),
                       ],
                     ),
@@ -316,7 +352,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       // case "Sitio Arqueológico":
       //   return AntDesign.history_outline; // Icono para museos
       default:
-        return Icons.location_pin; // Icono por defecto
+        return Icons.location_on_outlined; // Icono por defecto
     }
   }
 

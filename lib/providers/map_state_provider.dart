@@ -46,6 +46,12 @@ class MapStateProvider extends ChangeNotifier{
     notifyListeners();
   }
   
+  bool _showRoute = false;
+  bool get showRoute => _showRoute;
+  set showRoute(bool show){
+    _showRoute = show;
+    notifyListeners();
+  }
 
   bool _focusPOI = false;
   bool get focusPOI => _focusPOI;

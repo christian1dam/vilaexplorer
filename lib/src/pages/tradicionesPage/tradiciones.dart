@@ -137,8 +137,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
                                   Icons.close,
                                   color: Colors.white,
                                 ),
-                                onPressed: () =>
-                                    pageProvider.changePage('map'),
+                                onPressed: () => Navigator.pop(context),
                               ),
                             ),
                           ],
