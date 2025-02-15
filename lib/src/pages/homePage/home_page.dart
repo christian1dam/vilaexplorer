@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
+import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';

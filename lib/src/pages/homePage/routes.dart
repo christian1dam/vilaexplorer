@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/src/widgets/loading.dart';
 
 class RoutesPage extends StatefulWidget {
@@ -14,26 +15,22 @@ class RoutesPage extends StatefulWidget {
 }
 
 class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
-  List<String> rutasGuardadas = [
-    "Ruta 1: Centro histórico",
-    "Ruta 2: Sendero ecológico",
-    "Ruta 3: Paseo gastronómico"
-  ];
-
-  List<String> rutasPredefinidas = [
+  final List<String> rutasPredefinidas = [
     "Ruta A: Playa",
     "Ruta B: Montañas",
     "Ruta C: Parque natural"
   ];
 
-  void _eliminarRuta(int index) {
-    setState(() {
-      rutasGuardadas.removeAt(index);
-    });
+  final Set<String> rutasGuardadas = {}; // Control dinámico de rutas guardadas
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Ruta eliminada correctamente.')),
-    );
+  void _toggleGuardarRuta(String ruta) {
+    setState(() {
+      if (rutasGuardadas.contains(ruta)) {
+        rutasGuardadas.remove(ruta);
+      } else {
+        rutasGuardadas.add(ruta);
+      }
+    });
   }
 
   void _showLoadingLogo() {
@@ -52,7 +49,7 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Número de pestañas
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromRGBO(32, 29, 29, 1),
@@ -62,26 +59,34 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
               Navigator.pop(context);
             },
           ),
-          title: const Text(
-            "Rutas",
+          title: Text(
+            AppLocalizations.of(context)!.translate('routes'),
             style: TextStyle(color: Colors.white),
           ),
           centerTitle: true,
           bottom: TabBar(
-            indicatorColor: Colors.white, // Línea de selección blanca
-            labelColor: Colors.white, // Color del texto seleccionado
-            unselectedLabelColor:
-                Colors.grey, // Color del texto no seleccionado
-            tabs: const [
-              Tab(text: "Rutas Predefinidas"),
-              Tab(text: "Rutas Guardadas"),
+            indicatorColor: Colors.white,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.grey,
+            tabs: [
+              Tab(text: AppLocalizations.of(context)!.translate('predefined_route')),
+              Tab(text: AppLocalizations.of(context)!.translate('saved_routes')),
             ],
           ),
         ),
         body: TabBarView(
           children: [
-            RutasPredefinidasTab(showLoadingLogo: _showLoadingLogo),
-            RutasGuardadasTab(showLoadingLogo: _showLoadingLogo),
+            RutasPredefinidasTab(
+              rutasPredefinidas: rutasPredefinidas,
+              rutasGuardadas: rutasGuardadas,
+              onToggleGuardar: _toggleGuardarRuta,
+              showLoadingLogo: _showLoadingLogo,
+            ),
+            RutasGuardadasTab(
+              rutasGuardadas: rutasGuardadas,
+              onToggleGuardar: _toggleGuardarRuta,
+              showLoadingLogo: _showLoadingLogo,
+            ),
           ],
         ),
       ),
@@ -90,14 +95,18 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
 }
 
 class RutasPredefinidasTab extends StatelessWidget {
-  final List<String> rutasPredefinidas = [
-    "Ruta A: Playa",
-    "Ruta B: Montañas",
-    "Ruta C: Parque natural"
-  ];
+  final List<String> rutasPredefinidas;
+  final Set<String> rutasGuardadas;
+  final Function(String) onToggleGuardar;
   final VoidCallback showLoadingLogo;
 
-  RutasPredefinidasTab({super.key, required this.showLoadingLogo});
+  const RutasPredefinidasTab({
+    super.key,
+    required this.rutasPredefinidas,
+    required this.rutasGuardadas,
+    required this.onToggleGuardar,
+    required this.showLoadingLogo,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +116,9 @@ class RutasPredefinidasTab extends StatelessWidget {
       child: ListView.builder(
         itemCount: rutasPredefinidas.length,
         itemBuilder: (context, index) {
+          final ruta = rutasPredefinidas[index];
+          final isGuardada = rutasGuardadas.contains(ruta);
+
           return Card(
             color: const Color.fromARGB(255, 47, 42, 42),
             shape: RoundedRectangleBorder(
@@ -115,15 +127,21 @@ class RutasPredefinidasTab extends StatelessWidget {
             child: ListTile(
               onTap: () {
                 showLoadingLogo();
-                // Redirigir a mapa y marcar ruta
               },
               title: Text(
-                rutasPredefinidas[index],
+                ruta,
                 style: const TextStyle(color: Colors.white),
               ),
               leading: const Icon(
                 Icons.route,
                 color: Colors.white,
+              ),
+              trailing: IconButton(
+                icon: Icon(
+                  isGuardada ? Icons.bookmark : Icons.bookmark_outline,
+                  color: isGuardada ? Colors.white : Colors.grey,
+                ),
+                onPressed: () => onToggleGuardar(ruta),
               ),
             ),
           );
@@ -133,31 +151,17 @@ class RutasPredefinidasTab extends StatelessWidget {
   }
 }
 
-class RutasGuardadasTab extends StatefulWidget {
+class RutasGuardadasTab extends StatelessWidget {
+  final Set<String> rutasGuardadas;
+  final Function(String) onToggleGuardar;
   final VoidCallback showLoadingLogo;
 
-  const RutasGuardadasTab({super.key, required this.showLoadingLogo});
-
-  @override
-  _RutasGuardadasTabState createState() => _RutasGuardadasTabState();
-}
-
-class _RutasGuardadasTabState extends State<RutasGuardadasTab> {
-  List<String> rutasGuardadas = [
-    "Ruta 1: Centro histórico",
-    "Ruta 2: Sendero ecológico",
-    "Ruta 3: Paseo gastronómico"
-  ];
-
-  void _eliminarRuta(int index) {
-    setState(() {
-      rutasGuardadas.removeAt(index);
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Ruta eliminada correctamente.')),
-    );
-  }
+  const RutasGuardadasTab({
+    super.key,
+    required this.rutasGuardadas,
+    required this.onToggleGuardar,
+    required this.showLoadingLogo,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -165,46 +169,37 @@ class _RutasGuardadasTabState extends State<RutasGuardadasTab> {
       color: const Color.fromRGBO(32, 29, 29, 1),
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       child: rutasGuardadas.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
-                "No tienes rutas guardadas.",
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                AppLocalizations.of(context)!.translate('no_saved_route'),
+                style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
             )
           : ListView.builder(
               itemCount: rutasGuardadas.length,
               itemBuilder: (context, index) {
-                return Dismissible(
-                  key: Key(rutasGuardadas[index]),
-                  background: Container(
-                    color: Colors.red,
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.only(right: 20),
-                    child: const Icon(Icons.delete, color: Colors.white),
+                final ruta = rutasGuardadas.elementAt(index);
+
+                return Card(
+                  color: const Color.fromARGB(255, 47, 42, 42),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
                   ),
-                  onDismissed: (direction) => _eliminarRuta(index),
-                  child: Card(
-                    color: const Color.fromARGB(255, 47, 42, 42),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
+                  child: ListTile(
+                    onTap: () {
+                      showLoadingLogo();
+                    },
+                    title: Text(
+                      ruta,
+                      style: const TextStyle(color: Colors.white),
                     ),
-                    child: ListTile(
-                      onTap: () {
-                        widget.showLoadingLogo();
-                        // Redirigir a mapa y marcar ruta
-                      },
-                      title: Text(
-                        rutasGuardadas[index],
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      leading: const Icon(
-                        Icons.route,
-                        color: Colors.white,
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => _eliminarRuta(index),
-                      ),
+                    leading: const Icon(
+                      Icons.route,
+                      color: Colors.white,
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.bookmark, color: Colors.white),
+                      onPressed: () => onToggleGuardar(ruta),
                     ),
                   ),
                 );

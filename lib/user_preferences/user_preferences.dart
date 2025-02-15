@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class UserPreferences extends ChangeNotifier{
+class UserPreferences extends ChangeNotifier {
   static final UserPreferences _instance = UserPreferences._internal();
   late final FlutterSecureStorage _storage;
   FlutterSecureStorage get storage => _storage;
@@ -10,7 +10,6 @@ class UserPreferences extends ChangeNotifier{
 
   String get nombre => _nombre;
   String get correo => _email;
-
 
   factory UserPreferences() {
     return _instance;
@@ -31,8 +30,7 @@ class UserPreferences extends ChangeNotifier{
   }
 
   Future<String> get typeToken async {
-    String? type = await _storage.read(key: 'typeToken');
-    return type!;
+    return await _storage.read(key: 'typeToken') ?? '';
   }
 
   Future<void> setTypeToken(String typeToken) async {
@@ -40,12 +38,11 @@ class UserPreferences extends ChangeNotifier{
   }
 
   Future<String> get token async {
-    String? token = await _storage.read(key: 'token');
-    return token!;
+    return await _storage.read(key: 'token') ?? '';
   }
 
   Future<void> setToken(String token) async {
-    await _storage.write(key: 'token', value: token); 
+    await _storage.write(key: 'token', value: token);
   }
 
   Future<void> setId(int id) async {
@@ -54,7 +51,7 @@ class UserPreferences extends ChangeNotifier{
 
   Future<int> get id async {
     final id = await _storage.read(key: 'id');
-    return int.parse(id!);
+    return id != null ? int.tryParse(id) ?? 0 : 0;
   }
 
   Future<void> setSesion(bool estado) async {
@@ -63,12 +60,11 @@ class UserPreferences extends ChangeNotifier{
 
   Future<bool> get sesion async {
     final estadoSesion = await storage.read(key: 'estadoSesion');
-    return estadoSesion == 'true' ? true : false;
+    return estadoSesion?.toLowerCase() == 'true';
   }
 
   Future<String> get username async {
-    String? username = await _storage.read(key: 'username');
-    return username!;
+    return await _storage.read(key: 'username') ?? 'Usuario desconocido';
   }
 
   Future<void> setUsername(String username) async {
@@ -77,9 +73,8 @@ class UserPreferences extends ChangeNotifier{
     notifyListeners();
   }
 
-    Future<String> get email async {
-    String? email = await _storage.read(key: 'email');
-    return email!;
+  Future<String> get email async {
+    return await _storage.read(key: 'email') ?? 'Email no disponible';
   }
 
   Future<void> setEmail(String email) async {

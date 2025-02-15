@@ -154,9 +154,9 @@ class _TradicionesPageState extends State<TradicionesPage> {
                           ),
                           child: Row(
                             children: [
-                              Expanded(child: _buildFilterButton('Todo', 0)),
-                              Expanded(child: _buildFilterButton('Populares', 1)),
-                              Expanded(child: _buildFilterButton('Cercanos', 2)),
+                              Expanded(child: _buildFilterButton('all', 0)),
+                              Expanded(child: _buildFilterButton('popular', 1)),
+                              Expanded(child: _buildFilterButton('nearby', 2)),
                             ],
                           ),
                         ),

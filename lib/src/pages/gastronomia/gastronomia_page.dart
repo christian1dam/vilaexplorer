@@ -307,7 +307,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                 } else if (snapshot.hasData) {
                   return ClipRRect(
                     borderRadius: BorderRadius.circular(10.r),
-                    child: Container(
+                    child: SizedBox(
                       width: double.infinity, // La imagen ocupa todo el ancho
                       height: 90
                           .h, // Ajusta la altura para evitar el desbordamiento
@@ -392,7 +392,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
             // Aquí aumentamos el tamaño de la imagen cargada
             return ClipRRect(
               borderRadius: BorderRadius.circular(10.r),
-              child: Container(
+              child: SizedBox(
                 width: 100.w, // Aumenta el tamaño de la imagen
                 height: 100.h, // Aumenta el tamaño de la imagen
                 child: snapshot.data!, // La imagen cargada
