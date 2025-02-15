@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
+import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
+import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
+import 'package:vilaexplorer/src/pages/homePage/routes.dart';
 
 class LugarDeInteresDelegate extends SearchDelegate {
   String get searchFieldLabel => 'Buscar lugar de interés';
@@ -83,7 +86,7 @@ class _LugarDeInteresItem extends StatelessWidget {
   const _LugarDeInteresItem(this.lugarDeInteres);
   @override
   Widget build(BuildContext context) {
-    print("ERROR AQUIIII");
+    final mapProvider = Provider.of<MapStateProvider>(context, listen: false);
     lugarDeInteres.uniqueId = '${lugarDeInteres.idLugarInteres}-search';
     return SizedBox(
       height: 70,
@@ -108,8 +111,11 @@ class _LugarDeInteresItem extends StatelessWidget {
         title: Text(lugarDeInteres.nombreLugar!),
         subtitle: Text(lugarDeInteres.descripcion!),
         onTap: () {
-          Navigator.pushNamed(context, 'details', arguments: lugarDeInteres);
-        },
+          debugPrint(lugarDeInteres.toString());
+          Navigator.pop(context);
+          mapProvider.lugarDeInteres = lugarDeInteres;
+          mapProvider.focusPOI = true;
+        } 
       ),
     );
   }
@@ -122,7 +128,7 @@ class EmptyContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Icon(
-        Icons.movie_creation_outlined,
+        Icons.place_outlined,
         color: Colors.black38,
         size: 130,
       ),

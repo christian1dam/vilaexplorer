@@ -6,8 +6,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:vilaexplorer/api/api_client.dart';
+import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 
-class MapStateProvider extends ChangeNotifier {
+class MapStateProvider extends ChangeNotifier{
   final _apiClient = ApiClient();
   LatLng? _currentLocation;
   List<LatLng> _routePoints = [];
@@ -22,24 +23,38 @@ class MapStateProvider extends ChangeNotifier {
 
   MapController? get mapController => _mapController;
 
-  set setMapController(MapController mapController){
+  set setMapController(MapController mapController) {
     _mapController = mapController;
     notifyListeners();
   }
 
   StreamController<void>? _resetController;
 
-  StreamController<void>? get resetController => _resetController; 
+  StreamController<void>? get resetController => _resetController;
 
-  set setStreamController(StreamController<void> resetController){
+  set setStreamController(StreamController<void> resetController) {
     _resetController = resetController;
     notifyListeners();
   }
 
   bool _focusCurrentLocation = false;
 
-  bool get focusCurrentLocation => _focusCurrentLocation;
+  LugarDeInteres? _lugarDeInteres;
+  LugarDeInteres get lugarDeInteres => _lugarDeInteres!;
+  set lugarDeInteres(LugarDeInteres poi){
+    _lugarDeInteres = poi;
+    notifyListeners();
+  }
+  
 
+  bool _focusPOI = false;
+  bool get focusPOI => _focusPOI;
+  set focusPOI(bool focus){
+    _focusPOI = focus;
+    notifyListeners();
+  }
+
+  bool get focusCurrentLocation => _focusCurrentLocation;
 
   set setCurrentLocation(LatLng location) {
     _currentLocation = location;
@@ -56,7 +71,7 @@ class MapStateProvider extends ChangeNotifier {
 
   void setRouteFocusMode() {
     _focusRoute = false;
-    notifyListeners(); 
+    notifyListeners();
   }
 
   set setCurrentLocationFocusMode(bool focus) {
@@ -75,9 +90,11 @@ class MapStateProvider extends ChangeNotifier {
 
       final features = data['features'] as List;
       final coordinates = features.first['geometry']['coordinates'] as List;
-      
-      setRoutePoints = coordinates.map<LatLng>((coord) => LatLng(coord[1], coord[0])).toList();
-    
+
+      setRoutePoints = coordinates
+          .map<LatLng>((coord) => LatLng(coord[1], coord[0]))
+          .toList();
+
       _bounds = LatLngBounds.fromPoints(_routePoints);
       notifyListeners();
     } catch (e) {
@@ -105,7 +122,7 @@ class MapStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-   void toggleMapStyle() {
+  void toggleMapStyle() {
     debugPrint("SE HA ENTRADO A TOGGLEMAPSTYLE $currentMapStyle");
     currentMapStyle = !currentMapStyle;
     notifyListeners();

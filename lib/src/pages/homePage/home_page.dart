@@ -7,6 +7,7 @@ import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
@@ -15,7 +16,8 @@ import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.da
 
 class MyHomePage extends StatefulWidget {
   static const String route = 'homePage';
-  const MyHomePage({super.key});
+  final LugarDeInteres? lugarDeInteres;
+  const MyHomePage({super.key, this.lugarDeInteres});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -25,6 +27,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   static const _startedId = 'AnimatedMapController#MoveStarted';
   static const _inProgressId = 'AnimatedMapController#MoveInProgress';
   static const _finishedId = 'AnimatedMapController#MoveFinished';
+  LugarDeInteres? _lugarDeInteres;
 
   Future<List<void>>? _fetchDataFuture;
   MapStateProvider? _mapStateProvider;
@@ -43,10 +46,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _fetchDataFuture = _fetchData();
+    _lugarDeInteres = widget.lugarDeInteres;
   }
 
   Future<List<void>> _fetchData() async {
-    final lugaresDeInteres = Provider.of<LugarDeInteresService>(context, listen: false).fetchLugaresDeInteresActivos();
+    final lugaresDeInteres =
+        Provider.of<LugarDeInteresService>(context, listen: false)
+            .fetchLugaresDeInteresActivos();
     final currentLocation = _getCurrentLocation();
     return Future.wait([currentLocation, lugaresDeInteres]);
   }
@@ -59,7 +65,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   void _drawMarkers() {
     try {
-      final lugaresDeInteresService = Provider.of<LugarDeInteresService>(context, listen: false);
+      final lugaresDeInteresService =
+          Provider.of<LugarDeInteresService>(context, listen: false);
       final markers = lugaresDeInteresService.lugaresDeInteres
           .where((lugar) =>
               lugar.coordenadas != null && lugar.coordenadas!.isNotEmpty)
@@ -75,27 +82,26 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   rotate: true,
                   child: Builder(
                     builder: (context) => IconButton(
-                      icon: Icon(
-                        iconData,
-                        color: color,
-                        size: 40.r,
-                      ),
-                      onPressed: () async {
-                        return showModalBottomSheet(
-                          backgroundColor: Colors.transparent,
-                          scrollControlDisabledMaxHeightRatio: 470.h,
-                          sheetAnimationStyle: AnimationStyle(
-                            duration: Duration(milliseconds: 400),
-                          ),
-                          context: context,
-                          builder: (BuildContext context) {
-                            return DetalleLugarInteres(
-                              lugarDeInteresID: lugar.idLugarInteres!,
-                            );
-                          },
-                        );
-                      },
-                    ),
+                        icon: Icon(
+                          iconData,
+                          color: color,
+                          size: 40.r,
+                        ),
+                        onPressed: () async {
+                          return showModalBottomSheet(
+                            backgroundColor: Colors.transparent,
+                            scrollControlDisabledMaxHeightRatio: 470.h,
+                            sheetAnimationStyle: AnimationStyle(
+                              duration: Duration(milliseconds: 400),
+                            ),
+                            context: context,
+                            builder: (BuildContext context) {
+                              return DetalleLugarInteres(
+                                lugarDeInteresID: lugar.idLugarInteres!,
+                              );
+                            },
+                          );
+                        }),
                   ),
                 );
               },
@@ -136,6 +142,32 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     );
                   }
 
+                  if (context.mounted && mapStateProvider.focusPOI) {
+                    final lugarDeInteres = mapStateProvider.lugarDeInteres;
+                    final destino = LatLng(
+                        lugarDeInteres.coordenadas![0].latitud!,
+                        lugarDeInteres.coordenadas![0].longitud!);
+                    _animatedMapMove(destino, 20);
+                    Future.microtask(
+                      () {
+                        mapStateProvider.focusPOI = false;
+                        showModalBottomSheet(
+                          backgroundColor: Colors.transparent,
+                          scrollControlDisabledMaxHeightRatio: 470.h,
+                          sheetAnimationStyle: AnimationStyle(
+                            duration: Duration(milliseconds: 400),
+                          ),
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DetalleLugarInteres(
+                              lugarDeInteresID: lugarDeInteres.idLugarInteres!,
+                            );
+                          },
+                        );
+                      },
+                    );
+                  }
+
                   return GestureDetector(
                     onDoubleTap: () =>
                         mapStateProvider.setCurrentLocationFocusMode = true,
@@ -144,8 +176,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       options: MapOptions(
                         onMapReady: () {
                           mapStateProvider.setMapController = _mapController;
-                          mapStateProvider.setStreamController = _resetController;
-                            _drawMarkers();
+                          mapStateProvider.setStreamController =
+                              _resetController;
+                          _drawMarkers();
                         },
                         initialCenter:
                             mapStateProvider.currentLocation ?? LatLng(0, 0),
