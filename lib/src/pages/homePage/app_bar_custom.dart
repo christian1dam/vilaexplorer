@@ -95,16 +95,41 @@ class AppBarCustom extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 24, 24, 24),
-          borderRadius:
-              BorderRadius.all(Radius.circular(20.r)),
+          borderRadius: BorderRadius.all(Radius.circular(20.r)),
         ),
         child: Row(
           children: [
-            Text(weatherData?.temperatura != null ? '${(weatherData!.temperatura - 273.15).toStringAsFixed(2)}°' : 'Error°'),
+            Icon(
+              getWeatherIcon(weatherData?.estadoClimatico ?? ''),
+              color: Colors.white,
+              size: 24.r,
+            ),
+            SizedBox(width: 8.w),
+            Text(
+              weatherData?.temperatura != null 
+                ? '${(weatherData!.temperatura - 273.15).round()}°' 
+                : 'Error°',
+              style: TextStyle(color: Colors.white),
+            ),
           ],
         ),
-      ),
+      )
     ];
+  }
+
+   IconData getWeatherIcon(String estadoClimatico) {
+    switch (estadoClimatico.toLowerCase()) {
+      case 'clear':
+        return Icons.wb_sunny; // Soleado
+      case 'clouds':
+        return Icons.cloud; // Nublado
+      case 'rain':
+        return Icons.umbrella; // Lluvioso
+      case 'snow':
+        return Icons.ac_unit; // Nevado
+      default:
+        return Icons.help; // Desconocido
+    }
   }
 
   Widget _searchBar(BuildContext context) {

@@ -29,13 +29,15 @@ class WeatherService {
 class Weather {
   final String nombreLugar;
   final double temperatura;
+  final String estadoClimatico;
 
-  Weather({required this.nombreLugar, required this.temperatura});
+  Weather({required this.nombreLugar, required this.temperatura, required this.estadoClimatico,});
 
   factory Weather.fromJson(Map<String, dynamic> json) {
     return Weather(
       nombreLugar: json['name'],
       temperatura: json['main']['temp'],
+      estadoClimatico: json['weather'][0]['main'],
     );
   }
 }
