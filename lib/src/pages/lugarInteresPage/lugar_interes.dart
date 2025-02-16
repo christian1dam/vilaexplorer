@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
@@ -19,8 +20,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
   String? selectedLugarInteres;
   bool isSearchActive = false;
   TextEditingController searchController = TextEditingController();
-  int selectedFilter =
-      0; // Índice del botón seleccionado, 0 para 'Todo' por defecto
+  int selectedFilter = 0; // Índice del botón seleccionado, 0 para 'Todo' por defecto
 
   @override
   void initState() {
@@ -32,17 +32,14 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
     setState(() {
       isSearchActive = !isSearchActive;
       if (!isSearchActive) {
-        // Limpiamos el texto de búsqueda cuando se desactiva
         searchController.clear();
-        // Aquí podrías agregar lógica para resetear el filtro a 'Todo' si es necesario
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final lugarDeInteresService =
-        Provider.of<LugarDeInteresService>(context, listen: false);
+    final lugarDeInteresService = Provider.of<LugarDeInteresService>(context, listen: false);
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
 
     return BackgroundBoxDecoration(
@@ -51,7 +48,6 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
         child: Column(
           children: [
             BarraDeslizamiento(),
-
             Padding(
               padding: EdgeInsets.all(8.0.h),
               child: Row(
@@ -84,7 +80,6 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                 ],
               ),
             ),
-            // Botones para filtros y barra de búsqueda
             Padding(
               padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
               child: Column(
@@ -100,14 +95,11 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                         onPressed: _toggleSearch,
                       ),
                       if (!isSearchActive) ...[
-                        // Envolvemos los botones en un Container para el estilo de fondo
                         Expanded(
                           child: Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 2.h), // Reducimos el padding vertical
+                            padding: EdgeInsets.symmetric(vertical: 2.h),
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 55, 55,
-                                  55), // Fondo oscuro similar al de la imagen
+                              color: Color.fromARGB(255, 55, 55, 55),
                               borderRadius: BorderRadius.circular(20.r),
                             ),
                             child: Row(
@@ -132,8 +124,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                               fillColor: const Color.fromARGB(255, 47, 42, 42),
                               filled: true,
                               border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.r)),
+                                borderRadius: BorderRadius.all(Radius.circular(20.r)),
                               ),
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 5.h, horizontal: 10.w),
@@ -152,13 +143,13 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                   if (snapshot.connectionState == ConnectionState.done) {
                     final lugaresDeInteres = lugarDeInteresService.lugaresDeInteres;
                     if (lugaresDeInteres.isEmpty) {
-                    return Center(
-                      child: Text(
-                        AppLocalizations.of(context)!.translate('no_poi_available'),
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    );
-                  }
+                      return Center(
+                        child: Text(
+                          AppLocalizations.of(context)!.translate('no_poi_available'),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      );
+                    }
                     return ListView.builder(
                       padding: const EdgeInsets.all(0),
                       itemCount: lugaresDeInteres.length,
@@ -173,12 +164,52 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                       },
                     );
                   }
-                  
+
                   return ListView.builder(
                     padding: const EdgeInsets.all(0),
                     itemCount: 5,
                     itemBuilder: (context, index) {
-                      return Center(child: CircularProgressIndicator(),);
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey[700]!,
+                        highlightColor: Colors.grey[500]!,
+                        child: Card(
+                          color: Colors.grey[850],
+                          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[700],
+                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 150,
+                                      height: 20,
+                                      color: Colors.grey[700],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Container(
+                                      width: 100,
+                                      height: 15,
+                                      color: Colors.grey[700],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
                     },
                   );
                 },
@@ -195,7 +226,6 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
       onTap: () {
         setState(() {
           selectedFilter = index;
-          // Aquí puedes agregar la lógica para cambiar el filtro según el botón seleccionado
         });
       },
       child: Container(
