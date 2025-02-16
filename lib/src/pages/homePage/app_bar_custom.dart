@@ -123,6 +123,8 @@ class AppBarCustom extends StatelessWidget {
                 onTap: () => showSearch(
                   context: context,
                   delegate: LugarDeInteresDelegate(),
+                  maintainState: true,
+                  useRootNavigator: true
                 ),
                 decoration: InputDecoration(
                   hintText:

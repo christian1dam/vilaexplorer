@@ -1,13 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
-import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
-import 'package:vilaexplorer/src/pages/homePage/routes.dart';
 
 class LugarDeInteresDelegate extends SearchDelegate {
   String get searchFieldLabel => 'Buscar lugar de interés';
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    // TODO: implement appBarTheme
+    return ThemeData(
+      applyElevationOverlayColor: true,
+      textTheme: TextTheme(
+      headlineLarge: TextStyle(fontSize: 24.0, color: Colors.white),
+      ),
+      appBarTheme: AppBarTheme(
+      color: const Color.fromARGB(255, 32, 31, 31),
+      iconTheme: IconThemeData(color: Colors.white),
+      titleTextStyle: TextStyle(color: Colors.white)
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+      border: InputBorder.none, 
+      
+      hintStyle: TextStyle(fontSize: 20, color: const Color.fromARGB(255, 255, 255, 255)),
+      ),
+      scaffoldBackgroundColor: const Color.fromARGB(255, 69, 69, 69)
+    );
+  }
+
+
+ @override
+ TextStyle? get searchFieldStyle => TextStyle(color: Colors.white, fontSize: 18);
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -88,34 +114,44 @@ class _LugarDeInteresItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final mapProvider = Provider.of<MapStateProvider>(context, listen: false);
     lugarDeInteres.uniqueId = '${lugarDeInteres.idLugarInteres}-search';
-    return SizedBox(
-      height: 70,
-      width: 100,
+    return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.r), 
+      ),
+      elevation: 3,
       child: ListTile(
-          leading: Hero(
-            tag: lugarDeInteres.uniqueId!,
-            child: FadeInImage(
-              placeholder: AssetImage('assets/no-image.jpg'),
-              image: NetworkImage(lugarDeInteres.imagen!),
-              width: 50,
-              fit: BoxFit.contain,
-              imageErrorBuilder: (context, error, stackTrace) {
-                return Image.asset(
-                  "assets/no-image.jpg",
-                  width: 50,
-                  fit: BoxFit.cover,
-                );
-              },
-            ),
+        leading: Hero(
+          tag: lugarDeInteres.uniqueId!,
+          child: FadeInImage(
+            placeholder: AssetImage('assets/no-image.jpg'),
+            image: NetworkImage(lugarDeInteres.imagen!),
+            width: 50,
+            fit: BoxFit.contain,
+            imageErrorBuilder: (context, error, stackTrace) {
+              return Image.asset(
+                "assets/no-image.jpg",
+                width: 50,
+                fit: BoxFit.cover,
+              );
+            },
           ),
-          title: Text(lugarDeInteres.nombreLugar!),
-          subtitle: Text(lugarDeInteres.descripcion!),
-          onTap: () {
-            debugPrint(lugarDeInteres.toString());
-            Navigator.pop(context);
-            mapProvider.lugarDeInteres = lugarDeInteres;
-            mapProvider.focusPOI = true;
-          }),
+        ),
+        title: Text(
+          lugarDeInteres.nombreLugar!,
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          lugarDeInteres.descripcion!,
+          style: TextStyle(color: Colors.black54),
+        ),
+        onTap: () {
+          debugPrint(lugarDeInteres.toString());
+          Navigator.pop(context);
+          mapProvider.lugarDeInteres = lugarDeInteres;
+          mapProvider.focusPOI = true;
+        },
+      ),
     );
   }
 }
@@ -128,7 +164,7 @@ class EmptyContainer extends StatelessWidget {
     return Center(
       child: Icon(
         Icons.place_outlined,
-        color: Colors.black38,
+        color: const Color.fromARGB(96, 226, 226, 226),
         size: 130,
       ),
     );

@@ -17,7 +17,7 @@ import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.da
 
 class MyHomePage extends StatefulWidget {
   static const String route = 'homePage';
-  
+
   final dynamic lugarDeInteres;
   const MyHomePage({super.key, this.lugarDeInteres});
 
@@ -50,14 +50,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   Future<List<dynamic>> _fetchData() async {
-    final lugaresDeInteres = Provider.of<LugarDeInteresService>(context, listen: false).fetchLugaresDeInteresActivos();
+    final lugaresDeInteres =
+        Provider.of<LugarDeInteresService>(context, listen: false)
+            .fetchLugaresDeInteresActivos();
     final currentLocation = _getCurrentLocation();
     Future<Weather> weather = WeatherService().fetchWeather();
     return Future.wait([lugaresDeInteres, currentLocation, weather]);
-    }
+  }
 
   Future<void> _getCurrentLocation() async {
-    final mapStateProvider = Provider.of<MapStateProvider>(context, listen: false);
+    final mapStateProvider =
+        Provider.of<MapStateProvider>(context, listen: false);
     return mapStateProvider.getCurrentLocation();
   }
 
@@ -232,9 +235,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           ),
                         MarkerLayer(markers: _markers),
                         Visibility(
-                          visible: mapStateProvider.showRoute,
+                          visible: mapStateProvider.showRoute && mapStateProvider.routePoints.isNotEmpty,
                           child: GestureDetector(
-                            onLongPress: () => mapStateProvider.showRoute = false,
+                            onLongPress: () {
+                              mapStateProvider.showRoute = false;
+                            },
                             child: PolylineLayer(
                               minimumHitbox: 20,
                               simplificationTolerance: 0.01,
