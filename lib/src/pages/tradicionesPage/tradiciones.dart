@@ -1,10 +1,7 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
-import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'tarjetaFiestaTradicion.dart';
@@ -25,19 +22,57 @@ class TradicionesPage extends StatefulWidget {
 
 class _TradicionesPageState extends State<TradicionesPage> {
   Future<void>? fetchTradicionesFuture;
-
   String? selectedFiesta;
   bool isSearchActive = false;
   TextEditingController searchController = TextEditingController();
   int selectedFilter = 0;
+  final sheet = GlobalKey();
+  DraggableScrollableController controller = DraggableScrollableController();
 
   @override
   void initState() {
     super.initState();
+    controller.addListener(onChanged);
     fetchTradicionesFuture =
         Provider.of<TradicionesService>(context, listen: false)
             .getAllTradiciones();
   }
+
+  void onChanged() {
+    final currentSize = controller.size;
+    if (currentSize <= 0.05) {
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context, rootNavigator: true)
+            .pop(); // Cierra solo el modal
+      }
+    }
+  }
+
+  void collapse() => animateSheet(getSheet.snapSizes!.first);
+
+  void anchor() => animateSheet(getSheet.snapSizes!.last);
+
+  void expand() => animateSheet(getSheet.maxChildSize);
+
+  void hide() => animateSheet(getSheet.minChildSize);
+
+  @override
+  void dispose() {
+    controller.removeListener(onChanged);
+    controller.dispose();
+    super.dispose();
+  }
+
+  void animateSheet(double size) {
+    controller.animateTo(
+      size,
+      duration: const Duration(milliseconds: 50),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  DraggableScrollableSheet get getSheet =>
+      (sheet.currentWidget as DraggableScrollableSheet);
 
   void _toggleContainer(String nombreFiesta) {
     setState(() {
@@ -60,7 +95,6 @@ class _TradicionesPageState extends State<TradicionesPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final pageProvider = Provider.of<PageProvider>(context, listen: false);
     final tradicionesProvider =
         Provider.of<TradicionesService>(context, listen: false);
 
@@ -87,137 +121,190 @@ class _TradicionesPageState extends State<TradicionesPage> {
               ),
             );
           }
-          return GestureDetector(
-            onTap: () {
-              if (isSearchActive) {
-                setState(() {
-                  isSearchActive = false;
-                  searchController.clear();
-                });
-              }
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              return DraggableScrollableSheet(
+                key: sheet,
+                initialChildSize: 0.5,
+                maxChildSize: 0.95,
+                minChildSize: 0,
+                expand: false,
+                snap: true,
+                snapSizes: [
+                  60 / constraints.maxHeight,
+                  0.5,
+                ],
+                controller: controller,
+                builder:
+                    (BuildContext context, ScrollController scrollController) {
+                  return GestureDetector(
+                    onTap: () {
+                      if (isSearchActive) {
+                        setState(() {
+                          isSearchActive = false;
+                          searchController.clear();
+                        });
+                      }
+                    },
+                    child: BackgroundBoxDecoration(
+                      child: CustomScrollView(
+                        controller: scrollController,
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                    fit: FlexFit.loose,
+                                    child: BarraDeslizamiento()),
+                                Flexible(
+                                  fit: FlexFit.loose,
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 20.w),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 8,
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .translate(
+                                                    'holidays_traditions'),
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontSize: 21.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: IconButton(
+                                            icon: Icon(
+                                              isSearchActive
+                                                  ? Icons.arrow_back
+                                                  : Icons.search,
+                                              color: Colors.white,
+                                            ),
+                                            onPressed: _toggleSearch,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.close,
+                                              color: Colors.white,
+                                            ),
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                if (!isSearchActive)
+                                  Flexible(
+                                    fit: FlexFit.loose,
+                                    child: Container(
+                                      width: size.width - 40.w,
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 55, 55, 55),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20.r)),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              child:
+                                                  _buildFilterButton('all', 0)),
+                                          Expanded(
+                                              child: _buildFilterButton(
+                                                  'popular', 1)),
+                                          Expanded(
+                                              child: _buildFilterButton(
+                                                  'nearby', 2)),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                else
+                                  Flexible(
+                                    fit: FlexFit.loose,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: size.width - 40.w,
+                                      child: TextField(
+                                        controller: searchController,
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                        decoration: InputDecoration(
+                                          hintText: AppLocalizations.of(
+                                                  context)!
+                                              .translate('search_traditions'),
+                                          hintStyle: const TextStyle(
+                                              color: Colors.white54),
+                                          fillColor: const Color.fromARGB(
+                                              255, 47, 42, 42),
+                                          filled: true,
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20.r)),
+                                          ),
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 5.h, horizontal: 10.w),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                Flexible(
+                                  fit: FlexFit.loose,
+                                  flex: 10,
+                                  child: RefreshIndicator(
+                                    displacement: 20,
+                                    onRefresh: () async {
+                                      setState(() {
+                                        fetchTradicionesFuture =
+                                            tradicionesProvider
+                                                .getAllTradiciones();
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 10.h),
+                                      child: SizedBox(
+                                        height: constraints.maxHeight * 0.8,
+                                        child: ListView.builder(
+                                          itemCount: tradiciones.length,
+                                          itemBuilder: (context, index) {
+                                            final tradicion =
+                                                tradiciones[index];
+                                            return FiestaCard(
+                                              nombre: tradicion.nombre,
+                                              fecha: tradicion.fecha,
+                                              imagen: tradicionesProvider
+                                                  .getImageForTradicion(
+                                                      tradicion.imagen),
+                                              detalleTap: () =>
+                                                  _toggleContainer(
+                                                      tradicion.nombre),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
             },
-            child: BackgroundBoxDecoration(
-              child: SizedBox(
-                height: 600.h,
-                child: Column(
-                  children: [
-                    Expanded(child: BarraDeslizamiento()),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 8,
-                              child: Text(
-                                AppLocalizations.of(context)!
-                                    .translate('holidays_traditions'),
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontSize: 21.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: IconButton(
-                                icon: Icon(
-                                  isSearchActive
-                                      ? Icons.arrow_back
-                                      : Icons.search,
-                                  color: Colors.white,
-                                ),
-                                onPressed: _toggleSearch,
-                              ),
-                            ),
-                            Expanded(
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.close,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () => Navigator.pop(context),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    if (!isSearchActive)
-                      Expanded(
-                        child: Container(
-                          width: size.width - 40.w,
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 55, 55, 55),
-                            borderRadius: BorderRadius.all(Radius.circular(20.r)),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(child: _buildFilterButton('all', 0)),
-                              Expanded(child: _buildFilterButton('popular', 1)),
-                              Expanded(child: _buildFilterButton('nearby', 2)),
-                            ],
-                          ),
-                        ),
-                      )
-                    else
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: size.width - 40.w,
-                          child: TextField(
-                            controller: searchController,
-                            style: const TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                              hintText: AppLocalizations.of(context)!
-                                  .translate('search_traditions'),
-                              hintStyle: const TextStyle(color: Colors.white54),
-                              fillColor: const Color.fromARGB(255, 47, 42, 42),
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.r)),
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 5.h, horizontal: 10.w),
-                            ),
-                          ),
-                        ),
-                      ),
-                    Expanded(
-                      flex: 10,
-                      child: RefreshIndicator(
-                        displacement: 20,
-                        onRefresh: () async {
-                          setState(() {
-                            fetchTradicionesFuture =
-                                tradicionesProvider.getAllTradiciones();
-                          });
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 10.h),
-                          child: ListView.builder(
-                            itemCount: tradiciones.length,
-                            itemBuilder: (context, index) {
-                              final tradicion = tradiciones[index];
-                              return FiestaCard(
-                                nombre: tradicion.nombre,
-                                fecha: tradicion.fecha,
-                                imagen: tradicionesProvider
-                                    .getImageForTradicion(tradicion.imagen),
-                                detalleTap: () =>
-                                    _toggleContainer(tradicion.nombre),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           );
         }
       },
@@ -238,7 +325,8 @@ class _TradicionesPageState extends State<TradicionesPage> {
             : const Color.fromARGB(255, 55, 55, 55),
         borderRadius: BorderRadius.circular(20.r),
       ),
-      text: Text(textAlign: TextAlign.center,
+      text: Text(
+        textAlign: TextAlign.center,
         text,
         style: const TextStyle(color: Colors.white),
       ),
@@ -445,7 +533,7 @@ class _TradicionesLoadingEffectState extends State<TradicionesLoadingEffect> {
                     ),
                     Expanded(
                       child: Padding(
-                      padding: EdgeInsets.only(left: 4.w),
+                        padding: EdgeInsets.only(left: 4.w),
                         child: Icon(
                           Icons.close,
                           color: Colors.white,
@@ -467,8 +555,11 @@ class _TradicionesLoadingEffectState extends State<TradicionesLoadingEffect> {
                   children: [
                     Expanded(
                       child: FilterButton(
-                        text: Text("Todo",
-                            style: const TextStyle(color: Colors.white), textAlign: TextAlign.center,),
+                        text: Text(
+                          "Todo",
+                          style: const TextStyle(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
                         style: BoxDecoration(
                           color: Colors.grey[700],
                           borderRadius: BorderRadius.circular(20.r),
@@ -478,7 +569,8 @@ class _TradicionesLoadingEffectState extends State<TradicionesLoadingEffect> {
                     Expanded(
                       child: FilterButton(
                         text: Text("Populares",
-                            style: const TextStyle(color: Colors.white), textAlign: TextAlign.center),
+                            style: const TextStyle(color: Colors.white),
+                            textAlign: TextAlign.center),
                         style: BoxDecoration(
                           color: Colors.grey[700],
                           borderRadius: BorderRadius.circular(20.r),
@@ -488,7 +580,8 @@ class _TradicionesLoadingEffectState extends State<TradicionesLoadingEffect> {
                     Expanded(
                       child: FilterButton(
                         text: Text("Cercanos",
-                            style: const TextStyle(color: Colors.white), textAlign: TextAlign.center),
+                            style: const TextStyle(color: Colors.white),
+                            textAlign: TextAlign.center),
                         style: BoxDecoration(
                           color: Colors.grey[700],
                           borderRadius: BorderRadius.circular(20.r),
