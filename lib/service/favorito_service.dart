@@ -16,20 +16,22 @@ class FavoritoService extends ChangeNotifier {
   List<dynamic> get favoritosDelUsuario => _favoritosDelUsuario;
 
   bool esFavorito(int idEntidad, TipoEntidad tipoEntidad) {
-    return _favoritosDelUsuario.any(
-      (favorito) {
-        if (tipoEntidad == TipoEntidad.LUGAR_INTERES &&
-            favorito is LugarDeInteres) {
-          return favorito.idLugarInteres == idEntidad;
-        } else if (tipoEntidad == TipoEntidad.PLATO && favorito is Plato) {
-          return favorito.platoId == idEntidad;
-        } else if (tipoEntidad == TipoEntidad.FIESTA_TRADICION &&
-            favorito is Tradicion) {
-          return favorito.idFiestaTradicion == idEntidad;
-        }
-        return false;
-      },
-    );
+    bool result = false;
+
+     for (final fav in _favoritosDelUsuario) {
+      if (fav is LugarDeInteres && idEntidad == fav.idLugarInteres) {
+        result = true;
+        break;
+      } else if (fav is Plato && idEntidad == fav.platoId) {
+        result = true;
+        break;
+      } else if (fav is Tradicion && idEntidad == fav.idFiestaTradicion) {
+        result = true;
+        break;
+      }
+    }
+
+    return result;
   }
 
   Future<void> getFavoritosByUsuario(int idUsuario) async {
@@ -92,7 +94,19 @@ class FavoritoService extends ChangeNotifier {
       final response = await _apiClient.delete(endpoint);
       if (response.statusCode == 204) {
         debugPrint("Favorito eliminado correctamente.");
-        _favoritosDelUsuario.removeWhere((f) => f.idFavorito == idEntidad);
+        for (int i = 0; i < _favoritosDelUsuario.length; i++) {
+          final fav = _favoritosDelUsuario[i];
+          if (fav is LugarDeInteres && idEntidad == fav.idLugarInteres) {
+            _favoritosDelUsuario.removeAt(i);
+            break;
+          } else if (fav is Plato && idEntidad == fav.platoId) {
+            _favoritosDelUsuario.removeAt(i);
+            break;
+          } else if (fav is Tradicion && idEntidad == fav.idFiestaTradicion) {
+            _favoritosDelUsuario.removeAt(i);
+            break;
+          }
+        }
         notifyListeners();
         return true;
       } else if (response.statusCode == 404) {

@@ -19,6 +19,13 @@ class GetImage extends StatelessWidget {
       return FadeInImage(
         placeholder: const AssetImage('lib/assets/jar-loading.gif'),
         image: NetworkImage(image!),
+        imageErrorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            "assets/no-image.jpg",
+            width: 50,
+            fit: BoxFit.cover,
+          );
+        },
         fit: BoxFit.cover,
       );
     }

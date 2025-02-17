@@ -213,11 +213,11 @@ class _FavoritosPageState extends State<FavoritosPage> {
                                       .map((favorito) {
                                     final lugar = favorito;
                                     return Dismissible(
-                                      key:
-                                          Key(lugar.idFiestaTradicion.toString()),
+                                      key: Key(
+                                          lugar.idFiestaTradicion.toString()),
                                       direction: DismissDirection.endToStart,
-                                      onDismissed: (direction) {
-                                        // TODO #2
+                                      onDismissed: (direction) async {
+                                        favoritoService.eliminarFavorito(favorito.idFiestaTradicion, await UserPreferences().id);
                                       },
                                       child: ListTile(
                                         leading: SizedBox(
@@ -231,6 +231,14 @@ class _FavoritosPageState extends State<FavoritosPage> {
                                                   "assets/no-image.jpg"),
                                               image: NetworkImage(lugar.imagen),
                                               fit: BoxFit.cover,
+                                              imageErrorBuilder:
+                                                  (context, error, stackTrace) {
+                                                return Image.asset(
+                                                  "assets/no-image.jpg",
+                                                  width: 50,
+                                                  fit: BoxFit.cover,
+                                                );
+                                              },
                                             ),
                                           ),
                                         ),

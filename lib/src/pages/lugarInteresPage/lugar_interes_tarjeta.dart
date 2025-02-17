@@ -4,7 +4,7 @@ import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class LugarDeInteresTarjeta extends StatelessWidget {
   final LugarDeInteres lugarDeInteres;
-  final Function() onTap; 
+  final Function() onTap;
 
   const LugarDeInteresTarjeta({
     super.key,
@@ -30,10 +30,18 @@ class LugarDeInteresTarjeta extends StatelessWidget {
                   height: 200,
                   width: double.infinity,
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(15)),
                     child: FadeInImage(
                       placeholder: AssetImage("assets/no-image.jpg"),
-                      image: NetworkImage(lugarDeInteres.imagen ?? ''), // Asegúrate de que la imagen no sea nula
+                      image: NetworkImage(lugarDeInteres.imagen!),
+                      imageErrorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          "assets/no-image.jpg",
+                          width: 50,
+                          fit: BoxFit.cover,
+                        );
+                      },
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -56,7 +64,8 @@ class LugarDeInteresTarjeta extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    lugarDeInteres.nombreLugar ?? 'Nombre no disponible', // Nombre del lugar
+                    lugarDeInteres.nombreLugar ??
+                        'Nombre no disponible', // Nombre del lugar
                     style: const TextStyle(
                         fontSize: 25,
                         color: Colors.white,

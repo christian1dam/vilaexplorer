@@ -320,14 +320,15 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                         ),
                         child: favoritoService.esFavorito(
                                 _lugarDeInteres.idLugarInteres!,
-                                TipoEntidad.FIESTA_TRADICION)
+                                TipoEntidad.LUGAR_INTERES)
                             ? MySvgWidget(path: 'lib/icon/favoriteTrue.svg')
                             : MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
                         onPressed: () async {
-                          favoritoService.gestionarFavorito(
+                          print("ENTIDAD: ${TipoEntidad.LUGAR_INTERES.name}");
+                          await favoritoService.gestionarFavorito(
                             idUsuario: await userPreferences.id,
                             idEntidad: _lugarDeInteres.idLugarInteres!,
-                            tipoEntidad: TipoEntidad.FIESTA_TRADICION.name,
+                            tipoEntidad: TipoEntidad.LUGAR_INTERES.name,
                           );
                         },
                       ),
