@@ -85,8 +85,6 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                                   maxHeight:
                                       MediaQuery.sizeOf(context).height * 0.81,
                                 ),
-                                sheetAnimationStyle: AnimationStyle(
-                                    duration: Duration(milliseconds: 400)),
                                 builder: (BuildContext context) {
                                   return CustomDraggableScrollableSheet(builder:
                                       (ScrollController scrollController,
@@ -108,17 +106,27 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                           svgPath: "lib/icon/favoritos.svg",
                           onTap: () async {
                             Navigator.pop(context);
+
                             return showModalBottomSheet(
                               backgroundColor: Colors.transparent,
                               context: context,
                               isScrollControlled: true,
                               isDismissible: true,
                               enableDrag: true,
-                              scrollControlDisabledMaxHeightRatio: 550.h,
-                              sheetAnimationStyle: AnimationStyle(
-                                  duration: Duration(milliseconds: 400)),
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    MediaQuery.sizeOf(context).height * 0.81,
+                              ),
                               builder: (BuildContext context) {
-                                return FavoritosPage();
+                                return CustomDraggableScrollableSheet(
+                                  builder: (ScrollController scrollController,
+                                      BoxConstraints constraints) {
+                                    return FavoritosPage(
+                                      scrollCOntroller: scrollController,
+                                      boxConstraints: constraints,
+                                    );
+                                  },
+                                );
                               },
                             );
                           },
@@ -149,14 +157,24 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                             Navigator.pop(context);
                             return showModalBottomSheet(
                               backgroundColor: Colors.transparent,
-                              scrollControlDisabledMaxHeightRatio: 470.h,
                               context: context,
-                              sheetAnimationStyle: AnimationStyle(
-                                  duration: Duration(milliseconds: 400)),
+                              isScrollControlled: true,
+                              isDismissible: true,
+                              enableDrag: true,
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    MediaQuery.sizeOf(context).height * 0.81,
+                              ),
                               builder: (BuildContext context) {
-                                return GastronomiaPage(
-                                  onCategoriaPlatoSelected: (plato) {},
-                                );
+                                return CustomDraggableScrollableSheet(builder:
+                                    (ScrollController controller,
+                                        BoxConstraints constraints) {
+                                  return GastronomiaPage(
+                                    scrollController: controller,
+                                    boxConstraints: constraints,
+                                    onCategoriaPlatoSelected: (plato) {},
+                                  );
+                                });
                               },
                             );
                           },
