@@ -18,6 +18,7 @@ import 'package:vilaexplorer/src/pages/cuentaPage/cuenta_page.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/addPlato.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/routes.dart';
+import 'package:vilaexplorer/src/pages/login_page.dart';
 import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
@@ -183,6 +184,6 @@ class _MyAppState extends State<MyApp> {
   Future<Widget> _checkEstadoSesion() async {
     debugPrint(
         "ESTADO DE LA SESION DEL USUARIO: ${await UserPreferences().sesion}");
-    return await UserPreferences().sesion ? MyHomePage() : SplashPage();
+    return LoginPage();
   }
 }

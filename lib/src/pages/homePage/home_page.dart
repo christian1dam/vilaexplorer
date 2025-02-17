@@ -50,18 +50,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   Future<List<dynamic>> _fetchData() async {
-    final lugaresDeInteres =
-        Provider.of<LugarDeInteresService>(context, listen: false)
-            .fetchLugaresDeInteresActivos();
-    final currentLocation = _getCurrentLocation();
+    final lugaresDeInteres = Provider.of<LugarDeInteresService>(context, listen: false).fetchLugaresDeInteresActivos();
+    final currentLocation = Provider.of<MapStateProvider>(context, listen: false).getCurrentLocation();
     Future<Weather> weather = WeatherService().fetchWeather();
     return Future.wait([lugaresDeInteres, currentLocation, weather]);
-  }
-
-  Future<void> _getCurrentLocation() async {
-    final mapStateProvider =
-        Provider.of<MapStateProvider>(context, listen: false);
-    return mapStateProvider.getCurrentLocation();
   }
 
   void _drawMarkers() {
@@ -140,8 +132,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     _animatedMapMove(mapStateProvider.currentLocation!,
                         _mapController.camera.zoom);
                     Future.microtask(
-                      () =>
-                          mapStateProvider.setCurrentLocationFocusMode = false,
+                      () => mapStateProvider.setCurrentLocationFocusMode = false,
                     );
                   }
 
@@ -181,7 +172,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           .screenOffsetToLatLng(localOffset);
 
                       double newZoom =
-                          (_mapController.camera.zoom + 1.5).clamp(4, 18.0);
+                          (_mapController.camera.zoom + 0.5).clamp(4, 18.0);
                       _animatedMapMove(zonaTap, newZoom);
                     },
                     child: FlutterMap(

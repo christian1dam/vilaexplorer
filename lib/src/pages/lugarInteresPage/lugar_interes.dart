@@ -9,7 +9,11 @@ import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'lugar_interes_tarjeta.dart';
 
 class LugarDeInteresPage extends StatefulWidget {
-  const LugarDeInteresPage({super.key});
+  final ScrollController? scrollController;
+  final BoxConstraints? constraints;
+
+  const LugarDeInteresPage(
+      {super.key, this.scrollController, this.constraints});
 
   @override
   _LugarDeInteresPageState createState() => _LugarDeInteresPageState();
@@ -20,12 +24,15 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
   String? selectedLugarInteres;
   bool isSearchActive = false;
   TextEditingController searchController = TextEditingController();
-  int selectedFilter = 0; // Índice del botón seleccionado, 0 para 'Todo' por defecto
+  int selectedFilter =
+      0; // Índice del botón seleccionado, 0 para 'Todo' por defecto
 
   @override
   void initState() {
     super.initState();
-    _lugaresDeInteresFuture = Provider.of<LugarDeInteresService>(context, listen: false).fetchLugaresDeInteresActivos();
+    _lugaresDeInteresFuture =
+        Provider.of<LugarDeInteresService>(context, listen: false)
+            .fetchLugaresDeInteresActivos();
   }
 
   void _toggleSearch() {
@@ -39,184 +46,229 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
 
   @override
   Widget build(BuildContext context) {
-    final lugarDeInteresService = Provider.of<LugarDeInteresService>(context, listen: false);
+    final lugarDeInteresService =
+        Provider.of<LugarDeInteresService>(context, listen: false);
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
 
     return BackgroundBoxDecoration(
-      child: SizedBox(
-        height: 500.h,
-        child: Column(
-          children: [
-            BarraDeslizamiento(),
-            Padding(
-              padding: EdgeInsets.all(8.0.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 10),
-                        width: MediaQuery.sizeOf(context).width * 0.5,
-                        height: 35.h,
-                        child: Center(
-                          child: Text(
-                            AppLocalizations.of(context)!.translate('sights'),
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                            isSearchActive ? Icons.arrow_back : Icons.search,
-                            color: Colors.white),
-                        onPressed: _toggleSearch,
-                      ),
-                      if (!isSearchActive) ...[
+      child: CustomScrollView(
+        controller: widget.scrollController,
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(fit: FlexFit.loose, child: BarraDeslizamiento()),
+                
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
                         Expanded(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 2.h),
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 55, 55, 55),
-                              borderRadius: BorderRadius.circular(20.r),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _buildFilterButton(AppLocalizations.of(context)!.translate('all'), 0),
-                                _buildFilterButton(AppLocalizations.of(context)!.translate('popular'), 1),
-                                _buildFilterButton(AppLocalizations.of(context)!.translate('nearby'), 2),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ] else
-                        Expanded(
-                          child: TextField(
-                            controller: searchController,
-                            style: const TextStyle(color: Colors.white),
-                            onChanged: (query) {},
-                            decoration: InputDecoration(
-                              hintText: "${AppLocalizations.of(context)!.translate('search_poi')}...",
-                              hintStyle: const TextStyle(color: Colors.white54),
-                              fillColor: const Color.fromARGB(255, 47, 42, 42),
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(20.r)),
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 5.h, horizontal: 10.w),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: FutureBuilder(
-                future: _lugaresDeInteresFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    final lugaresDeInteres = lugarDeInteresService.lugaresDeInteres;
-                    if (lugaresDeInteres.isEmpty) {
-                      return Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.translate('no_poi_available'),
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      );
-                    }
-                    return ListView.builder(
-                      padding: const EdgeInsets.all(0),
-                      itemCount: lugaresDeInteres.length,
-                      itemBuilder: (context, index) {
-                        final lugarDeInteres = lugaresDeInteres[index];
-                        return LugarDeInteresTarjeta(
-                          lugarDeInteres: lugarDeInteres,
-                          abrirTarjeta: () => pageProvider.setLugarDeInteres(
-                            lugarDeInteres.idLugarInteres!,
-                          ),
-                        );
-                      },
-                    );
-                  }
-
-                  return ListView.builder(
-                    padding: const EdgeInsets.all(0),
-                    itemCount: 5,
-                    itemBuilder: (context, index) {
-                      return Shimmer.fromColors(
-                        baseColor: Colors.grey[700]!,
-                        highlightColor: Colors.grey[500]!,
-                        child: Card(
-                          color: Colors.grey[850],
-                          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[700],
-                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              width: MediaQuery.sizeOf(context).width * 0.5,
+                              height: 35.h,
+                              child: Center(
+                                child: Text(
+                                  AppLocalizations.of(context)!
+                                      .translate('sights'),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Colors.white),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                  isSearchActive
+                                      ? Icons.arrow_back
+                                      : Icons.search,
+                                  color: Colors.white),
+                              onPressed: _toggleSearch,
+                            ),
+                            if (!isSearchActive) ...[
+                              Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(vertical: 2.h),
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 55, 55, 55),
+                                    borderRadius: BorderRadius.circular(20.r),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      _buildFilterButton(
+                                          AppLocalizations.of(context)!
+                                              .translate('all'),
+                                          0),
+                                      _buildFilterButton(
+                                          AppLocalizations.of(context)!
+                                              .translate('popular'),
+                                          1),
+                                      _buildFilterButton(
+                                          AppLocalizations.of(context)!
+                                              .translate('nearby'),
+                                          2),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ] else
+                              Expanded(
+                                child: TextField(
+                                  controller: searchController,
+                                  style: const TextStyle(color: Colors.white),
+                                  onChanged: (query) {},
+                                  decoration: InputDecoration(
+                                    hintText:
+                                        "${AppLocalizations.of(context)!.translate('search_poi')}...",
+                                    hintStyle:
+                                        const TextStyle(color: Colors.white54),
+                                    fillColor:
+                                        const Color.fromARGB(255, 47, 42, 42),
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(20.r)),
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 5.h, horizontal: 10.w),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: FutureBuilder(
+                    future: _lugaresDeInteresFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        final lugaresDeInteres =
+                            lugarDeInteresService.lugaresDeInteres;
+                        if (lugaresDeInteres.isEmpty) {
+                          return Center(
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('no_poi_available'),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          );
+                        }
+                        return SizedBox(
+                          height: widget.constraints!.maxHeight * 0.76,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(0),
+                            itemCount: lugaresDeInteres.length,
+                            itemBuilder: (context, index) {
+                              final lugarDeInteres = lugaresDeInteres[index];
+                              return LugarDeInteresTarjeta(
+                                lugarDeInteres: lugarDeInteres,
+                                abrirTarjeta: () =>
+                                    pageProvider.setLugarDeInteres(
+                                  lugarDeInteres.idLugarInteres!,
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }
+
+                      return SizedBox(
+                        height: widget.constraints!.maxHeight * 0.76,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(0),
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey[700]!,
+                              highlightColor: Colors.grey[500]!,
+                              child: Card(
+                                color: Colors.grey[850],
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 20),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      width: 150,
-                                      height: 20,
-                                      color: Colors.grey[700],
+                                      height: 200,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[700],
+                                        borderRadius: const BorderRadius.vertical(
+                                            top: Radius.circular(15)),
+                                      ),
                                     ),
-                                    const SizedBox(height: 10),
-                                    Container(
-                                      width: 100,
-                                      height: 15,
-                                      color: Colors.grey[700],
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: 150,
+                                            height: 20,
+                                            color: Colors.grey[700],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Container(
+                                            width: 100,
+                                            height: 15,
+                                            color: Colors.grey[700],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
                       );
                     },
-                  );
-                },
-              ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

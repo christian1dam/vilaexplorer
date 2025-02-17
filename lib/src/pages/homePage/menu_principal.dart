@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/cuenta_page.dart';
+import 'package:vilaexplorer/src/pages/custom_draggable_scrollable_sheet.dart';
 import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/history_page.dart';
@@ -80,20 +81,30 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                                 isScrollControlled: true,
                                 isDismissible: true,
                                 enableDrag: true,
-                                scrollControlDisabledMaxHeightRatio: 600.h,
+                                constraints: BoxConstraints(
+                                  maxHeight:
+                                      MediaQuery.sizeOf(context).height * 0.81,
+                                ),
                                 sheetAnimationStyle: AnimationStyle(
-                                  duration: Duration(milliseconds: 400)),
+                                    duration: Duration(milliseconds: 400)),
                                 builder: (BuildContext context) {
-                                  return TradicionesPage(
-                                    onFiestaSelected: (fiestaName) =>
-                                        pageProvider.setFiesta(fiestaName),
-                                  );
+                                  return CustomDraggableScrollableSheet(builder:
+                                      (ScrollController scrollController,
+                                          BoxConstraints constraints) {
+                                    return TradicionesPage(
+                                      onFiestaSelected: (fiestaName) =>
+                                          pageProvider.setFiesta(fiestaName),
+                                      scrollCOntroller: scrollController,
+                                      boxConstraints: constraints,
+                                    );
+                                  });
                                 },
                               );
                             }),
                         ButtonMenuCustom(
                           width: 100.w,
-                          textContent: AppLocalizations.of(context)!.translate('favorites'),
+                          textContent: AppLocalizations.of(context)!
+                              .translate('favorites'),
                           svgPath: "lib/icon/favoritos.svg",
                           onTap: () async {
                             Navigator.pop(context);
@@ -113,11 +124,12 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                           },
                         ),
                         ButtonMenuCustom(
-                          width: 100.w,
-                          textContent: AppLocalizations.of(context)!.translate('my_account'),
-                          svgPath: "lib/icon/user_icon.svg",
-                          onTap: () => Navigator.pushReplacementNamed(context, CuentaPage.route)
-                        ),
+                            width: 100.w,
+                            textContent: AppLocalizations.of(context)!
+                                .translate('my_account'),
+                            svgPath: "lib/icon/user_icon.svg",
+                            onTap: () => Navigator.pushReplacementNamed(
+                                context, CuentaPage.route)),
                       ],
                     ),
 
@@ -130,7 +142,8 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                       children: [
                         ButtonMenuCustom(
                           width: 155.w,
-                          textContent: AppLocalizations.of(context)!.translate('gastronomy'),
+                          textContent: AppLocalizations.of(context)!
+                              .translate('gastronomy'),
                           svgPath: "lib/icon/gastronomia.svg",
                           onTap: () {
                             Navigator.pop(context);
@@ -155,14 +168,50 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                           svgPath: "lib/icon/monumentos.svg",
                           onTap: () async {
                             Navigator.pop(context);
+                            // showModalBottomSheet(
+                            //   backgroundColor: Colors.transparent,
+                            //   context: context,
+                            //   isScrollControlled: true,
+                            //   isDismissible: true,
+                            //   enableDrag: true,
+                            //   constraints: BoxConstraints(
+                            //     maxHeight:
+                            //         MediaQuery.sizeOf(context).height * 0.81,
+                            //   ),
+                            //   builder: (BuildContext context) {
+                            //     return CustomDraggableScrollableSheet(builder:
+                            //         (ScrollController scrollController,
+                            //             BoxConstraints constraints) {
+                            //       return TradicionesPage(
+                            //         onFiestaSelected: (fiestaName) =>
+                            //             pageProvider.setFiesta(fiestaName),
+                            //         scrollCOntroller: scrollController,
+                            //         boxConstraints: constraints,
+                            //       );
+                            //     });
+                            //   },
+                            // );
                             return showModalBottomSheet(
                               backgroundColor: Colors.transparent,
                               scrollControlDisabledMaxHeightRatio: 470.h,
                               context: context,
-                              sheetAnimationStyle: AnimationStyle(
-                                  duration: Duration(milliseconds: 400)),
+                              isScrollControlled: true,
+                              isDismissible: true,
+                              enableDrag: true,
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    MediaQuery.sizeOf(context).height * 0.81,
+                              ),
                               builder: (BuildContext context) {
-                                return LugarDeInteresPage();
+                                return CustomDraggableScrollableSheet(
+                                  builder: (ScrollController scrollController,
+                                      BoxConstraints constraints) {
+                                    return LugarDeInteresPage(
+                                      scrollController: scrollController,
+                                      constraints: constraints,
+                                    );
+                                  },
+                                );
                               },
                             );
                           },
