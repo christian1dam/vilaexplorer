@@ -15,7 +15,7 @@ class DetalleFiestaTradicion extends StatelessWidget {
     final size = MediaQuery.sizeOf(context);
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
     final tradicionesService = Provider.of<TradicionesService>(context, listen: false);
-    final Tradiciones tradicion = tradicionesService.todasLasTradiciones!.firstWhere((element) => element.nombre == fiestaName);
+    final Tradicion tradicion = tradicionesService.todasLasTradiciones!.firstWhere((element) => element.nombre == fiestaName);
 
     return Align(
       alignment: Alignment.bottomCenter,

@@ -14,7 +14,6 @@ import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class DetalleLugarInteres extends StatefulWidget {
-  static const String route = 'detalleLugarInteres';
   final int lugarDeInteresID;
 
   const DetalleLugarInteres({super.key, required this.lugarDeInteresID});
@@ -67,7 +66,6 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
         } else {
           _lugarDeInteres = lugarDeInteresService.lugarDeInteres;
           return Stack(
-            clipBehavior: Clip.hardEdge,
             children: [
               Positioned(
                 bottom: 70.h,
@@ -88,7 +86,6 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Imagen con título y botón de cerrar superpuestos
                       Stack(
                         children: [
                           ClipRRect(
@@ -114,10 +111,8 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                               },
                             ),
                           ),
-          
-                          // Gradiente y superposición para título y botón
                           Container(
-                            height: 180.h, // Misma altura que la imagen
+                            height: 180.h,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(20.r),

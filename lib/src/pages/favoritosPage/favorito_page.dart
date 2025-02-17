@@ -209,7 +209,7 @@ class _FavoritosPageState extends State<FavoritosPage> {
                                   collapsedIconColor: Colors.white,
                                   iconColor: Colors.white,
                                   children: _favoritosDelUsuario
-                                      .whereType<Tradiciones>()
+                                      .whereType<Tradicion>()
                                       .map((favorito) {
                                     final lugar = favorito;
                                     return Dismissible(

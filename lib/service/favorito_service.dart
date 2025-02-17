@@ -18,14 +18,13 @@ class FavoritoService extends ChangeNotifier {
   bool esFavorito(int idEntidad, TipoEntidad tipoEntidad) {
     return _favoritosDelUsuario.any(
       (favorito) {
-        
         if (tipoEntidad == TipoEntidad.LUGAR_INTERES &&
             favorito is LugarDeInteres) {
           return favorito.idLugarInteres == idEntidad;
         } else if (tipoEntidad == TipoEntidad.PLATO && favorito is Plato) {
           return favorito.platoId == idEntidad;
         } else if (tipoEntidad == TipoEntidad.FIESTA_TRADICION &&
-            favorito is Tradiciones) {
+            favorito is Tradicion) {
           return favorito.idFiestaTradicion == idEntidad;
         }
         return false;
@@ -34,38 +33,34 @@ class FavoritoService extends ChangeNotifier {
   }
 
   Future<void> getFavoritosByUsuario(int idUsuario) async {
+    _favoritosDelUsuario = [];
+
     final endpoint = "/favorito/usuario/$idUsuario";
     try {
       final response = await _apiClient.get(endpoint);
 
       if (response.statusCode == 200) {
+        
         final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
 
-        _favoritosDelUsuario = data
-            .map((json) {
-              if (json.containsKey("idLugarInteres")) {
-                return LugarDeInteres.fromMap(json);
-              } else if (json.containsKey("platoId")) {
-                return Plato.fromMap(json);
-              } else if (json.containsKey("idFiestaTradicion")) {
-                return Tradiciones.fromMap(json);
-              } else {
-                debugPrint(
-                    "No se pudo determinar el tipo de entidad para el JSON: $json");
-                return null;
-              }
-            })
-            .where((favorito) => favorito != null)
-            .toList();
-
+        for (int i = 0; i < data.length; i++) {
+          if (data[i].containsKey("idLugarInteres")) {
+            _favoritosDelUsuario.add(LugarDeInteres.fromMap(data[i]));
+          } else if (data[i].containsKey("platoId")) {
+            _favoritosDelUsuario.add(Plato.fromMap(data[i]));
+          } else if (data[i].containsKey("idFiestaTradicion")) {
+            _favoritosDelUsuario.add(Tradicion.fromMap(data[i]));
+          }
+        }
         notifyListeners();
       } else {
         debugPrint("Error al obtener favoritos: ${response.statusCode}");
         _favoritosDelUsuario = [];
+        notifyListeners();
       }
     } catch (e) {
       debugPrint("Error al obtener favoritos: $e");
-      _favoritosDelUsuario = [];
+      throw Exception(e);
     }
   }
 
@@ -91,13 +86,13 @@ class FavoritoService extends ChangeNotifier {
     }
   }
 
-  Future<bool> eliminarFavorito(int idFavorito) async {
-    final endpoint = "/favorito/eliminar/$idFavorito";
+  Future<bool> eliminarFavorito(int idEntidad, int idUsuario) async {
+    final endpoint = "/favorito/eliminar?idEntidad=$idEntidad&idUsuario=$idUsuario";
     try {
       final response = await _apiClient.delete(endpoint);
       if (response.statusCode == 204) {
         debugPrint("Favorito eliminado correctamente.");
-        _favoritosDelUsuario.removeWhere((f) => f.idFavorito == idFavorito);
+        _favoritosDelUsuario.removeWhere((f) => f.idFavorito == idEntidad);
         notifyListeners();
         return true;
       } else if (response.statusCode == 404) {
@@ -120,12 +115,27 @@ class FavoritoService extends ChangeNotifier {
   }) async {
     await getFavoritosByUsuario(idUsuario);
 
-    final favoritoExistente = _favoritosDelUsuario.firstWhereOrNull(
-      (f) => f.idEntidad == idEntidad && f.tipoEntidad == tipoEntidad,
-    );
+    Object? favoritoExistente;
 
-    if (favoritoExistente != null) {
-      await eliminarFavorito(favoritoExistente.idFavorito!);
+    for (final fav in _favoritosDelUsuario) {
+      if (fav is LugarDeInteres && idEntidad == fav.idLugarInteres) {
+        favoritoExistente = fav;
+        break;
+      } else if (fav is Plato && idEntidad == fav.platoId) {
+        favoritoExistente = fav;
+        break;
+      } else if (fav is Tradicion && idEntidad == fav.idFiestaTradicion) {
+        favoritoExistente = fav;
+        break;
+      }
+    }
+
+    if (favoritoExistente != null && favoritoExistente is LugarDeInteres) {
+      await eliminarFavorito(favoritoExistente.idLugarInteres!, idUsuario);
+    } else if (favoritoExistente != null && favoritoExistente is Plato) {
+      await eliminarFavorito(favoritoExistente.platoId!, idUsuario);
+    } else if (favoritoExistente != null && favoritoExistente is Tradicion) {
+      await eliminarFavorito(favoritoExistente.idFiestaTradicion, idUsuario);
     } else {
       final nuevoFavorito = Favorito(
         idEntidad: idEntidad,

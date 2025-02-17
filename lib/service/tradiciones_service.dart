@@ -7,14 +7,14 @@ import 'package:vilaexplorer/models/tradiciones/tradiciones.dart';
 class TradicionesService extends ChangeNotifier {
   final ApiClient _apiClient = ApiClient();
 
-  List<Tradiciones>? _todasLasTradiciones;
-  Tradiciones? _tradicionSeleccionada;
+  List<Tradicion>? _todasLasTradiciones;
+  Tradicion? _tradicionSeleccionada;
   String? _error;
   bool _isLoading = false;
 
   // Getters
-  List<Tradiciones>? get todasLasTradiciones => _todasLasTradiciones;
-  Tradiciones? get tradicionSeleccionada => _tradicionSeleccionada;
+  List<Tradicion>? get todasLasTradiciones => _todasLasTradiciones;
+  Tradicion? get tradicionSeleccionada => _tradicionSeleccionada;
   String? get error => _error;
   bool get isLoading => _isLoading;
 
@@ -24,7 +24,7 @@ class TradicionesService extends ChangeNotifier {
       if (response.statusCode == 200) {
         final List<dynamic> tradicionesList = json.decode(utf8.decode(response.bodyBytes));
         _todasLasTradiciones = tradicionesList
-            .map((tradicion) => Tradiciones.fromMap(tradicion))
+            .map((tradicion) => Tradicion.fromMap(tradicion))
             .toList();
       }
       debugPrint("SE HAN OBTENIDO TODAS LAS TRADICIONES");
@@ -41,7 +41,7 @@ class TradicionesService extends ChangeNotifier {
       final response = await _apiClient.get('/fiesta_tradicion/$id');
       if (response.statusCode == 200) {
         _tradicionSeleccionada =
-            Tradiciones.fromMap(json.decode(utf8.decode(response.bodyBytes)));
+            Tradicion.fromMap(json.decode(utf8.decode(response.bodyBytes)));
       }
     }, onError: 'Error al obtener la tradición');
   }
@@ -55,7 +55,7 @@ class TradicionesService extends ChangeNotifier {
         final List<dynamic> tradicionesList =
             json.decode(utf8.decode(response.bodyBytes));
         _todasLasTradiciones = tradicionesList
-            .map((tradicion) => Tradiciones.fromMap(tradicion))
+            .map((tradicion) => Tradicion.fromMap(tradicion))
             .toList();
       }
     }, onError: 'Error al buscar tradiciones');

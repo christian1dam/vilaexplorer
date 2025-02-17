@@ -3,7 +3,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:provider/provider.dart';
-import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/providers/edit_profile_provider.dart';
 import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
@@ -22,7 +21,6 @@ import 'package:vilaexplorer/src/pages/login_page.dart';
 import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
-import 'src/pages/splash_page.dart';
 import 'l10n/app_localizations.dart';
 
 void main() async {
@@ -137,10 +135,6 @@ class _MyAppState extends State<MyApp> {
                   CuentaPage.route: (BuildContext context) =>
                       const CuentaPage(),
                   AddPlato.route: (BuildContext context) => const AddPlato(),
-                  DetalleLugarInteres.route: (BuildContext context) {
-                    final id = ModalRoute.settingsOf(context)!.arguments as int;
-                    return DetalleLugarInteres(lugarDeInteresID: id);
-                  },
                 },
                 locale: _locale,
                 supportedLocales: const [

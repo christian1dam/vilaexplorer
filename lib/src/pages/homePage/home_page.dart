@@ -8,12 +8,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/map_state_provider.dart';
+import 'package:vilaexplorer/service/favorito_service.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
+import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/service/weather_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'package:vilaexplorer/src/pages/homePage/routes.dart';
 import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.dart';
+import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
   static const String route = 'homePage';
@@ -52,8 +55,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Future<List<dynamic>> _fetchData() async {
     final lugaresDeInteres = Provider.of<LugarDeInteresService>(context, listen: false).fetchLugaresDeInteresActivos();
     final currentLocation = Provider.of<MapStateProvider>(context, listen: false).getCurrentLocation();
+    final elementosGuardadosDelUsuario = Provider.of<FavoritoService>(context, listen: false).getFavoritosByUsuario(await UserPreferences().id); 
     Future<Weather> weather = WeatherService().fetchWeather();
-    return Future.wait([lugaresDeInteres, currentLocation, weather]);
+    return Future.wait([lugaresDeInteres, currentLocation, weather, elementosGuardadosDelUsuario]);
   }
 
   void _drawMarkers() {
@@ -83,9 +87,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         onPressed: () async {
                           return showModalBottomSheet(
                             backgroundColor: Colors.transparent,
-                            scrollControlDisabledMaxHeightRatio: 470.h,
+                            isDismissible: true,
                             sheetAnimationStyle: AnimationStyle(
                               duration: Duration(milliseconds: 400),
+                            ),
+                            constraints: BoxConstraints(
+                              maxHeight: 500
                             ),
                             context: context,
                             builder: (BuildContext context) {
@@ -144,12 +151,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     _animatedMapMove(destino, 20);
                     Future.microtask(
                       () {
-                        mapStateProvider.focusPOI = false;
                         showModalBottomSheet(
                           backgroundColor: Colors.transparent,
-                          scrollControlDisabledMaxHeightRatio: 470.h,
-                          sheetAnimationStyle: AnimationStyle(
-                            duration: Duration(milliseconds: 400),
+                          isDismissible: true,
+                          constraints: BoxConstraints(
+                            maxHeight: 500
                           ),
                           context: context,
                           builder: (BuildContext context) {
@@ -158,6 +164,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             );
                           },
                         );
+                        mapStateProvider.focusPOI = false;
                       },
                     );
                   }
@@ -180,8 +187,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       options: MapOptions(
                         onMapReady: () {
                           mapStateProvider.setMapController = _mapController;
-                          mapStateProvider.setStreamController =
-                              _resetController;
+                          mapStateProvider.setStreamController = _resetController;
                           _drawMarkers();
                         },
                         initialCenter:

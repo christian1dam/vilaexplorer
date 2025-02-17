@@ -186,32 +186,8 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                           svgPath: "lib/icon/monumentos.svg",
                           onTap: () async {
                             Navigator.pop(context);
-                            // showModalBottomSheet(
-                            //   backgroundColor: Colors.transparent,
-                            //   context: context,
-                            //   isScrollControlled: true,
-                            //   isDismissible: true,
-                            //   enableDrag: true,
-                            //   constraints: BoxConstraints(
-                            //     maxHeight:
-                            //         MediaQuery.sizeOf(context).height * 0.81,
-                            //   ),
-                            //   builder: (BuildContext context) {
-                            //     return CustomDraggableScrollableSheet(builder:
-                            //         (ScrollController scrollController,
-                            //             BoxConstraints constraints) {
-                            //       return TradicionesPage(
-                            //         onFiestaSelected: (fiestaName) =>
-                            //             pageProvider.setFiesta(fiestaName),
-                            //         scrollCOntroller: scrollController,
-                            //         boxConstraints: constraints,
-                            //       );
-                            //     });
-                            //   },
-                            // );
                             return showModalBottomSheet(
                               backgroundColor: Colors.transparent,
-                              scrollControlDisabledMaxHeightRatio: 470.h,
                               context: context,
                               isScrollControlled: true,
                               isDismissible: true,

@@ -12,27 +12,25 @@ class LugarDeInteresDelegate extends SearchDelegate {
   ThemeData appBarTheme(BuildContext context) {
     // TODO: implement appBarTheme
     return ThemeData(
-      applyElevationOverlayColor: true,
-      textTheme: TextTheme(
-      headlineLarge: TextStyle(fontSize: 24.0, color: Colors.white),
-      ),
-      appBarTheme: AppBarTheme(
-      color: const Color.fromARGB(255, 32, 31, 31),
-      iconTheme: IconThemeData(color: Colors.white),
-      titleTextStyle: TextStyle(color: Colors.white)
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-      border: InputBorder.none, 
-      
-      hintStyle: TextStyle(fontSize: 20, color: const Color.fromARGB(255, 255, 255, 255)),
-      ),
-      scaffoldBackgroundColor: const Color.fromARGB(255, 69, 69, 69)
-    );
+        applyElevationOverlayColor: true,
+        textTheme: TextTheme(
+          headlineLarge: TextStyle(fontSize: 24.0, color: Colors.white),
+        ),
+        appBarTheme: AppBarTheme(
+            color: const Color.fromARGB(255, 32, 31, 31),
+            iconTheme: IconThemeData(color: Colors.white),
+            titleTextStyle: TextStyle(color: Colors.white)),
+        inputDecorationTheme: InputDecorationTheme(
+          border: InputBorder.none,
+          hintStyle: TextStyle(
+              fontSize: 20, color: const Color.fromARGB(255, 255, 255, 255)),
+        ),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 69, 69, 69));
   }
 
-
- @override
- TextStyle? get searchFieldStyle => TextStyle(color: Colors.white, fontSize: 18);
+  @override
+  TextStyle? get searchFieldStyle =>
+      TextStyle(color: Colors.white, fontSize: 18);
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -117,7 +115,7 @@ class _LugarDeInteresItem extends StatelessWidget {
     return Card(
       color: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.r), 
+        borderRadius: BorderRadius.circular(10.r),
       ),
       elevation: 3,
       child: ListTile(
@@ -146,10 +144,11 @@ class _LugarDeInteresItem extends StatelessWidget {
           style: TextStyle(color: Colors.black54),
         ),
         onTap: () {
-          debugPrint(lugarDeInteres.toString());
           Navigator.pop(context);
-          mapProvider.lugarDeInteres = lugarDeInteres;
-          mapProvider.focusPOI = true;
+          Future.delayed(Duration(milliseconds: 500), () {
+            mapProvider.lugarDeInteres = lugarDeInteres;
+            mapProvider.focusPOI = true;
+          });
         },
       ),
     );

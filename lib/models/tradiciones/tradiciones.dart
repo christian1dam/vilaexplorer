@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
 
-class Tradiciones {
+class Tradicion {
   int idFiestaTradicion;
   String nombre;
   String fecha;
@@ -11,7 +11,7 @@ class Tradiciones {
   bool activo;
   Usuario autor;
 
-  Tradiciones({
+  Tradicion({
     required this.idFiestaTradicion,
     required this.nombre,
     required this.fecha,
@@ -22,12 +22,12 @@ class Tradiciones {
     required this.autor,
   });
 
-  factory Tradiciones.fromJson(String str) =>
-      Tradiciones.fromMap(json.decode(str));
+  factory Tradicion.fromJson(String str) =>
+      Tradicion.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory Tradiciones.fromMap(Map<String, dynamic> json) => Tradiciones(
+  factory Tradicion.fromMap(Map<String, dynamic> json) => Tradicion(
         idFiestaTradicion: json["idFiestaTradicion"],
         nombre: json["nombre"],
         fecha: json["fecha"],

@@ -6,6 +6,7 @@ import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
+import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.dart';
 import 'lugar_interes_tarjeta.dart';
 
 class LugarDeInteresPage extends StatefulWidget {
@@ -59,7 +60,6 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Flexible(fit: FlexFit.loose, child: BarraDeslizamiento()),
-                
                 Flexible(
                   fit: FlexFit.loose,
                   child: Padding(
@@ -96,7 +96,6 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                     ),
                   ),
                 ),
-
                 Flexible(
                   fit: FlexFit.loose,
                   child: Padding(
@@ -159,8 +158,8 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                                         const Color.fromARGB(255, 47, 42, 42),
                                     filled: true,
                                     border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20.r)),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20.r)),
                                     ),
                                     contentPadding: EdgeInsets.symmetric(
                                         vertical: 5.h, horizontal: 10.w),
@@ -199,10 +198,21 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                               final lugarDeInteres = lugaresDeInteres[index];
                               return LugarDeInteresTarjeta(
                                 lugarDeInteres: lugarDeInteres,
-                                abrirTarjeta: () =>
-                                    pageProvider.setLugarDeInteres(
-                                  lugarDeInteres.idLugarInteres!,
-                                ),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  showModalBottomSheet(
+                                    backgroundColor: Colors.transparent,
+                                    isDismissible: true,
+                                    constraints: BoxConstraints(maxHeight: 500),
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return DetalleLugarInteres(
+                                        lugarDeInteresID:
+                                            lugarDeInteres.idLugarInteres!,
+                                      );
+                                    },
+                                  );
+                                },
                               );
                             },
                           ),
@@ -231,8 +241,9 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                                       height: 200,
                                       decoration: BoxDecoration(
                                         color: Colors.grey[700],
-                                        borderRadius: const BorderRadius.vertical(
-                                            top: Radius.circular(15)),
+                                        borderRadius:
+                                            const BorderRadius.vertical(
+                                                top: Radius.circular(15)),
                                       ),
                                     ),
                                     Padding(
