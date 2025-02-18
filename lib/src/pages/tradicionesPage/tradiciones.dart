@@ -4,18 +4,17 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
+import 'package:vilaexplorer/src/pages/tradicionesPage/detalle_fiesta_tradicion.dart';
 import 'tarjetaFiestaTradicion.dart';
 
 class TradicionesPage extends StatefulWidget {
   static const String route = 'TradicionesPage';
 
-  final Function(String)? onFiestaSelected;
   final ScrollController? scrollCOntroller;
   final BoxConstraints? boxConstraints;
 
   const TradicionesPage({
     super.key,
-    this.onFiestaSelected,
     this.scrollCOntroller,
     this.boxConstraints,
   });
@@ -39,13 +38,6 @@ class _TradicionesPageState extends State<TradicionesPage> {
             .getAllTradiciones();
   }
 
-  void _toggleContainer(String nombreFiesta) {
-    setState(() {
-      selectedFiesta = nombreFiesta;
-      widget.onFiestaSelected!(nombreFiesta);
-    });
-  }
-
   void _toggleSearch() {
     setState(() {
       isSearchActive = !isSearchActive;
@@ -67,7 +59,8 @@ class _TradicionesPageState extends State<TradicionesPage> {
       future: fetchTradicionesFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return TradicionesLoadingEffect(boxConstraints: widget.boxConstraints);
+          return TradicionesLoadingEffect(
+              boxConstraints: widget.boxConstraints);
         } else if (snapshot.hasError) {
           return Center(
             child: Text(
@@ -216,13 +209,27 @@ class _TradicionesPageState extends State<TradicionesPage> {
                                   itemBuilder: (context, index) {
                                     final tradicion = tradiciones[index];
                                     return FiestaCard(
+                                      detalleTap: () => showModalBottomSheet(context: context, builder: (context) {
+                                        return DetalleFiestaTradicion(id: tradicion.idFiestaTradicion);
+                                      }),
                                       nombre: tradicion.nombre,
                                       fecha: tradicion.fecha,
-                                      imagen: tradicionesProvider
-                                          .getImageForTradicion(
-                                              tradicion.imagen),
-                                      detalleTap: () =>
-                                          _toggleContainer(tradicion.nombre),
+                                      imagen: Image.network(
+                                        tradicion.imagen,
+                                        width: double.infinity,
+                                        height: 200,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Image(
+                                            image: AssetImage(
+                                                "assets/no-image.jpg"),
+                                            width: double.infinity,
+                                            height: 200,
+                                            fit: BoxFit.cover,
+                                          );
+                                        },
+                                      ),
                                     );
                                   },
                                 ),

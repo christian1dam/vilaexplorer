@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
-import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
@@ -25,8 +24,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
   String? selectedLugarInteres;
   bool isSearchActive = false;
   TextEditingController searchController = TextEditingController();
-  int selectedFilter =
-      0; // Índice del botón seleccionado, 0 para 'Todo' por defecto
+  int selectedFilter = 0;
 
   @override
   void initState() {
@@ -49,7 +47,6 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
   Widget build(BuildContext context) {
     final lugarDeInteresService =
         Provider.of<LugarDeInteresService>(context, listen: false);
-    final pageProvider = Provider.of<PageProvider>(context, listen: false);
 
     return BackgroundBoxDecoration(
       child: CustomScrollView(

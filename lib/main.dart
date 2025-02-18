@@ -5,7 +5,6 @@ import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/edit_profile_provider.dart';
 import 'package:vilaexplorer/providers/map_state_provider.dart';
-import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/favorito_service.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
@@ -15,6 +14,8 @@ import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/cuenta_page.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/addPlato.dart';
+import 'package:vilaexplorer/src/pages/gastronomia/detalle_platillo.dart';
+import 'package:vilaexplorer/src/pages/gastronomia/mis_recetas.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
 import 'package:vilaexplorer/src/pages/homePage/routes.dart';
 import 'package:vilaexplorer/src/pages/login_page.dart';
@@ -52,19 +53,14 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-            create: (_) => TradicionesService(), lazy: false),
-        ChangeNotifierProvider(
-            create: (_) => GastronomiaService(), lazy: false),
+        ChangeNotifierProvider(create: (_) => TradicionesService(), lazy: false),
+        ChangeNotifierProvider(create: (_) => GastronomiaService(), lazy: false),
         ChangeNotifierProvider(create: (_) => TipoPlatoService(), lazy: false),
-        ChangeNotifierProvider(create: (_) => PageProvider(), lazy: false),
-        ChangeNotifierProvider(
-            create: (_) => LugarDeInteresService(), lazy: false),
+        ChangeNotifierProvider(create: (_) => LugarDeInteresService(), lazy: false),
         ChangeNotifierProvider(create: (_) => PuntuacionService(), lazy: false),
         ChangeNotifierProvider(create: (_) => FavoritoService(), lazy: false),
         ChangeNotifierProvider(create: (_) => MapStateProvider(), lazy: false),
-        ChangeNotifierProvider(
-            create: (_) => EditProfileFormProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => EditProfileFormProvider(), lazy: false),
         ChangeNotifierProvider(create: (_) => UserPreferences(), lazy: false),
       ],
       child: const MyApp(),
@@ -134,6 +130,8 @@ class _MyAppState extends State<MyApp> {
                   CuentaPage.route: (BuildContext context) =>
                       const CuentaPage(),
                   AddPlato.route: (BuildContext context) => const AddPlato(),
+                  DetallePlatillo.route: (BuildContext context) => const DetallePlatillo(),
+                  MyRecipesPage.route: (BuildContext context) => const MyRecipesPage(),
                 },
                 locale: _locale,
                 supportedLocales: const [

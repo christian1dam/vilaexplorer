@@ -5,7 +5,6 @@ import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/models/gastronomia/plato.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/models/tradiciones/tradiciones.dart';
-import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/favorito_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
@@ -50,219 +49,201 @@ class _FavoritosPageState extends State<FavoritosPage> {
 
   @override
   Widget build(BuildContext context) {
-    final favoritoService =
-        Provider.of<FavoritoService>(context, listen: false);
-    final pageProvider = Provider.of<PageProvider>(context, listen: false);
+    final favoritoService = Provider.of<FavoritoService>(context, listen: false);
+    return BackgroundBoxDecoration(
+      child: CustomScrollView(
+        controller: widget.scrollCOntroller,
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(fit: FlexFit.loose, child: BarraDeslizamiento()),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        ),
+                        onPressed: _toggleSearch,
+                      ),
+                      Center(
+                        child: Text(
+                          AppLocalizations.of(context)!.translate('favorites'),
+                          style: TextStyle(
+                              fontSize: 25.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              letterSpacing: 1.w),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close, color: Colors.white),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                if (isSearchActive)
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: TextField(
+                        controller: searchController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: AppLocalizations.of(context)!
+                              .translate('search_favorites'),
+                          hintStyle: TextStyle(color: Colors.white54),
+                          fillColor: Color.fromARGB(255, 47, 42, 42),
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.r)),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 5.h, horizontal: 10.w),
+                        ),
+                      ),
+                    ),
+                  ),
+                Divider(
+                  color: Colors.white,
+                  thickness: 1.h,
+                  indent: 25.w,
+                  endIndent: 25.w,
+                ),
+                FutureBuilder(
+                  future: _favoritosDelUsuarioFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      _favoritosDelUsuario =
+                          favoritoService.favoritosDelUsuario;
 
-    return FutureBuilder(
-      future: _favoritosDelUsuarioFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: Colors.white,
-              backgroundColor: Colors.black,
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text("ERROR: ${snapshot.error}"),
-          );
-        } else {
-          _favoritosDelUsuario = favoritoService.favoritosDelUsuario;
-          return GestureDetector(
-            onTap: () {
-              if (isSearchActive) {
-                setState(() {
-                  isSearchActive = false;
-                  searchController.clear();
-                });
-              }
-            },
-            child: BackgroundBoxDecoration(
-              child: CustomScrollView(
-                controller: widget.scrollCOntroller,
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Flexible(
-                            fit: FlexFit.loose, child: BarraDeslizamiento()),
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      return Flexible(
+                        fit: FlexFit.loose,
+                        child: SizedBox(
+                          height: widget.boxConstraints!.maxHeight * 0.76,
+                          child: ListView(
+                            padding: EdgeInsets.only(top: 10.h),
                             children: [
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.search,
-                                  color: Colors.white,
-                                ),
-                                onPressed: _toggleSearch,
-                              ),
-                              Center(
-                                child: Text(
+                              ExpansionTile(
+                                title: Text(
                                   AppLocalizations.of(context)!
-                                      .translate('favorites'),
-                                  style: TextStyle(
-                                      fontSize: 25.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      letterSpacing: 1.w),
+                                      .translate('monuments_place'),
+                                  style: TextStyle(color: Colors.white),
                                 ),
+                                collapsedIconColor: Colors.white,
+                                iconColor: Colors.white,
+                                children: _favoritosDelUsuario
+                                    .whereType<LugarDeInteres>()
+                                    .map((favorito) {
+                                  final lugar = favorito;
+                                  return ListTile(
+                                    title: Text(
+                                      lugar.nombreLugar!,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  );
+                                }).toList(),
                               ),
-                              IconButton(
-                                icon: const Icon(Icons.close,
-                                    color: Colors.white),
-                                onPressed: () {
-                                  pageProvider.clearScreen();
-                                },
+                              ExpansionTile(
+                                title: Text(
+                                  AppLocalizations.of(context)!
+                                      .translate('gastronomy'),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                collapsedIconColor: Colors.white,
+                                iconColor: Colors.white,
+                                children: _favoritosDelUsuario
+                                    .whereType<Plato>()
+                                    .map((favorito) {
+                                  final plato = favorito;
+                                  return ListTile(
+                                    title: Text(
+                                      plato.nombre,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                              ExpansionTile(
+                                title: Text(
+                                  AppLocalizations.of(context)!
+                                      .translate('traditions'),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                collapsedIconColor: Colors.white,
+                                iconColor: Colors.white,
+                                children: _favoritosDelUsuario
+                                    .whereType<Tradicion>()
+                                    .map((favorito) {
+                                  final lugar = favorito;
+                                  return Dismissible(
+                                    key:
+                                        Key(lugar.idFiestaTradicion.toString()),
+                                    direction: DismissDirection.endToStart,
+                                    onDismissed: (direction) async {
+                                      favoritoService.eliminarFavorito(
+                                          favorito.idFiestaTradicion,
+                                          await UserPreferences().id);
+                                    },
+                                    child: ListTile(
+                                      leading: SizedBox(
+                                        width: 40.w,
+                                        height: 50.h,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(6.r),
+                                          child: FadeInImage(
+                                            placeholder: AssetImage(
+                                                "assets/no-image.jpg"),
+                                            image: NetworkImage(lugar.imagen),
+                                            fit: BoxFit.cover,
+                                            imageErrorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Image.asset(
+                                                "assets/no-image.jpg",
+                                                width: 50,
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      title: Text(
+                                        lugar.nombre,
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
                               ),
                             ],
                           ),
                         ),
-                        if (isSearchActive)
-                          Flexible(
-                            fit: FlexFit.loose,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.w),
-                              child: TextField(
-                                controller: searchController,
-                                style: const TextStyle(color: Colors.white),
-                                decoration: InputDecoration(
-                                  hintText: AppLocalizations.of(context)!
-                                      .translate('search_favorites'),
-                                  hintStyle: TextStyle(color: Colors.white54),
-                                  fillColor: Color.fromARGB(255, 47, 42, 42),
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20.r)),
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 5.h, horizontal: 10.w),
-                                ),
-                              ),
-                            ),
-                          ),
-                        Divider(
-                          color: Colors.white,
-                          thickness: 1.h,
-                          indent: 25.w,
-                          endIndent: 25.w,
-                        ),
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: SizedBox(
-                            height: widget.boxConstraints!.maxHeight * 0.76,
-                            child: ListView(
-                              padding: EdgeInsets.only(top: 10.h),
-                              children: [
-                                // Primera lista desplegable
-                                ExpansionTile(
-                                  title: Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('monuments_place'),
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  collapsedIconColor: Colors.white,
-                                  iconColor: Colors.white,
-                                  children: _favoritosDelUsuario
-                                      .whereType<LugarDeInteres>()
-                                      .map((favorito) {
-                                    final lugar = favorito;
-                                    return ListTile(
-                                      title: Text(
-                                        lugar.nombreLugar!,
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                                ExpansionTile(
-                                  title: Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('gastronomy'),
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  collapsedIconColor: Colors.white,
-                                  iconColor: Colors.white,
-                                  children: _favoritosDelUsuario
-                                      .whereType<Plato>()
-                                      .map((favorito) {
-                                    final plato = favorito;
-                                    return ListTile(
-                                      title: Text(
-                                        plato.nombre,
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                                ExpansionTile(
-                                  title: Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('traditions'),
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  collapsedIconColor: Colors.white,
-                                  iconColor: Colors.white,
-                                  children: _favoritosDelUsuario
-                                      .whereType<Tradicion>()
-                                      .map((favorito) {
-                                    final lugar = favorito;
-                                    return Dismissible(
-                                      key: Key(
-                                          lugar.idFiestaTradicion.toString()),
-                                      direction: DismissDirection.endToStart,
-                                      onDismissed: (direction) async {
-                                        favoritoService.eliminarFavorito(favorito.idFiestaTradicion, await UserPreferences().id);
-                                      },
-                                      child: ListTile(
-                                        leading: SizedBox(
-                                          width: 40.w,
-                                          height: 50.h,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(6.r),
-                                            child: FadeInImage(
-                                              placeholder: AssetImage(
-                                                  "assets/no-image.jpg"),
-                                              image: NetworkImage(lugar.imagen),
-                                              fit: BoxFit.cover,
-                                              imageErrorBuilder:
-                                                  (context, error, stackTrace) {
-                                                return Image.asset(
-                                                  "assets/no-image.jpg",
-                                                  width: 50,
-                                                  fit: BoxFit.cover,
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        title: Text(
-                                          lugar.nombre,
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                      );
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        backgroundColor: Colors.black,
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-          );
-        }
-      },
+          ),
+        ],
+      ),
     );
   }
 }

@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/models/tradiciones/tradiciones.dart';
-import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 
 class DetalleFiestaTradicion extends StatelessWidget {
-  final String fiestaName;
+  final int id;
 
-  const DetalleFiestaTradicion({super.key, required this.fiestaName});
+  const DetalleFiestaTradicion({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final pageProvider = Provider.of<PageProvider>(context, listen: false);
     final tradicionesService = Provider.of<TradicionesService>(context, listen: false);
-    final Tradicion tradicion = tradicionesService.todasLasTradiciones!.firstWhere((element) => element.nombre == fiestaName);
+    final Tradicion tradicion = tradicionesService.todasLasTradiciones!.firstWhere((element) => element.idFiestaTradicion == id);
 
     return Align(
       alignment: Alignment.bottomCenter,
@@ -79,7 +77,7 @@ class DetalleFiestaTradicion extends StatelessWidget {
                 ),
                 Positioned(
                   top: 10,
-                  right: 10, // Mover la flecha hacia la derecha
+                  right: 10,
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(14)),
@@ -87,9 +85,9 @@ class DetalleFiestaTradicion extends StatelessWidget {
                     ),
                     child: IconButton(
                       icon: const Icon(Icons.arrow_back,
-                          color: Colors.white), // Flecha hacia atrás
+                          color: Colors.white),
                       onPressed: () {
-                        pageProvider.changePage('tradiciones');
+                        Navigator.pop(context);
                       }
                     ),
                   ),

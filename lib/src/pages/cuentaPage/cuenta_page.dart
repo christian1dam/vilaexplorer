@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/main.dart';
-import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/contacto.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/editar_perfil.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/preguntas_frecuentes.dart';
@@ -131,7 +130,6 @@ class _CuentaPageState extends State<CuentaPage> {
 
   @override
   Widget build(BuildContext context) {
-    final pageProvider = Provider.of<PageProvider>(context, listen: false);
     final prefsProvider = Provider.of<UserPreferences>(context);
     
     return Scaffold(
@@ -349,15 +347,11 @@ class _CuentaPageState extends State<CuentaPage> {
                     width: 200.w,
                     child: ElevatedButton(
                       onPressed: () async {
-                        pageProvider.clearScreen();
                         Navigator.of(context).pushAndRemoveUntil(
                             PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      LoginPage(),
+                              pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
                               transitionsBuilder: (context, animation,
                                   secondaryAnimation, child) {
-                                // Cambiar Offset a (-1.0, 0.0) para deslizar hacia la izquierda
                                 const begin = Offset(-1.0, 0.0);
                                 const end = Offset.zero;
                                 const curve = Curves.easeInOut;

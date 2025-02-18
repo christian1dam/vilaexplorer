@@ -4,13 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
-import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/cuenta_page.dart';
 import 'package:vilaexplorer/src/pages/custom_draggable_scrollable_sheet.dart';
 import 'package:vilaexplorer/src/pages/favoritosPage/favorito_page.dart';
-import 'package:vilaexplorer/src/pages/gastronomia/gastronomia_page.dart';
+import 'package:vilaexplorer/src/pages/gastronomia/gastronomia.dart';
 import 'package:vilaexplorer/src/pages/homePage/history_page.dart';
 import 'package:vilaexplorer/src/pages/lugarInteresPage/lugar_interes.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
@@ -43,7 +41,6 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
 
   @override
   Widget build(BuildContext context) {
-    final pageProvider = Provider.of<PageProvider>(context, listen: false);
 
     return FutureBuilder(
         future: _historias,
@@ -60,10 +57,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                 child: Column(
                   children: <Widget>[
                     const BarraDeslizamiento(),
-
                     Divider(height: 10.h, color: Colors.transparent),
-
-                    // Botones principales
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -92,8 +86,6 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                                       (ScrollController scrollController,
                                           BoxConstraints constraints) {
                                     return TradicionesPage(
-                                      onFiestaSelected: (fiestaName) =>
-                                          pageProvider.setFiesta(fiestaName),
                                       scrollCOntroller: scrollController,
                                       boxConstraints: constraints,
                                     );
@@ -177,7 +169,6 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                                   return GastronomiaPage(
                                     scrollController: controller,
                                     boxConstraints: constraints,
-                                    onCategoriaPlatoSelected: (plato) {},
                                   );
                                 });
                               },

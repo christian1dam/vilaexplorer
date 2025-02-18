@@ -9,20 +9,16 @@ class TradicionesService extends ChangeNotifier {
 
   List<Tradicion>? _todasLasTradiciones;
   Tradicion? _tradicionSeleccionada;
-  String? _error;
-  bool _isLoading = false;
 
-  // Getters
   List<Tradicion>? get todasLasTradiciones => _todasLasTradiciones;
   Tradicion? get tradicionSeleccionada => _tradicionSeleccionada;
-  String? get error => _error;
-  bool get isLoading => _isLoading;
 
   Future<void> getAllTradiciones() async {
     try {
       final response = await _apiClient.get('/fiesta_tradicion/activas');
       if (response.statusCode == 200) {
-        final List<dynamic> tradicionesList = json.decode(utf8.decode(response.bodyBytes));
+        final List<dynamic> tradicionesList =
+            json.decode(utf8.decode(response.bodyBytes));
         _todasLasTradiciones = tradicionesList
             .map((tradicion) => Tradicion.fromMap(tradicion))
             .toList();
@@ -35,86 +31,29 @@ class TradicionesService extends ChangeNotifier {
     }
   }
 
-  // Obtener una tradición por ID
   Future<void> getTradicionById(int id) async {
-    await _executeWithLoading(() async {
+    try{
       final response = await _apiClient.get('/fiesta_tradicion/$id');
       if (response.statusCode == 200) {
-        _tradicionSeleccionada =
-            Tradicion.fromMap(json.decode(utf8.decode(response.bodyBytes)));
+        _tradicionSeleccionada = Tradicion.fromMap(json.decode(utf8.decode(response.bodyBytes)));
+        notifyListeners();
       }
-    }, onError: 'Error al obtener la tradición');
+    }catch(e) {
+      throw Exception(e);
+    }
+      
   }
 
-  // Buscar tradiciones por palabra clave
   Future<void> searchTradiciones(String keyword) async {
-    await _executeWithLoading(() async {
-      final response =
-          await _apiClient.get('/fiesta_tradicion/buscar?keyword=$keyword');
-      if (response.statusCode == 200) {
-        final List<dynamic> tradicionesList =
-            json.decode(utf8.decode(response.bodyBytes));
-        _todasLasTradiciones = tradicionesList
-            .map((tradicion) => Tradicion.fromMap(tradicion))
-            .toList();
-      }
-    }, onError: 'Error al buscar tradiciones');
-  }
-
-  // Limpiar errores
-  void limpiarError() {
-    _error = null;
-    notifyListeners();
-  }
-
-  // Métodos privados para el manejo del estado
-
-  // Ejecutar una función con manejo del estado de carga
-  Future<void> _executeWithLoading(Future<void> Function() action,
-      {required String onError}) async {
-    _setLoading(true);
     try {
-      await action();
-      _error = null;
+      final response = await _apiClient.get('/fiesta_tradicion/buscar?keyword=$keyword');
+      if (response.statusCode == 200) {
+        final List<dynamic> tradicionesList = json.decode(utf8.decode(response.bodyBytes));
+        _todasLasTradiciones = tradicionesList.map((tradicion) => Tradicion.fromMap(tradicion)).toList();
+        notifyListeners();
+      }
     } catch (e) {
-      _error = '$onError: $e';
-    } finally {
-      _setLoading(false);
+      throw Exception(e);
     }
-  }
-
-  // Actualizar el estado de carga
-  void _setLoading(bool value) {
-    _isLoading = value;
-    notifyListeners();
-  }
-
-// Método para obtener la imagen de una tradición desde Cloudinary
-  Image getImageForTradicion(String? imagenUrl) {
-    if (imagenUrl != null && imagenUrl.isNotEmpty) {
-      // Si hay una URL válida proporcionada
-      return Image.network(
-        imagenUrl,
-        width: double.infinity,
-        height: 200,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          // En caso de error al cargar la imagen, mostrar un icono
-          return const Icon(
-            Icons.broken_image,
-            size: 50,
-            color: Colors.grey,
-          );
-        },
-      );
-    }
-
-    // Si no hay URL proporcionada o está vacía, mostrar imagen de respaldo
-    return const Image(
-      image: AssetImage("assets/no-image.jpg"),
-      width: double.infinity,
-      height: 200,
-      fit: BoxFit.cover,
-    );
   }
 }

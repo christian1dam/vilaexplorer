@@ -7,7 +7,7 @@ class FiestaCard extends StatelessWidget {
   final String? nombre;
   final String? fecha;
   final Image? imagen;
-  final VoidCallback? detalleTap;
+  final Function()? detalleTap;
 
   const FiestaCard({
     super.key,

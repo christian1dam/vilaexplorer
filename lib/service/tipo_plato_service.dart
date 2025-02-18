@@ -18,7 +18,6 @@ class TipoPlatoService extends ChangeNotifier {
   String? get error => _error;
   bool get isLoading => _isLoading;
 
-  // Obtener todos los tipos de plato activos
   Future<void> fetchTiposPlatoActivos() async {
     _isLoading = true;
     _error = null;

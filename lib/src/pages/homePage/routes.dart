@@ -21,7 +21,7 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
     "Ruta C: Parque natural"
   ];
 
-  final Set<String> rutasGuardadas = {}; // Control dinámico de rutas guardadas
+  final Set<String> rutasGuardadas = {};
 
   void _toggleGuardarRuta(String ruta) {
     setState(() {

@@ -3,22 +3,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/models/gastronomia/plato.dart';
-import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/addPlato.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/detalle_platillo.dart';
-import 'package:vilaexplorer/src/pages/gastronomia/myRecipesPage.dart';
+import 'package:vilaexplorer/src/pages/gastronomia/mis_recetas.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 
 class GastronomiaPage extends StatefulWidget {
   final ScrollController? scrollController;
   final BoxConstraints? boxConstraints;
 
-  final Function(String) onCategoriaPlatoSelected;
-
   const GastronomiaPage({
     super.key,
-    required this.onCategoriaPlatoSelected,
     this.scrollController,
     this.boxConstraints,
   });
@@ -56,53 +52,53 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
   Widget build(BuildContext context) {
     final gastronomiaService =
         Provider.of<GastronomiaService>(context, listen: false);
-    final platos = gastronomiaService.platos;
 
-    return FutureBuilder(
-        future: _fetchPlatosFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return BackgroundBoxDecoration(
-              child: CustomScrollView(
-                controller: widget.scrollController,
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Flexible(
-                            fit: FlexFit.loose, child: BarraDeslizamiento()),
-                        Flexible(fit: FlexFit.loose, child: _buildHeader()),
-                        if (isSearchActive)
-                          Flexible(
-                              fit: FlexFit.loose, child: _buildSearchField()),
-                        Flexible(fit: FlexFit.loose, child: _buildButton()),
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: platos == null
-                              ? const Center(
-                                  child: Text(
-                                    "No hay platos disponibles",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                )
-                              : isGridView
-                                  ? _buildGridView(platos, gastronomiaService)
-                                  : _buildListView(platos, gastronomiaService),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-          return Center(
-            child: CircularProgressIndicator(
-              color: Colors.white,
+    return BackgroundBoxDecoration(
+      child: CustomScrollView(
+        controller: widget.scrollController,
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(fit: FlexFit.loose, child: BarraDeslizamiento()),
+                Flexible(fit: FlexFit.loose, child: _buildHeader()),
+                if (isSearchActive)
+                  Flexible(fit: FlexFit.loose, child: _buildSearchField()),
+                Flexible(fit: FlexFit.loose, child: _buildButton()),
+                FutureBuilder(
+                  future: _fetchPlatosFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      final platos = gastronomiaService.platos;
+    
+                      return Flexible(
+                        fit: FlexFit.loose,
+                        child: platos.isEmpty
+                            ? const Center(
+                                child: Text(
+                                  "No hay platos disponibles",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              )
+                            : isGridView
+                                ? _buildGridView(platos, gastronomiaService)
+                                : _buildListView(platos, gastronomiaService),
+                      );
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    );
+                  },
+                )
+              ],
             ),
-          );
-        });
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildHeader() {
@@ -228,19 +224,8 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
           final plato = platos[index];
           return GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetallePlatillo(
-                    platillo: plato.nombre,
-                    ingredientes: plato.ingredientes,
-                    receta: plato.receta,
-                    closeWidget: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-              );
+              Navigator.pushNamed(context, DetallePlatillo.route,
+                  arguments: plato);
             },
             child: _buildPlatoCard(plato, index),
           );
@@ -265,19 +250,8 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
           final plato = platos[index];
           return GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetallePlatillo(
-                    platillo: plato.nombre,
-                    ingredientes: plato.ingredientes,
-                    receta: plato.receta,
-                    closeWidget: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-              );
+              Navigator.pushNamed(context, DetallePlatillo.route,
+                  arguments: plato);
             },
             child: _buildGridPlatoCard(plato),
           );
@@ -349,14 +323,13 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
     bool isImageLeft = index % 2 == 0;
 
     return Card(
-      margin:
-          EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h), // Espaciado
+      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.r), // Esquinas redondeadas
+        borderRadius: BorderRadius.circular(20.r),
       ),
       color: const Color.fromARGB(255, 47, 42, 42),
       child: Padding(
-        padding: EdgeInsets.all(16.0.w), // Padding interno
+        padding: EdgeInsets.all(16.0.w),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: isImageLeft
