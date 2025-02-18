@@ -78,8 +78,7 @@ class PuntuacionService extends ChangeNotifier {
         return LugarDeInteres.fromMap(
             json.decode(utf8.decode(response.bodyBytes)));
       } else {
-        throw Exception(
-            "Error al crear la puntuación: ${response.statusCode}\nError body: ${response.body}");
+        throw Exception("Error al crear la puntuación: ${response.statusCode}\nError body: ${response.body}");
       }
     } catch (e) {
       throw Exception("Error al actualizar puntuación: $e");

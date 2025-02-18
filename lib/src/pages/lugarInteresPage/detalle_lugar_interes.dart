@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
 import 'package:vilaexplorer/models/tipo_entidad.dart';
 import 'package:vilaexplorer/providers/map_state_provider.dart';
-import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/favorito_service.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/service/puntuacion_service.dart';
@@ -15,8 +14,10 @@ import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class DetalleLugarInteres extends StatefulWidget {
   final int lugarDeInteresID;
+  final BuildContext? context;
 
-  const DetalleLugarInteres({super.key, required this.lugarDeInteresID});
+  const DetalleLugarInteres(
+      {super.key, required this.lugarDeInteresID, this.context});
 
   @override
   State<DetalleLugarInteres> createState() => _DetalleLugarInteresState();
@@ -34,18 +35,18 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
 
   Future<LugarDeInteres> _fetchData() async {
     final service = Provider.of<LugarDeInteresService>(context, listen: false);
-    await service.fetchLugarDeInteresById(widget.lugarDeInteresID!);
+    await service.fetchLugarDeInteresById(widget.lugarDeInteresID);
     return service.lugarDeInteres;
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final pageProvider = Provider.of<PageProvider>(context, listen: true);
     final puntuacionService =
         Provider.of<PuntuacionService>(context, listen: false);
     final favoritoService = Provider.of<FavoritoService>(context, listen: true);
-    final lugarDeInteresService = Provider.of<LugarDeInteresService>(context, listen: true);
+    final lugarDeInteresService =
+        Provider.of<LugarDeInteresService>(context, listen: true);
     final userPreferences = UserPreferences();
 
     return FutureBuilder(
@@ -100,8 +101,7 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                               width: double.infinity,
                               height: 180.h,
                               fadeInDuration: Duration(milliseconds: 400),
-                              imageErrorBuilder:
-                                  (context, error, stackTrace) {
+                              imageErrorBuilder: (context, error, stackTrace) {
                                 return Image.asset(
                                   "assets/no-image.jpg",
                                   height: 180.h,
@@ -127,7 +127,6 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                 end: Alignment.center,
                               ),
                             ),
-          
                             child: Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 15.w,
@@ -154,13 +153,11 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                     ),
                                   ),
                                   GoBackAndCloseButton(
-                                    myIcono: Icons.arrow_back,
-                                    onPressed: () => pageProvider
-                                        .changePage('lugares de interés'),
-                                    margin: EdgeInsets.only(right: 5.w),
-                                  ),
-                                  GoBackAndCloseButton(
-                                    onPressed: pageProvider.clearScreen,
+                                    onPressed: () {
+                                      if (Navigator.canPop(widget.context!)) {
+                                        Navigator.pop(widget.context!);
+                                      }
+                                    },
                                     myIcono: Icons.close_outlined,
                                   ),
                                 ],
@@ -169,7 +166,6 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                           ),
                         ],
                       ),
-          
                       Expanded(
                         child: SingleChildScrollView(
                           child: Padding(
@@ -203,7 +199,6 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                           RatingBar.builder(
                                             itemSize: 23.r,
                                             //TODO #2 refactorizar la pagina para que solamente se consuma el lugar de interes por servicio
-                                            //  HAY QUE ENCONTRAR EL LUGAR DE INTERES EN EL BUILD.
                                             initialRating: _lugarDeInteres
                                                 .puntuacionMediaLugar!,
                                             minRating: 1,
@@ -232,7 +227,7 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                               );
                                               debugPrint(
                                                   "Nueva calificación: $rating \n ${_lugarDeInteres.puntuacionMediaLugar}");
-          
+
                                               setState(() {
                                                 _lugarDeInteres =
                                                     lugarDeInteresService
@@ -283,17 +278,18 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                           ),
                         ),
                         onPressed: () {
-                          final mapProvider = Provider.of<MapStateProvider>(context, listen: false);
+                          final mapProvider = Provider.of<MapStateProvider>(
+                              context,
+                              listen: false);
                           if (mapProvider.currentLocation != null) {
-                          mapProvider.showRoute = true;
+                            mapProvider.showRoute = true;
                             mapProvider.getRouteTo(
                                 LatLng(
                                   _lugarDeInteres.coordenadas!.first.latitud!,
-                                  _lugarDeInteres
-                                      .coordenadas!.first.longitud!,
+                                  _lugarDeInteres.coordenadas!.first.longitud!,
                                 ),
                                 mapProvider.currentLocation!);
-                          } 
+                          }
                           Navigator.pop(context);
                         },
                         child: Text(
@@ -305,9 +301,7 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                         ),
                       ),
                     ),
-          
                     SizedBox(width: 8.w),
-          
                     Expanded(
                       flex: 1, // 20% del espacio
                       child: ElevatedButton(

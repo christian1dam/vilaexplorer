@@ -18,7 +18,7 @@ class FavoritoService extends ChangeNotifier {
   bool esFavorito(int idEntidad, TipoEntidad tipoEntidad) {
     bool result = false;
 
-     for (final fav in _favoritosDelUsuario) {
+    for (final fav in _favoritosDelUsuario) {
       if (fav is LugarDeInteres && idEntidad == fav.idLugarInteres) {
         result = true;
         break;
@@ -42,7 +42,6 @@ class FavoritoService extends ChangeNotifier {
       final response = await _apiClient.get(endpoint);
 
       if (response.statusCode == 200) {
-        
         final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
 
         for (int i = 0; i < data.length; i++) {
@@ -73,9 +72,17 @@ class FavoritoService extends ChangeNotifier {
         endpoint,
         body: favorito.toMap(),
       );
-
       if (response.statusCode == 200) {
-        debugPrint("Favorito creado correctamente.");
+        final data = jsonDecode(utf8.decode(response.bodyBytes));
+
+        if (data.containsKey("idLugarInteres")) {
+          _favoritosDelUsuario.add(LugarDeInteres.fromMap(data));
+        } else if (data.containsKey("platoId")) {
+          _favoritosDelUsuario.add(Plato.fromMap(data));
+        } else if (data.containsKey("idFiestaTradicion")) {
+          _favoritosDelUsuario.add(Tradicion.fromMap(data));
+        }
+
         notifyListeners();
         return true;
       } else {
@@ -89,7 +96,8 @@ class FavoritoService extends ChangeNotifier {
   }
 
   Future<bool> eliminarFavorito(int idEntidad, int idUsuario) async {
-    final endpoint = "/favorito/eliminar?idEntidad=$idEntidad&idUsuario=$idUsuario";
+    final endpoint =
+        "/favorito/eliminar?idEntidad=$idEntidad&idUsuario=$idUsuario";
     try {
       final response = await _apiClient.delete(endpoint);
       if (response.statusCode == 204) {
@@ -127,8 +135,6 @@ class FavoritoService extends ChangeNotifier {
     required int idEntidad,
     required String tipoEntidad,
   }) async {
-    await getFavoritosByUsuario(idUsuario);
-
     Object? favoritoExistente;
 
     for (final fav in _favoritosDelUsuario) {
@@ -159,7 +165,5 @@ class FavoritoService extends ChangeNotifier {
 
       await crearFavorito(nuevoFavorito);
     }
-
-    await getFavoritosByUsuario(idUsuario);
   }
 }

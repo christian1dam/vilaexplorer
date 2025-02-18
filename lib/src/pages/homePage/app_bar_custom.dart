@@ -7,9 +7,11 @@ import 'package:vilaexplorer/src/pages/search/search_delegate.dart';
 
 class AppBarCustom extends StatelessWidget {
   final Weather? weatherData;
+  final BuildContext context;
   const AppBarCustom({
     super.key,
     this.weatherData,
+    required this.context,
   });
 
   @override
@@ -106,9 +108,9 @@ class AppBarCustom extends StatelessWidget {
             ),
             SizedBox(width: 8.w),
             Text(
-              weatherData?.temperatura != null 
-                ? '${(weatherData!.temperatura - 273.15).round()}°' 
-                : 'Error°',
+              weatherData?.temperatura != null
+                  ? '${(weatherData!.temperatura - 273.15).round()}°'
+                  : 'Error°',
               style: TextStyle(color: Colors.white),
             ),
           ],
@@ -117,7 +119,7 @@ class AppBarCustom extends StatelessWidget {
     ];
   }
 
-   IconData getWeatherIcon(String estadoClimatico) {
+  IconData getWeatherIcon(String estadoClimatico) {
     switch (estadoClimatico.toLowerCase()) {
       case 'clear':
         return Icons.wb_sunny; // Soleado
@@ -146,11 +148,10 @@ class AppBarCustom extends StatelessWidget {
               flex: 5,
               child: TextField(
                 onTap: () => showSearch(
-                  context: context,
-                  delegate: LugarDeInteresDelegate(),
-                  maintainState: true,
-                  useRootNavigator: true
-                ),
+                    context: context,
+                    delegate: LugarDeInteresDelegate(),
+                    maintainState: true,
+                    useRootNavigator: true),
                 decoration: InputDecoration(
                   hintText:
                       AppLocalizations.of(context)!.translate('mp_search'),

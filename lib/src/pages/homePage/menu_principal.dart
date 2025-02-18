@@ -86,7 +86,9 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                                       MediaQuery.sizeOf(context).height * 0.81,
                                 ),
                                 builder: (BuildContext context) {
-                                  return CustomDraggableScrollableSheet(builder:
+                                  return CustomDraggableScrollableSheet(
+                                    context: context,
+                                    builder:
                                       (ScrollController scrollController,
                                           BoxConstraints constraints) {
                                     return TradicionesPage(
@@ -119,6 +121,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                               ),
                               builder: (BuildContext context) {
                                 return CustomDraggableScrollableSheet(
+                                  context: context,
                                   builder: (ScrollController scrollController,
                                       BoxConstraints constraints) {
                                     return FavoritosPage(
@@ -166,7 +169,9 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                                     MediaQuery.sizeOf(context).height * 0.81,
                               ),
                               builder: (BuildContext context) {
-                                return CustomDraggableScrollableSheet(builder:
+                                return CustomDraggableScrollableSheet(
+                                  context: context,
+                                  builder:
                                     (ScrollController controller,
                                         BoxConstraints constraints) {
                                   return GastronomiaPage(
@@ -198,6 +203,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                               ),
                               builder: (BuildContext context) {
                                 return CustomDraggableScrollableSheet(
+                                  context: context,
                                   builder: (ScrollController scrollController,
                                       BoxConstraints constraints) {
                                     return LugarDeInteresPage(

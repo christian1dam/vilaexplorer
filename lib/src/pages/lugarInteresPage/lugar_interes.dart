@@ -209,6 +209,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                                       return DetalleLugarInteres(
                                         lugarDeInteresID:
                                             lugarDeInteres.idLugarInteres!,
+                                            context: context,
                                       );
                                     },
                                   );

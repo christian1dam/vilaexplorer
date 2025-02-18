@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CustomDraggableScrollableSheet extends StatefulWidget {
+  final BuildContext context;
   final Widget Function(ScrollController, BoxConstraints) builder;
 
-  const CustomDraggableScrollableSheet({super.key, required this.builder});
+  const CustomDraggableScrollableSheet({super.key, required this.builder, required this.context});
 
   @override
   _CustomDraggableScrollableSheetState createState() =>
@@ -24,9 +25,8 @@ class _CustomDraggableScrollableSheetState
 
   void _onSizeChanged() {
     if (controller.size < 0.3) {
-      if (Navigator.of(context).canPop()) {
-        hide();
-        Navigator.of(context).pop();
+      if (Navigator.of(widget.context).canPop()) {
+        Navigator.of(widget.context).pop();
       }
     }
   }

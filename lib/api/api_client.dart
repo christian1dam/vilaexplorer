@@ -5,12 +5,11 @@ import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class ApiClient {
   final String _baseUrl =  
-  'http://192.168.100.103:8080/api/v0';
-  // 'http://172.20.10.6:8080/api/v0';
+  // 'http://192.168.100.103:8080/api/v0';
+  'http://172.20.10.6:8080/api/v0';
   //  'http://172.20.10.2:8080/api/v0'; // Wifi Móvil
   // 'http://192.168.0.31:8080/api/v0'; // Red
 
-  // GET request
   Future<http.Response> get(String endpoint) async {
     final url = Uri.parse('$_baseUrl$endpoint');
     try {
@@ -25,7 +24,6 @@ class ApiClient {
     }
   }
 
-  // POST request
   Future<http.Response> post(String endpoint,
       {Map<String, dynamic>? body}) async {
     final url = Uri.parse('$_baseUrl$endpoint');
@@ -46,7 +44,6 @@ class ApiClient {
     }
   }
 
-  // POST request
   Future<http.Response> postAuth(String endpoint,
       {Map<String, dynamic>? body}) async {
     final url = Uri.parse('$_baseUrl$endpoint');
@@ -66,7 +63,6 @@ class ApiClient {
     }
   }
 
-  // PUT request
   Future<http.Response> put(String endpoint,
       {Map<String, dynamic>? body}) async {
     final url = Uri.parse('$_baseUrl$endpoint');
@@ -83,7 +79,6 @@ class ApiClient {
     }
   }
 
-  // DELETE request
   Future<http.Response> delete(String endpoint) async {
     final url = Uri.parse('$_baseUrl$endpoint');
     try {
@@ -95,7 +90,6 @@ class ApiClient {
     }
   }
 
-  // PATCH request
   Future<http.Response> patch(String endpoint,
       {Map<String, dynamic>? body}) async {
     final url = Uri.parse('$_baseUrl$endpoint');
@@ -112,7 +106,6 @@ class ApiClient {
     }
   }
 
-  // Configuración de headers por defecto
   Map<String, String> _defaultHeaders() {
     return {
       'Content-Type': 'application/json',
@@ -120,7 +113,6 @@ class ApiClient {
     };
   }
 
-  // Manejo de errores HTTP
   void _handleResponse(http.Response response) {
     if (response.statusCode < 200 || response.statusCode > 299) {
       throw Exception(

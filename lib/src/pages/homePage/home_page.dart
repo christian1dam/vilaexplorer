@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/service/favorito_service.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
-import 'package:vilaexplorer/service/usuario_service.dart';
 import 'package:vilaexplorer/service/weather_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
@@ -57,61 +56,71 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     final currentLocation = Provider.of<MapStateProvider>(context, listen: false).getCurrentLocation();
     final elementosGuardadosDelUsuario = Provider.of<FavoritoService>(context, listen: false).getFavoritosByUsuario(await UserPreferences().id); 
     Future<Weather> weather = WeatherService().fetchWeather();
-    return Future.wait([lugaresDeInteres, currentLocation, weather, elementosGuardadosDelUsuario]);
+    return Future.wait([
+      lugaresDeInteres,
+      currentLocation,
+      weather,
+      elementosGuardadosDelUsuario
+    ]);
   }
 
   void _drawMarkers() {
     try {
-      final lugaresDeInteresService =
-          Provider.of<LugarDeInteresService>(context, listen: false);
-      final markers = lugaresDeInteresService.lugaresDeInteres
-          .where((lugar) =>
-              lugar.coordenadas != null && lugar.coordenadas!.isNotEmpty)
-          .expand(
-            (lugar) => lugar.coordenadas!.map(
-              (coordenada) {
-                final iconData = _getIconForLugar(lugar.tipoLugar!.nombreTipo!);
-                final color = _getColorForLugar(lugar.tipoLugar!.nombreTipo!);
-                return Marker(
-                  point: LatLng(coordenada.latitud!, coordenada.longitud!),
-                  width: 40.w,
-                  height: 40.h,
-                  rotate: true,
-                  child: Builder(
-                    builder: (context) => IconButton(
-                        icon: Icon(
-                          iconData,
-                          color: color,
-                          size: 40.r,
-                        ),
-                        onPressed: () async {
-                          return showModalBottomSheet(
-                            backgroundColor: Colors.transparent,
-                            isDismissible: true,
-                            sheetAnimationStyle: AnimationStyle(
-                              duration: Duration(milliseconds: 400),
-                            ),
-                            constraints: BoxConstraints(
-                              maxHeight: 500
-                            ),
-                            context: context,
-                            builder: (BuildContext context) {
-                              return DetalleLugarInteres(
-                                lugarDeInteresID: lugar.idLugarInteres!,
-                              );
-                            },
-                          );
-                        }),
-                  ),
-                );
-              },
-            ),
-          )
-          .toList();
+      final lugaresDeInteresService = Provider.of<LugarDeInteresService>(context, listen: false);
+      List<Marker> markers = [];
 
-      setState(() {
-        _markers = markers;
-      });
+      for (int i = 0; i < lugaresDeInteresService.lugaresDeInteres.length; i++) {
+        final lugar = lugaresDeInteresService.lugaresDeInteres[i];
+        if (lugar.coordenadas != null && lugar.coordenadas!.isNotEmpty) {
+          final icono = _getIconForLugar(lugar.tipoLugar!.nombreTipo!);
+          final color = _getColorForLugar(lugar.tipoLugar!.nombreTipo!);
+          markers.add(
+            Marker(
+              point: LatLng(
+                lugar.coordenadas![0].latitud!,
+                lugar.coordenadas![0].longitud!,
+              ),
+              width: 40.w,
+              height: 40.h,
+              rotate: true,
+              child: Builder(
+                builder: (context) {
+                  return IconButton(
+                    onPressed: () async {
+                      return showModalBottomSheet(
+                        backgroundColor: Colors.transparent,
+                        isDismissible: true,
+                        sheetAnimationStyle: AnimationStyle(
+                          duration: Duration(milliseconds: 400),
+                        ),
+                        constraints: BoxConstraints(maxHeight: 500),
+                        context: context,
+                        builder: (BuildContext modalContext) {
+                          return DetalleLugarInteres(
+                            lugarDeInteresID: lugar.idLugarInteres!,
+                            context: modalContext,
+                          );
+                        },
+                      );
+                    },
+                    icon: Icon(
+                      icono,
+                      color: color,
+                      size: 40.r,
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        }
+      }
+
+      setState(
+        () {
+          _markers = markers;
+        },
+      );
     } catch (error) {
       debugPrint('Error al cargar los marcadores: $error');
     }
@@ -139,11 +148,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     _animatedMapMove(mapStateProvider.currentLocation!,
                         _mapController.camera.zoom);
                     Future.microtask(
-                      () => mapStateProvider.setCurrentLocationFocusMode = false,
+                      () =>
+                          mapStateProvider.setCurrentLocationFocusMode = false,
                     );
                   }
 
-                  if (context.mounted && mapStateProvider.focusPOI) {
+                  if (mapStateProvider.focusPOI) {
                     final lugarDeInteres = mapStateProvider.lugarDeInteres;
                     final destino = LatLng(
                         lugarDeInteres.coordenadas![0].latitud!,
@@ -151,19 +161,20 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     _animatedMapMove(destino, 20);
                     Future.microtask(
                       () {
-                        showModalBottomSheet(
-                          backgroundColor: Colors.transparent,
-                          isDismissible: true,
-                          constraints: BoxConstraints(
-                            maxHeight: 500
-                          ),
-                          context: context,
-                          builder: (BuildContext context) {
-                            return DetalleLugarInteres(
-                              lugarDeInteresID: lugarDeInteres.idLugarInteres!,
-                            );
-                          },
-                        );
+                        if (context.mounted) {
+                          showModalBottomSheet(
+                            backgroundColor: Colors.transparent,
+                            isDismissible: true,
+                            constraints: BoxConstraints(maxHeight: 500),
+                            context: context,
+                            builder: (BuildContext context) {
+                              return DetalleLugarInteres(
+                                lugarDeInteresID: lugarDeInteres.idLugarInteres!,
+                                context: context,
+                              );
+                            },
+                          );
+                        }
                         mapStateProvider.focusPOI = false;
                       },
                     );
@@ -187,7 +198,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       options: MapOptions(
                         onMapReady: () {
                           mapStateProvider.setMapController = _mapController;
-                          mapStateProvider.setStreamController = _resetController;
+                          mapStateProvider.setStreamController =
+                              _resetController;
                           _drawMarkers();
                         },
                         initialCenter:
@@ -232,7 +244,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           ),
                         MarkerLayer(markers: _markers),
                         Visibility(
-                          visible: mapStateProvider.showRoute && mapStateProvider.routePoints.isNotEmpty,
+                          visible: mapStateProvider.showRoute &&
+                              mapStateProvider.routePoints.isNotEmpty,
                           child: GestureDetector(
                             onLongPress: () {
                               mapStateProvider.showRoute = false;
@@ -257,7 +270,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           top: 0,
                           left: 0,
                           right: 0,
-                          child: AppBarCustom(weatherData: weather),
+                          child: AppBarCustom(
+                              context: context, weatherData: weather),
                         ),
                         Positioned(
                           bottom: 145.h,
