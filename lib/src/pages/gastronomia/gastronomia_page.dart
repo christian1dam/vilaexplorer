@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
+import 'package:vilaexplorer/models/gastronomia/plato.dart';
 import 'package:vilaexplorer/providers/page_provider.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/addPlato.dart';
@@ -55,54 +56,44 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
   Widget build(BuildContext context) {
     final gastronomiaService =
         Provider.of<GastronomiaService>(context, listen: false);
-    final pageProvider = Provider.of<PageProvider>(context, listen: false);
-
     final platos = gastronomiaService.platos;
 
     return FutureBuilder(
         future: _fetchPlatosFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return GestureDetector(
-              onTap: () {
-                if (isSearchActive) {
-                  setState(() {
-                    isSearchActive = false;
-                    searchController.clear();
-                  });
-                }
-              },
-              child: BackgroundBoxDecoration(
-                child: CustomScrollView(
-                  controller: widget.scrollController,
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(fit: FlexFit.loose, child: BarraDeslizamiento()),
-                          Flexible(fit: FlexFit.loose, child: _buildHeader(context, pageProvider)),
-                          if (isSearchActive)
-                            Flexible(fit:FlexFit.loose, child: _buildSearchField(context)),
-                          Flexible(fit:FlexFit.loose, child: _buildButton(context)),
-                          Flexible(fit:FlexFit.loose,
-                            child: platos == null
-                                ? const Center(
-                                    child: Text(
-                                      "No hay platos disponibles",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  )
-                                : isGridView
-                                    ? _buildGridView(platos, gastronomiaService)
-                                    : _buildListView(
-                                        platos, gastronomiaService),
-                          ),
-                        ],
-                      ),
+            return BackgroundBoxDecoration(
+              child: CustomScrollView(
+                controller: widget.scrollController,
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                            fit: FlexFit.loose, child: BarraDeslizamiento()),
+                        Flexible(fit: FlexFit.loose, child: _buildHeader()),
+                        if (isSearchActive)
+                          Flexible(
+                              fit: FlexFit.loose, child: _buildSearchField()),
+                        Flexible(fit: FlexFit.loose, child: _buildButton()),
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: platos == null
+                              ? const Center(
+                                  child: Text(
+                                    "No hay platos disponibles",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                )
+                              : isGridView
+                                  ? _buildGridView(platos, gastronomiaService)
+                                  : _buildListView(platos, gastronomiaService),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             );
           }
@@ -114,19 +105,21 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
         });
   }
 
-  Widget _buildHeader(BuildContext context, PageProvider pageProvider) {
+  Widget _buildHeader() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
       child: Row(
         children: [
-          Flexible(fit:FlexFit.loose,
+          Flexible(
+            fit: FlexFit.loose,
             child: IconButton(
               alignment: Alignment.centerRight,
               icon: const Icon(Icons.search, color: Colors.white),
               onPressed: _toggleSearch,
             ),
           ),
-          Flexible(fit:FlexFit.loose,
+          Flexible(
+            fit: FlexFit.loose,
             child: IconButton(
               alignment: Alignment.centerLeft,
               icon: Icon(
@@ -140,7 +133,8 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
               },
             ),
           ),
-          Flexible(fit:FlexFit.loose,
+          Flexible(
+            fit: FlexFit.loose,
             flex: 3,
             child: Text(
               AppLocalizations.of(context)!.translate('gastronomy'),
@@ -152,13 +146,15 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
               ),
             ),
           ),
-          Flexible(fit:FlexFit.loose,
+          Flexible(
+            fit: FlexFit.loose,
             child: IconButton(
                 alignment: Alignment.centerRight,
                 icon: const Icon(Icons.add, color: Colors.white),
                 onPressed: () => Navigator.pushNamed(context, AddPlato.route)),
           ),
-          Flexible(fit:FlexFit.loose,
+          Flexible(
+            fit: FlexFit.loose,
             child: IconButton(
               alignment: Alignment.centerLeft,
               icon: const Icon(Icons.close, color: Colors.white),
@@ -172,7 +168,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
     );
   }
 
-  Widget _buildSearchField(BuildContext context) {
+  Widget _buildSearchField() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: TextField(
@@ -192,7 +188,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
     );
   }
 
-  Widget _buildButton(BuildContext context) {
+  Widget _buildButton() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
       child: SizedBox(
@@ -236,17 +232,17 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => DetallePlatillo(
-                    platillo: plato.nombre, // Nombre del plato
-                    ingredientes: plato.ingredientes, // Ingredientes del plato
-                    receta: plato.receta, // Receta del plato
+                    platillo: plato.nombre,
+                    ingredientes: plato.ingredientes,
+                    receta: plato.receta,
                     closeWidget: () {
-                      Navigator.pop(context); // Cierra la pantalla
+                      Navigator.pop(context);
                     },
                   ),
                 ),
               );
             },
-            child: _buildPlatoCard(plato, service, index),
+            child: _buildPlatoCard(plato, index),
           );
         },
       ),
@@ -273,80 +269,62 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => DetallePlatillo(
-                    platillo: plato.nombre, // Nombre del plato
-                    ingredientes: plato.ingredientes, // Ingredientes del plato
-                    receta: plato.receta, // Receta del plato
+                    platillo: plato.nombre,
+                    ingredientes: plato.ingredientes,
+                    receta: plato.receta,
                     closeWidget: () {
-                      Navigator.pop(context); // Cierra la pantalla
+                      Navigator.pop(context);
                     },
                   ),
                 ),
               );
             },
-            child: _buildGridPlatoCard(plato, service, index),
+            child: _buildGridPlatoCard(plato),
           );
         },
       ),
     );
   }
 
-  Widget _buildGridPlatoCard(
-      dynamic plato, GastronomiaService service, int index) {
+  Widget _buildGridPlatoCard(Plato plato) {
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.r), // Bordes redondeados
+        borderRadius: BorderRadius.circular(10.r),
       ),
       color: const Color.fromARGB(255, 47, 42, 42),
       elevation: 4.0,
       child: Padding(
-        padding: EdgeInsets.all(8.0.w), // Padding interno
+        padding: EdgeInsets.all(8.0.w),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment
-              .stretch, // Asegura que el contenido ocupe todo el ancho
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Imagen de los platos (cubre todo el cuadrado)
-            FutureBuilder<Widget>(
-              future:
-                  service.getImageForPlato(plato.imagenBase64, plato.imagen),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return SizedBox(
-                    width: double.infinity, // La imagen ocupa todo el ancho
-                    height: 90
-                        .h, // Ajusta la altura de la imagen para evitar el desbordamiento
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                } else if (snapshot.hasError) {
-                  return Icon(Icons.broken_image,
-                      size: 50.r, color: Colors.grey);
-                } else if (snapshot.hasData) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(10.r),
-                    child: SizedBox(
-                      width: double.infinity, // La imagen ocupa todo el ancho
-                      height: 90
-                          .h, // Ajusta la altura para evitar el desbordamiento
-                      child: snapshot.data!, // La imagen cargada
-                    ),
-                  );
-                } else {
-                  return Icon(Icons.image_not_supported,
-                      size: 50.r, color: Colors.grey);
-                }
-              },
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10.r),
+              child: SizedBox(
+                width: double.infinity,
+                height: 90.h,
+                child: FadeInImage(
+                  placeholder: AssetImage("assets/no-image.jpg"),
+                  image: NetworkImage(plato.imagen!),
+                  fit: BoxFit.cover,
+                  imageErrorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      "assets/no-image.jpg",
+                      height: 90,
+                      fit: BoxFit.cover,
+                    );
+                  },
+                ),
+              ),
             ),
-            const SizedBox(height: 8.0), // Espacio entre imagen y nombre
-            // Nombre del plato
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 8.0.h, horizontal: 8.0.w),
               decoration: BoxDecoration(
-                color: Colors.white, // Fondo blanco
+                color: Colors.white,
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(
-                      10.r), // Esquina inferior izquierda redondeada
-                  bottomRight: Radius.circular(
-                      10.r), // Esquina inferior derecha redondeada
+                  bottomLeft: Radius.circular(10.r),
+                  bottomRight: Radius.circular(10.r),
                 ),
               ),
               child: Text(
@@ -367,8 +345,7 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
     );
   }
 
-  Widget _buildPlatoCard(dynamic plato, GastronomiaService service, int index) {
-    // Determina si la imagen estará a la izquierda o a la derecha
+  Widget _buildPlatoCard(Plato plato, int index) {
     bool isImageLeft = index % 2 == 0;
 
     return Card(
@@ -383,44 +360,37 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: isImageLeft
-              ? _buildCardContent(service, plato)
-              : _buildCardContent(service, plato).reversed.toList(),
+              ? _buildCardContent(plato)
+              : _buildCardContent(plato).reversed.toList(),
         ),
       ),
     );
   }
 
-  List<Widget> _buildCardContent(GastronomiaService service, dynamic plato) {
+  List<Widget> _buildCardContent(Plato plato) {
     return [
-      FutureBuilder<Widget>(
-        future: service.getImageForPlato(plato.imagenBase64, plato.imagen),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return SizedBox(
-              width: 100.w, // Esto sigue siendo mientras carga
-              height: 100.h,
-              child: Center(child: CircularProgressIndicator()),
-            );
-          } else if (snapshot.hasError) {
-            return Icon(Icons.broken_image, size: 50.r, color: Colors.grey);
-          } else if (snapshot.hasData) {
-            // Aquí aumentamos el tamaño de la imagen cargada
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(10.r),
-              child: SizedBox(
-                width: 100.w, // Aumenta el tamaño de la imagen
-                height: 100.h, // Aumenta el tamaño de la imagen
-                child: snapshot.data!, // La imagen cargada
-              ),
-            );
-          } else {
-            return Icon(Icons.image_not_supported,
-                size: 50.r, color: Colors.grey);
-          }
-        },
+      ClipRRect(
+        borderRadius: BorderRadius.circular(10.r),
+        child: SizedBox(
+          width: 100.w,
+          height: 100.h,
+          child: FadeInImage(
+            placeholder: AssetImage("assets/no-image.jpg"),
+            image: NetworkImage(plato.imagen!),
+            fit: BoxFit.cover,
+            imageErrorBuilder: (context, error, stackTrace) {
+              return Image.asset(
+                "assets/no-image.jpg",
+                width: 50,
+                fit: BoxFit.cover,
+              );
+            },
+          ),
+        ),
       ),
-      SizedBox(width: 16.w), // Espacio entre la imagen y el texto
-      Flexible(fit:FlexFit.loose,
+      SizedBox(width: 16.w),
+      Flexible(
+        fit: FlexFit.loose,
         child: Text(
           plato.nombre,
           style: TextStyle(color: Colors.white, fontSize: 18.sp),

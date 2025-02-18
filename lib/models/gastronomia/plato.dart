@@ -4,7 +4,7 @@ import 'package:vilaexplorer/models/gastronomia/tipoPlato.dart';
 import 'package:vilaexplorer/models/usuario/usuario.dart';
 
 class Plato {
-  int? platoId;
+  int platoId;
   String nombre;
   String descripcion;
   String ingredientes;
@@ -12,14 +12,13 @@ class Plato {
   bool estado;
   double puntuacionMediaPlato;
   String? imagen;
-  String? imagenBase64;
   TipoPlato tipoPlato;
   Usuario autor;
   Usuario? aprobador;
   bool eliminado;
 
   Plato({
-    this.platoId,
+    required this.platoId,
     required this.nombre,
     required this.descripcion,
     required this.ingredientes,
@@ -27,7 +26,6 @@ class Plato {
     required this.estado,
     required this.puntuacionMediaPlato,
     this.imagen,
-    this.imagenBase64,
     required this.tipoPlato,
     required this.autor,
     this.aprobador,
@@ -47,7 +45,6 @@ class Plato {
         estado: json["estado"],
         puntuacionMediaPlato: json["puntuacionMediaPlato"],
         imagen: json["imagen"],
-        imagenBase64: json["imagenBase64"],
         tipoPlato: TipoPlato.fromMap(json["tipoPlato"]),
         autor: Usuario.fromMap(json["autor"]),
         aprobador: json["aprobador"] == null
@@ -65,7 +62,6 @@ class Plato {
         "estado": estado,
         "puntuacionMediaPlato": puntuacionMediaPlato,
         "imagen": imagen,
-        "imagenBase64": imagenBase64,
         "tipoPlato": tipoPlato.toMap(),
         "autor": autor.toMap(),
         "aprobador": aprobador?.toMap(),
