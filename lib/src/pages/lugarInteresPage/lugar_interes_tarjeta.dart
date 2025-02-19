@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vilaexplorer/models/lugarDeInteres/LugarDeInteres.dart';
+import 'package:vilaexplorer/models/tipo_entidad.dart';
+import 'package:vilaexplorer/service/favorito_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
+import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class LugarDeInteresTarjeta extends StatelessWidget {
   final LugarDeInteres lugarDeInteres;
@@ -14,6 +18,8 @@ class LugarDeInteresTarjeta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final favoritoService = Provider.of<FavoritoService>(context);
+
     return Card(
       color: Colors.grey[850],
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -89,15 +95,29 @@ class LugarDeInteresTarjeta extends StatelessWidget {
                     Text(
                       lugarDeInteres.fechaAlta != null
                           ? lugarDeInteres.fechaAlta.toString()
-                          : 'Fecha no disponible', // Fecha de alta del lugar
+                          : 'Fecha no disponible', 
                       style: const TextStyle(
                           color: Color.fromRGBO(224, 120, 62, 1), fontSize: 16),
                     ),
-                    GestureDetector(
-                      child:
-                          const MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
-                      onTap: () => {},
-                    )
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+                        shadowColor: WidgetStatePropertyAll(Colors.transparent),
+                        overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                      ),
+                        child: favoritoService.esFavorito(
+                                lugarDeInteres.idLugarInteres!,
+                                TipoEntidad.LUGAR_INTERES)
+                            ? MySvgWidget(path: 'lib/icon/favoriteTrue.svg')
+                            : MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
+                        onPressed: () async {
+                          await favoritoService.gestionarFavorito(
+                            idUsuario: await UserPreferences().id,
+                            idEntidad: lugarDeInteres.idLugarInteres!,
+                            tipoEntidad: TipoEntidad.LUGAR_INTERES.name,
+                          );
+                        },
+                      ),
                   ],
                 ),
               ),

@@ -67,7 +67,7 @@ class PrivacidadPage extends StatelessWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 40),
-                          backgroundColor: Colors.green,
+                          backgroundColor: const Color.fromARGB(255, 44, 155, 48),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),

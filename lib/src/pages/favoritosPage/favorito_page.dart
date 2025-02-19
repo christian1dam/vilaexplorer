@@ -61,26 +61,32 @@ class _FavoritosPageState extends State<FavoritosPage> {
                 Flexible(fit: FlexFit.loose, child: BarraDeslizamiento()),
                 Flexible(
                   fit: FlexFit.loose,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.translate('favorites'),
-                          style: TextStyle(
-                              fontSize: 25.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              letterSpacing: 1.w),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            AppLocalizations.of(context)!.translate('favorites'),
+                            style: TextStyle(
+                                fontSize: 25.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 1.w),
+                          ),
                         ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.close, color: Colors.white),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
+                        Expanded(
+                          child: IconButton(
+                            icon: const Icon(Icons.close, color: Colors.white),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Divider(

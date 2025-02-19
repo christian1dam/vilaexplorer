@@ -134,6 +134,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
                                     },
                                     nombre: tradicion.nombre,
                                     fecha: tradicion.fecha,
+                                    id: tradicion.idFiestaTradicion,
                                     imagen: Image.network(
                                       tradicion.imagen,
                                       width: double.infinity,

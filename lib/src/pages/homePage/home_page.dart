@@ -15,6 +15,7 @@ import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'package:vilaexplorer/src/pages/rutas/routes.dart';
 import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.dart';
+import 'package:vilaexplorer/src/widgets/loading.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -112,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     },
                     icon: Icon(
                       Icons.location_on_outlined,
-                      color: Colors.red,
+                      color: const Color.fromARGB(255, 182, 40, 41),
                       size: 40.r,
                     ),
                   );
@@ -335,7 +336,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           }
           return Scaffold(
             body: Stack(
-              children: [CircularProgressIndicator()],
+              children: [Loading(imagePath: 'assets/images/VilaExplorer.png')],
             ),
           );
         });

@@ -53,7 +53,7 @@ class EditarPerfilPage extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () => formProvider.isEditingName = true,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: formProvider.isEditingName ? Colors.green : Colors.grey,
+                              backgroundColor: formProvider.isEditingName ? Color.fromARGB(255, 44, 155, 48) : Colors.grey,
                               foregroundColor: Colors.white
                             ),
                             child: Text(AppLocalizations.of(context)!.translate('change_name')),
@@ -61,7 +61,7 @@ class EditarPerfilPage extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () => formProvider.isEditingName = false,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: formProvider.isEditingName ? Colors.grey : Colors.green,
+                              backgroundColor: formProvider.isEditingName ? Colors.grey : Color.fromARGB(255, 44, 155, 48),
                               foregroundColor: Colors.white
                             ),
                             child: Text(AppLocalizations.of(context)!.translate('change_password')),
@@ -264,7 +264,7 @@ class EditarPerfilPage extends StatelessWidget {
                           },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 40.w),
-                            backgroundColor: Colors.green,
+                            backgroundColor: const Color.fromARGB(255, 44, 155, 48),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.r),
                             ),

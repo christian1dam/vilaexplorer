@@ -134,10 +134,10 @@ class _CuentaPageState extends State<CuentaPage> {
     
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(32, 29, 29, 1),
+        backgroundColor: const Color.fromARGB(255, 24, 24, 24),
         title: Container(
           decoration: BoxDecoration(
-            color: Color.fromRGBO(30, 30, 30, 1),
+            color: const Color.fromARGB(255, 24, 24, 24),
             borderRadius: BorderRadius.all(Radius.circular(10.r)),
           ),
           padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
@@ -158,7 +158,7 @@ class _CuentaPageState extends State<CuentaPage> {
         ),
       ),
       body: Container(
-        color: const Color.fromRGBO(32, 29, 29, 1),
+        color: const Color.fromARGB(255, 24, 24, 24),
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal:16.w, vertical:16.h),
@@ -166,7 +166,6 @@ class _CuentaPageState extends State<CuentaPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // User profile section
                 Row(
                   children: [
                     CircleAvatar(
@@ -190,13 +189,13 @@ class _CuentaPageState extends State<CuentaPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              prefsProvider.nombre,
+                              "Nombre: ${prefsProvider.nombre}",
                               style: TextStyle(
                                   fontSize: 20.sp, color: Colors.white),
                             ),
                             SizedBox(height: 5.h),
                             Text(
-                              prefsProvider.correo,
+                              "Correo electrónico: ${prefsProvider.correo}",
                               style: TextStyle(
                                   fontSize: 16.sp, color: Colors.white70),
                             ),
@@ -218,7 +217,7 @@ class _CuentaPageState extends State<CuentaPage> {
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(
                           vertical: 12.h, horizontal: 40.w),
-                      backgroundColor: Colors.green,
+                      backgroundColor: const Color.fromARGB(255, 44, 155, 48),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.r),
                       ),
@@ -370,7 +369,7 @@ class _CuentaPageState extends State<CuentaPage> {
                         await UserPreferences().storage.deleteAll();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 255, 99, 99),
+                        backgroundColor: const Color.fromARGB(255, 182, 40, 41),
                         padding: EdgeInsets.symmetric(
                             vertical: 12.h, horizontal: 40.w),
                         shape: RoundedRectangleBorder(

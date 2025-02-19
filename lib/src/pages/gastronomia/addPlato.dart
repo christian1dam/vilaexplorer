@@ -407,7 +407,7 @@ class _AddPlatoState extends State<AddPlato> {
                                     ),
                                     IconButton(
                                       icon: const Icon(Icons.remove_circle,
-                                          color: Colors.red),
+                                          color: Color.fromARGB(255, 182, 40, 41)),
                                       onPressed: () =>
                                           _removeIngredientRow(index),
                                     ),
@@ -428,7 +428,7 @@ class _AddPlatoState extends State<AddPlato> {
                                 style: ElevatedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 30, vertical: 12),
-                                  backgroundColor: Colors.green,
+                                  backgroundColor: const Color.fromARGB(255, 44, 155, 48),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),

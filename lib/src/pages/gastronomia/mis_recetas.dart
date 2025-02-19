@@ -33,14 +33,14 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
         title: Text(_platoSeleccionado != null
             ? _platoSeleccionado!.nombre
             : 'Mis Recetas'),
-        backgroundColor: const Color.fromRGBO(32, 29, 29, 0.9),
+        backgroundColor: const Color.fromARGB(255, 24, 24, 24),
         foregroundColor: const Color.fromRGBO(255, 255, 255, 0.898),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: const Color.fromRGBO(32, 29, 29, 0.9),
+      backgroundColor: const Color.fromARGB(255, 24, 24, 24),
       body: FutureBuilder(
         future: _recetasDelUsuarioFuture,
         builder: (context, snapshot) {
