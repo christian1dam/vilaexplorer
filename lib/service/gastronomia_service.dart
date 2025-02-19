@@ -12,11 +12,26 @@ class GastronomiaService extends ChangeNotifier {
 
   List<Plato> _platos = [];
   List<Plato> _platosUsuario = [];
-  Plato? _platoSeleccionado;
+  late Plato _platoSeleccionado;
 
   List<Plato> get platos => _platos;
   List<Plato> get platosUsuario => _platosUsuario;
-  Plato? get platoSeleccionado => _platoSeleccionado;
+  Plato get platoSeleccionado => _platoSeleccionado;
+
+  set platoSeleccionado(Plato plato) {
+    _platoSeleccionado = plato;
+    final indexPlatos = _platos.indexWhere((platoCache) => platoCache.platoId == plato.platoId);
+    if(indexPlatos != -1){
+      _platos[indexPlatos] = plato;
+    }
+
+    final indexPlatosUsuario = _platosUsuario.indexWhere((platoCache) => platoCache.platoId == plato!.platoId);
+    if (indexPlatosUsuario != -1) {
+      _platosUsuario[indexPlatosUsuario] = plato;
+    }
+    notifyListeners();
+  }
+
 
   Future<void> fetchAllPlatos() async {
     try {
@@ -60,12 +75,11 @@ class GastronomiaService extends ChangeNotifier {
       final response = await _apiClient.get('/plato/detalle/$id');
       if(response.statusCode == 200){
       _platoSeleccionado = Plato.fromMap(json.decode(utf8.decode(response.bodyBytes)));
+      notifyListeners();
       }
     } catch (e) {
       throw Exception(e);
     }
-
-    notifyListeners();
   }
 
   Future<void> createPlato(
@@ -135,15 +149,5 @@ class GastronomiaService extends ChangeNotifier {
       debugPrint('Error durante la subida de la imagen: $e');
       throw Exception(e);
     }
-  }
-
-  void selectPlato(Plato plato) {
-    _platoSeleccionado = plato;
-    notifyListeners();
-  }
-
-  void clearSelection() {
-    _platoSeleccionado = null;
-    notifyListeners();
   }
 }

@@ -22,6 +22,10 @@ class LugarDeInteresService with ChangeNotifier {
 
   set setLugarDeInteres(LugarDeInteres lugar) {
     _lugarDeInteresActual = lugar;
+    final index = _lugaresDeInteres.indexWhere((lugarCache) => lugarCache.idLugarInteres == lugar.idLugarInteres);
+    if (index != -1) {
+      _lugaresDeInteres[index] = lugar;
+    }
     notifyListeners();
   }
 

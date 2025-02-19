@@ -25,7 +25,9 @@ import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   await dotenv.load(fileName: ".env");
+
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
     debugPrint('FlutterError: ${details.exception}');
@@ -42,6 +44,7 @@ void main() async {
   await FMTCStore('VilaExplorerMapStore').manage.create();
 
   runApp(AppState());
+
 }
 
 class AppState extends StatelessWidget {
@@ -123,12 +126,9 @@ class _MyAppState extends State<MyApp> {
                 home: snapshot.data,
                 routes: {
                   MyHomePage.route: (BuildContext context) => const MyHomePage(),
-                  TradicionesPage.route: (BuildContext context) =>
-                      const TradicionesPage(),
-                  RoutesPage.route: (BuildContext context) =>
-                      const RoutesPage(),
-                  CuentaPage.route: (BuildContext context) =>
-                      const CuentaPage(),
+                  TradicionesPage.route: (BuildContext context) => const TradicionesPage(),
+                  RoutesPage.route: (BuildContext context) => const RoutesPage(),
+                  CuentaPage.route: (BuildContext context) => const CuentaPage(),
                   AddPlato.route: (BuildContext context) => const AddPlato(),
                   DetallePlatillo.route: (BuildContext context) => const DetallePlatillo(),
                   MyRecipesPage.route: (BuildContext context) => const MyRecipesPage(),

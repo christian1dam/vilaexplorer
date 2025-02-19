@@ -279,7 +279,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           child: FloatingActionButton(
                             heroTag: "FAB-${UniqueKey()}",
                             backgroundColor:
-                                const Color.fromARGB(230, 50, 50, 50),
+                                const Color.fromARGB(255, 24, 24, 24),
                             onPressed: () {
                               Navigator.of(context).pushNamed(RoutesPage.route);
                             },
@@ -296,7 +296,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           child: FloatingActionButton(
                             heroTag: "FAB-${UniqueKey()}",
                             backgroundColor:
-                                const Color.fromARGB(230, 50, 50, 50),
+                                const Color.fromARGB(255, 24, 24, 24),
                             onPressed: () => mapStateProvider.toggleMapStyle(),
                             tooltip: "Cambiar estilo del mapa",
                             child: const Icon(
@@ -311,7 +311,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           child: FloatingActionButton(
                               heroTag: "FAB-${UniqueKey()}",
                               backgroundColor:
-                                  const Color.fromARGB(230, 50, 50, 50),
+                                  const Color.fromARGB(255, 24, 24, 24),
                               onPressed: () => mapStateProvider
                                   .setCurrentLocationFocusMode = true,
                               tooltip: "Volver a mi ubicación",

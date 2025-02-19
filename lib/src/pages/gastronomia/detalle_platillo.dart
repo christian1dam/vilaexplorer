@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:vilaexplorer/l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:vilaexplorer/models/gastronomia/plato.dart';
+import 'package:vilaexplorer/models/tipo_entidad.dart';
+import 'package:vilaexplorer/service/gastronomia_service.dart';
+import 'package:vilaexplorer/service/puntuacion_service.dart';
+import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
 const kButtonBackgroundColorSelected = Color.fromRGBO(32, 29, 29, 0.9);
 const kButtonBackgroundColorUnselected = Color.fromRGBO(45, 45, 45, 1);
@@ -39,169 +44,36 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
   bool showIngredientes = true;
   late Plato _plato;
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   _plato = ModalRoute.of(context)!.settings.arguments as Plato;
-  //   final size = MediaQuery.sizeOf(context);
-
-  //   return Align(
-  //     alignment: Alignment.bottomCenter,
-  //     child: Container(
-  //       height: size.height * 0.65,
-  //       width: size.width,
-  //       decoration: const BoxDecoration(
-  //         color: Color.fromRGBO(32, 29, 29, 0.9),
-  //         borderRadius: BorderRadius.only(
-  //           topLeft: Radius.circular(20),
-  //           topRight: Radius.circular(20),
-  //         ),
-  //       ),
-  //       child: Column(
-  //         children: [
-  //           Padding(
-  //             padding: const EdgeInsets.all(10.0),
-  //             child: Stack(
-  //               children: [
-  //                 Align(
-  //                   alignment: Alignment.centerLeft,
-  //                   child: IconButton(
-  //                     icon:
-  //                         const Icon(Icons.arrow_back, color: Colors.white),
-  //                     onPressed: () => Navigator.pop(context),
-  //                   ),
-  //                 ),
-  //                 Align(
-  //                   alignment: Alignment.center,
-  //                   child: Text(
-  //                     _plato.nombre,
-  //                     style: kTituloTextStyle,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //           Padding(
-  //             padding: const EdgeInsets.symmetric(horizontal: 15.0),
-  //             child: ClipRRect(
-  //               borderRadius: BorderRadius.circular(15),
-  //               child: Image.asset(
-  //                 'assets/images_gastronomia/paella-valenciana.jpg',
-  //                 height: 200,
-  //                 width: double.infinity,
-  //                 fit: BoxFit.cover,
-  //               ),
-  //             ),
-  //           ),
-  //           const SizedBox(height: 10),
-  //           _buildButtonRow(size),
-  //           Expanded(
-  //             child: Padding(
-  //               padding: const EdgeInsets.all(20.0),
-  //               child: SingleChildScrollView(
-  //                 child: showIngredientes
-  //                     ? _buildIngredientes()
-  //                     : _buildReceta(),
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildButtonRow(Size size) {
-  //   return Container(
-  //     padding: EdgeInsets.symmetric(vertical: 8.h),
-  //     margin: EdgeInsets.symmetric(
-  //         horizontal: 14.w),
-  //     decoration: BoxDecoration(
-  //       color: const Color.fromARGB(255, 55, 55, 55),
-  //       borderRadius: BorderRadius.circular(20.r),
-  //     ),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //       children: [
-  //         _buildToggleButton(
-  //           AppLocalizations.of(context)!.translate('ingredients'),
-  //           showIngredientes,
-  //           () {
-  //             setState(() {
-  //               showIngredientes = true;
-  //             });
-  //           },
-  //         ),
-  //         _buildToggleButton(
-  //           AppLocalizations.of(context)!.translate('recipe'),
-  //           !showIngredientes,
-  //           () {
-  //             setState(() {
-  //               showIngredientes = false;
-  //             });
-  //           },
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildToggleButton(
-  //     String text, bool isSelected, VoidCallback onPressed) {
-  //   return Expanded(
-  //     child: GestureDetector(
-  //       onTap: onPressed,
-  //       child: Container(
-  //         padding: EdgeInsets.symmetric(
-  //             vertical: 10.h,
-  //             horizontal: 10.w),
-  //         margin: EdgeInsets.symmetric(
-  //             horizontal: isSelected
-  //                 ? 5.w
-  //                 : 0),
-  //         decoration: BoxDecoration(
-  //           color: isSelected
-  //               ? Colors.grey[700]
-  //               : const Color.fromARGB(255, 55, 55, 55),
-  //           borderRadius: BorderRadius.circular(17),
-  //         ),
-  //         alignment: Alignment.center,
-  //         child: Text(
-  //           text,
-  //           style: kButtonTextStyle,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildIngredientes() {
-  //   return Text(
-  //     _plato.ingredientes,
-  //     style: kIngredientesTextStyle,
-  //   );
-  // }
-
-  // Widget _buildReceta() {
-  //   return Text(
-  //     _plato.receta,
-  //     style: kIngredientesTextStyle,
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     _plato = ModalRoute.of(context)!.settings.arguments as Plato;
+    final ingredientes = _plato.ingredientes.split(',');
+    final puntuacionService =
+        Provider.of<PuntuacionService>(context, listen: false);
+    final userPreferences = UserPreferences();
+    final gastronomiaService =
+        Provider.of<GastronomiaService>(context, listen: false);
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color.fromARGB(255, 24, 24, 24),
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        backgroundColor: const Color.fromARGB(255, 24, 24, 24),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white,),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(icon: Icon(Icons.favorite_border, color: Colors.white,), onPressed: () {})
+          IconButton(
+              icon: Icon(
+                Icons.favorite_border,
+                color: Colors.white,
+              ),
+              onPressed: () {})
         ],
       ),
       body: LayoutBuilder(
@@ -214,15 +86,54 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
                 children: [
                   Text(
                     _plato.nombre,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                   SizedBox(height: 8),
                   Row(
                     children: [
-                      Text(_plato.descripcion, style: TextStyle(color: Colors.white),),
+                      Text(
+                        _plato.descripcion,
+                        style: TextStyle(color: Colors.white),
+                      ),
                       Spacer(),
-                      Icon(Icons.star, color: Colors.amber),
-                      Text("${_plato.puntuacionMediaPlato}"),
+                      RatingBar.builder(
+                        itemSize: 16.r,
+                        initialRating: _plato.puntuacionMediaPlato,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: false,
+                        unratedColor: Colors.grey,
+                        itemCount: 5,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 1.0.w),
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Color.fromARGB(230, 255, 255, 64),
+                        ),
+                        onRatingUpdate: (rating) async {
+                          await puntuacionService.gestionarPuntuacion(
+                            idUsuario: await userPreferences.id,
+                            idEntidad: _plato.platoId,
+                            tipoEntidad: TipoEntidad.PLATO.name,
+                            puntuacion: rating.toInt(),
+                            context: context,
+                          );
+                          debugPrint("Nueva calificación: $rating \n $_plato.puntuacionMediaLugar}");
+                          await gastronomiaService.fetchPlatoById(_plato.platoId);
+                          setState(
+                            () {
+                              _plato = gastronomiaService.platoSeleccionado;
+                            },
+                          );
+                        },
+                      ),
+                      SizedBox(width: 7.w),
+                      Text(
+                        _plato.puntuacionMediaPlato.toStringAsFixed(2),
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ],
                   ),
                   SizedBox(height: 16),
@@ -245,81 +156,56 @@ class _DetallePlatilloState extends State<DetallePlatillo> {
                   SizedBox(height: 16),
                   Row(
                     children: [
-                      Text("Receta", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                      Text("Receta",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)),
                       Spacer(),
-                      Icon(Icons.access_time, size: 18, color: Colors.white,),
-                      Text("15 min"),
                     ],
                   ),
                   SizedBox(height: 8),
-                  Text(_plato.receta, style: TextStyle(color: Colors.white),),
+                  Text(
+                    _plato.receta,
+                    style: TextStyle(color: Colors.white),
+                  ),
                   SizedBox(height: 16),
-                  Text("Add extra Ingredients",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                  Text("Ingredientes:",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white)),
                   SizedBox(height: 8),
-                  ListView(
+                  ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      _buildIngredientItem("Mushroom", "50 gm", 0.40, context),
-                      _buildIngredientItem(
-                          "Mayonnaise", "1/4 cup", 0.20, context),
-                      _buildIngredientItem(
-                          "Peeled boiled egg", "1 egg", 0.50, context),
-                      _buildIngredientItem(
-                          "Lemon juice", "10 ml", 0.30, context),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      minimumSize: Size(double.infinity, 50),
-                    ),
-                    onPressed: () {},
-                    child: Text("Add to Cart",
-                        style: TextStyle(color: Colors.black)),
+                    itemCount: ingredientes.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: 70,
+                            width: double.infinity,
+                            child: ListTile(
+                              leading: SizedBox(
+                                child: Text("· ${ingredientes[index]}",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    )),
+                              ),
+                            ),
+                          ),
+                          Divider(color: Colors.white54, thickness: 0.5),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildIngredientItem(
-      String name, String quantity, double price, BuildContext context,
-      {int quantityCount = 1}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          CircleAvatar(backgroundColor: Colors.grey.shade200, radius: 20),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-                Text("$quantity - \$$price", style: TextStyle(color: Colors.white),),
-              ],
-            ),
-          ),
-          Row(
-            children: [
-              IconButton(
-                  icon: Icon(Icons.remove_circle_outline, color: Colors.white,), onPressed: () {}),
-              Text("$quantityCount", style: TextStyle(color: Colors.white),),
-              IconButton(
-                  icon: Icon(Icons.add_circle_outline, color: Colors.white), onPressed: () {}),
-            ],
-          ),
-        ],
       ),
     );
   }

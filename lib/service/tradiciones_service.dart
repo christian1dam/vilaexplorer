@@ -8,10 +8,21 @@ class TradicionesService extends ChangeNotifier {
   final ApiClient _apiClient = ApiClient();
 
   List<Tradicion>? _todasLasTradiciones;
-  Tradicion? _tradicionSeleccionada;
+  late Tradicion _tradicionSeleccionada;
 
   List<Tradicion>? get todasLasTradiciones => _todasLasTradiciones;
-  Tradicion? get tradicionSeleccionada => _tradicionSeleccionada;
+  Tradicion get tradicionSeleccionada => _tradicionSeleccionada;
+
+  set tradicionSeleccionada(Tradicion tradicion) {
+    _tradicionSeleccionada = tradicion;
+
+    final indexTradiciones = _todasLasTradiciones?.indexWhere((tradicionCache) => tradicionCache.idFiestaTradicion == tradicion.idFiestaTradicion);
+    if (indexTradiciones != null && indexTradiciones != -1) {
+      _todasLasTradiciones![indexTradiciones] = tradicion;
+    }
+
+    notifyListeners();
+  }
 
   Future<void> getAllTradiciones() async {
     try {

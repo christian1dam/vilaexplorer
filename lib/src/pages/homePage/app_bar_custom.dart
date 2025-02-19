@@ -41,7 +41,7 @@ class AppBarCustom extends StatelessWidget {
       Container(
         padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 1.h),
         decoration: BoxDecoration(
-            color: Color.fromARGB(255, 24, 24, 24),
+            color: const Color.fromARGB(255, 24, 24, 24),
             borderRadius: BorderRadius.all(Radius.circular(15.r))),
         child: GestureDetector(
           onTap: () async {
@@ -63,7 +63,7 @@ class AppBarCustom extends StatelessWidget {
             height: 42.h,
             width: 50.w,
             decoration: BoxDecoration(
-                color: Color.fromARGB(255, 24, 24, 24),
+                color: const Color.fromARGB(255, 24, 24, 24),
                 borderRadius: BorderRadius.all(Radius.circular(12.r))),
             child: Icon(
               Icons.menu,
@@ -75,7 +75,7 @@ class AppBarCustom extends StatelessWidget {
       Container(
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
         decoration: BoxDecoration(
-          color: Color.fromRGBO(32, 29, 29, 0.9),
+          color: const Color.fromARGB(255, 24, 24, 24),
           borderRadius: BorderRadius.all(Radius.circular(20.r)),
         ),
         child: Padding(
@@ -96,7 +96,7 @@ class AppBarCustom extends StatelessWidget {
       Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 24, 24, 24),
+          color: const Color.fromARGB(255, 24, 24, 24),
           borderRadius: BorderRadius.all(Radius.circular(20.r)),
         ),
         child: Row(
@@ -139,7 +139,7 @@ class AppBarCustom extends StatelessWidget {
       padding: EdgeInsets.only(left: 5.w, top: 5, bottom: 5.h),
       child: Container(
         decoration: BoxDecoration(
-          color: Color.fromRGBO(32, 29, 29, 0.9),
+          color: const Color.fromARGB(255, 24, 24, 24),
           borderRadius: BorderRadius.all(Radius.circular(30.r)),
         ),
         child: Row(
