@@ -34,15 +34,6 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
             .fetchLugaresDeInteresActivos();
   }
 
-  void _toggleSearch() {
-    setState(() {
-      isSearchActive = !isSearchActive;
-      if (!isSearchActive) {
-        searchController.clear();
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final lugarDeInteresService =
@@ -95,82 +86,6 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                 ),
                 Flexible(
                   fit: FlexFit.loose,
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                  isSearchActive
-                                      ? Icons.arrow_back
-                                      : Icons.search,
-                                  color: Colors.white),
-                              onPressed: _toggleSearch,
-                            ),
-                            if (!isSearchActive) ...[
-                              Expanded(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 2.h),
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 55, 55, 55),
-                                    borderRadius: BorderRadius.circular(20.r),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      _buildFilterButton(
-                                          AppLocalizations.of(context)!
-                                              .translate('all'),
-                                          0),
-                                      _buildFilterButton(
-                                          AppLocalizations.of(context)!
-                                              .translate('popular'),
-                                          1),
-                                      _buildFilterButton(
-                                          AppLocalizations.of(context)!
-                                              .translate('nearby'),
-                                          2),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ] else
-                              Expanded(
-                                child: TextField(
-                                  controller: searchController,
-                                  style: const TextStyle(color: Colors.white),
-                                  onChanged: (query) {},
-                                  decoration: InputDecoration(
-                                    hintText:
-                                        "${AppLocalizations.of(context)!.translate('search_poi')}...",
-                                    hintStyle:
-                                        const TextStyle(color: Colors.white54),
-                                    fillColor:
-                                        const Color.fromARGB(255, 47, 42, 42),
-                                    filled: true,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(20.r)),
-                                    ),
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 5.h, horizontal: 10.w),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Flexible(
-                  fit: FlexFit.loose,
                   child: FutureBuilder(
                     future: _lugaresDeInteresFuture,
                     builder: (context, snapshot) {
@@ -196,7 +111,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                               return LugarDeInteresTarjeta(
                                 lugarDeInteres: lugarDeInteres,
                                 onTap: () {
-                                  Navigator.pop(context);
+                                  Navigator.pop(context); 
                                   showModalBottomSheet(
                                     backgroundColor: Colors.transparent,
                                     isDismissible: true,
@@ -206,7 +121,7 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
                                       return DetalleLugarInteres(
                                         lugarDeInteresID:
                                             lugarDeInteres.idLugarInteres!,
-                                            context: context,
+                                        context: context,
                                       );
                                     },
                                   );

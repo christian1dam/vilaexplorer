@@ -9,6 +9,7 @@ import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/service/favorito_service.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/service/puntuacion_service.dart';
+import 'package:vilaexplorer/service/rutas_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
@@ -214,7 +215,6 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                                   230, 255, 255, 64),
                                             ),
                                             onRatingUpdate: (rating) async {
-
                                               await puntuacionService
                                                   .gestionarPuntuacion(
                                                 idUsuario:
@@ -228,10 +228,19 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                               );
                                               debugPrint(
                                                   "Nueva calificación: $rating \nLugar de interes.puntuacionMediaLugar: ${_lugarDeInteres.puntuacionMediaLugar}");
-                                              await Provider.of<LugarDeInteresService>(context, listen: false).fetchLugarDeInteresById(widget.lugarDeInteresID);
-                                              setState(() {
-                                                _lugarDeInteres = lugarDeInteresService.lugarDeInteres;
-                                              });
+                                              await Provider.of<
+                                                          LugarDeInteresService>(
+                                                      context,
+                                                      listen: false)
+                                                  .fetchLugarDeInteresById(
+                                                      widget.lugarDeInteresID);
+                                              if (context.mounted) {
+                                                setState(() {
+                                                  _lugarDeInteres =
+                                                      lugarDeInteresService
+                                                          .lugarDeInteres;
+                                                });
+                                              }
                                             },
                                           ),
                                         ],
@@ -276,11 +285,18 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
-                        onPressed: () {
-                          final mapProvider = Provider.of<MapStateProvider>(
-                              context,
-                              listen: false);
+                        onPressed: () async {
+                          final mapProvider = Provider.of<MapStateProvider>(context, listen: false);
+                          final routeProvider = Provider.of<RutasService>(context, listen: false);
+                          final List<List<double>> coordenadas = _lugarDeInteres.coordenadas!.map((coord) => [coord.latitud!, coord.longitud!]).toList();
                           if (mapProvider.currentLocation != null) {
+                            coordenadas.insert(0, [
+                              mapProvider.currentLocation!.longitude,
+                              mapProvider.currentLocation!.latitude
+                            ]);
+                          }
+                          final bool rutaCreada = await routeProvider.createRoute(titulo: _lugarDeInteres.nombreLugar!, coordenadas: coordenadas);
+                          if (rutaCreada) {
                             mapProvider.showRoute = true;
                             mapProvider.getRouteTo(
                                 LatLng(
@@ -289,10 +305,13 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                 ),
                                 mapProvider.currentLocation!);
                           }
+                          else {
+                            throw Exception("NO SE HA CREADO LA RUTA");
+                          }
                           Navigator.pop(context);
                         },
                         child: Text(
-                          'Obtener ruta',
+                          'Crear Ruta',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16.sp,
@@ -302,7 +321,7 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                     ),
                     SizedBox(width: 8.w),
                     Expanded(
-                      flex: 1, // 20% del espacio
+                      flex: 1,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color.fromARGB(255, 24, 24, 24),
@@ -317,7 +336,6 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                             ? MySvgWidget(path: 'lib/icon/favoriteTrue.svg')
                             : MySvgWidget(path: 'lib/icon/guardar_icon.svg'),
                         onPressed: () async {
-                          print("ENTIDAD: ${TipoEntidad.LUGAR_INTERES.name}");
                           await favoritoService.gestionarFavorito(
                             idUsuario: await userPreferences.id,
                             idEntidad: _lugarDeInteres.idLugarInteres!,

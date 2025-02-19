@@ -20,15 +20,13 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
   void initState() {
     super.initState();
     _recetasDelUsuarioFuture =
-        Provider.of<GastronomiaService>(context, listen: false)
-            .fetchUserRecipes();
+        Provider.of<GastronomiaService>(context, listen: false).fetchUserRecipes();
   }
 
   @override
   Widget build(BuildContext context) {
     final gastronomiaService =
         Provider.of<GastronomiaService>(context, listen: false);
-    final platos = gastronomiaService.platos;
 
     return Scaffold(
       appBar: AppBar(
@@ -47,6 +45,7 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
         future: _recetasDelUsuarioFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
+            final platos = gastronomiaService.platosUsuario;
             return _platoSeleccionado == null
                 ? platos.isEmpty
                     ? const Center(
@@ -156,8 +155,7 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
                 onPressed: () {
                   setState(() {
                     _platoSeleccionado!.nombre = nombreController.text;
-                    _platoSeleccionado!.descripcion =
-                        descripcionController.text;
+                    _platoSeleccionado!.descripcion = descripcionController.text;
                   });
                 },
                 child: const Text('Guardar'),

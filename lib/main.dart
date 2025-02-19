@@ -18,7 +18,7 @@ import 'package:vilaexplorer/src/pages/gastronomia/addPlato.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/detalle_platillo.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/mis_recetas.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
-import 'package:vilaexplorer/src/pages/homePage/routes.dart';
+import 'package:vilaexplorer/src/pages/rutas/routes.dart';
 import 'package:vilaexplorer/src/pages/login_page.dart';
 import 'package:vilaexplorer/src/pages/tradicionesPage/tradiciones.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
@@ -132,7 +132,6 @@ class _MyAppState extends State<MyApp> {
                   RoutesPage.route: (BuildContext context) => const RoutesPage(),
                   CuentaPage.route: (BuildContext context) => const CuentaPage(),
                   AddPlato.route: (BuildContext context) => const AddPlato(),
-                  DetallePlatillo.route: (BuildContext context) => const DetallePlatillo(),
                   MyRecipesPage.route: (BuildContext context) => const MyRecipesPage(),
                 },
                 locale: _locale,
@@ -167,7 +166,7 @@ class _MyAppState extends State<MyApp> {
             body: Center(
                 child: CircularProgressIndicator(
               color: Colors.white,
-            )), // Pantalla de carga
+            )),
           ),
         );
       },

@@ -82,11 +82,13 @@ class AppBarCustom extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
           child: Row(
             children: [
+              Icon(Icons.navigation_outlined, color: Colors.blueAccent, size: 20),
+              SizedBox(width: 5.w),
               Text(
                 weatherData?.nombreLugar ?? 'Not vailabe',
                 style: TextStyle(
                   fontFamily: 'assets/fonts/Poppins-ExtraLight.ttf',
-                  fontSize: 20.sp,
+                  fontSize: 19.sp,
                 ),
               ),
             ],
@@ -104,7 +106,7 @@ class AppBarCustom extends StatelessWidget {
             Icon(
               getWeatherIcon(weatherData?.estadoClimatico ?? ''),
               color: Colors.white,
-              size: 24.r,
+              size: 20.r,
             ),
             SizedBox(width: 8.w),
             Text(
@@ -122,15 +124,15 @@ class AppBarCustom extends StatelessWidget {
   IconData getWeatherIcon(String estadoClimatico) {
     switch (estadoClimatico.toLowerCase()) {
       case 'clear':
-        return Icons.wb_sunny; // Soleado
+        return Icons.wb_sunny; 
       case 'clouds':
-        return Icons.cloud; // Nublado
+        return Icons.cloud; 
       case 'rain':
-        return Icons.umbrella; // Lluvioso
+        return Icons.umbrella; 
       case 'snow':
-        return Icons.ac_unit; // Nevado
+        return Icons.ac_unit;
       default:
-        return Icons.help; // Desconocido
+        return Icons.help;
     }
   }
 
@@ -170,5 +172,5 @@ class AppBarCustom extends StatelessWidget {
         ),
       ),
     );
-  }
+  } 
 }

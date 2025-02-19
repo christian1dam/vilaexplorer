@@ -20,18 +20,19 @@ class GastronomiaService extends ChangeNotifier {
 
   set platoSeleccionado(Plato plato) {
     _platoSeleccionado = plato;
-    final indexPlatos = _platos.indexWhere((platoCache) => platoCache.platoId == plato.platoId);
-    if(indexPlatos != -1){
+    final indexPlatos =
+        _platos.indexWhere((platoCache) => platoCache.platoId == plato.platoId);
+    if (indexPlatos != -1) {
       _platos[indexPlatos] = plato;
     }
 
-    final indexPlatosUsuario = _platosUsuario.indexWhere((platoCache) => platoCache.platoId == plato!.platoId);
+    final indexPlatosUsuario = _platosUsuario
+        .indexWhere((platoCache) => platoCache.platoId == plato.platoId);
     if (indexPlatosUsuario != -1) {
       _platosUsuario[indexPlatosUsuario] = plato;
     }
     notifyListeners();
   }
-
 
   Future<void> fetchAllPlatos() async {
     try {
@@ -55,27 +56,28 @@ class GastronomiaService extends ChangeNotifier {
     final idUsuario = await UserPreferences().id;
 
     try {
-      final response = await _apiClient.get('/plato/misRecetas?autorID=$idUsuario');
+      final response =
+          await _apiClient.get('/plato/recetasUsuario?autorID=$idUsuario');
       if (response.statusCode == 200) {
         _platosUsuario = [];
         final data = json.decode(utf8.decode(response.bodyBytes));
-         for (int i = 0; i < data.length; i++) {
+        for (int i = 0; i < data.length; i++) {
           _platosUsuario.add(Plato.fromMap(data[i]));
         }
+        notifyListeners();
       }
     } catch (e) {
       throw Exception(e);
     }
-    notifyListeners();
   }
 
   Future<void> fetchPlatoById(int id) async {
-
     try {
       final response = await _apiClient.get('/plato/detalle/$id');
-      if(response.statusCode == 200){
-      _platoSeleccionado = Plato.fromMap(json.decode(utf8.decode(response.bodyBytes)));
-      notifyListeners();
+      if (response.statusCode == 200) {
+        _platoSeleccionado =
+            Plato.fromMap(json.decode(utf8.decode(response.bodyBytes)));
+        notifyListeners();
       }
     } catch (e) {
       throw Exception(e);
@@ -128,7 +130,8 @@ class GastronomiaService extends ChangeNotifier {
   }
 
   Future<String?> uploadImage(File image) async {
-    const String uploadUrl = 'https://api.cloudinary.com/v1_1/vilaimagescloud/image/upload?upload_preset=villapreset';
+    const String uploadUrl =
+        'https://api.cloudinary.com/v1_1/vilaimagescloud/image/upload?upload_preset=villapreset';
 
     try {
       final request = http.MultipartRequest('POST', Uri.parse(uploadUrl));

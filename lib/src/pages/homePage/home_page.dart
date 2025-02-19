@@ -13,7 +13,7 @@ import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/service/weather_service.dart';
 import 'package:vilaexplorer/src/pages/homePage/app_bar_custom.dart';
 import 'package:vilaexplorer/src/pages/homePage/menu_principal.dart';
-import 'package:vilaexplorer/src/pages/homePage/routes.dart';
+import 'package:vilaexplorer/src/pages/rutas/routes.dart';
 import 'package:vilaexplorer/src/pages/lugarInteresPage/detalle_lugar_interes.dart';
 import 'package:vilaexplorer/user_preferences/user_preferences.dart';
 
@@ -52,9 +52,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   Future<List<dynamic>> _fetchData() async {
-    final lugaresDeInteres = Provider.of<LugarDeInteresService>(context, listen: false).fetchLugaresDeInteresActivos();
-    final currentLocation = Provider.of<MapStateProvider>(context, listen: false).getCurrentLocation();
-    final elementosGuardadosDelUsuario = Provider.of<FavoritoService>(context, listen: false).getFavoritosByUsuario(await UserPreferences().id); 
+    final lugaresDeInteres =
+        Provider.of<LugarDeInteresService>(context, listen: false)
+            .fetchLugaresDeInteresActivos();
+    final currentLocation =
+        Provider.of<MapStateProvider>(context, listen: false)
+            .getCurrentLocation();
+    final elementosGuardadosDelUsuario =
+        Provider.of<FavoritoService>(context, listen: false)
+            .getFavoritosByUsuario(await UserPreferences().id);
     Future<Weather> weather = WeatherService().fetchWeather();
     return Future.wait([
       lugaresDeInteres,
@@ -66,14 +72,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   void _drawMarkers() {
     try {
-      final lugaresDeInteresService = Provider.of<LugarDeInteresService>(context, listen: false);
+      final lugaresDeInteresService =
+          Provider.of<LugarDeInteresService>(context, listen: false);
       List<Marker> markers = [];
 
-      for (int i = 0; i < lugaresDeInteresService.lugaresDeInteres.length; i++) {
+      for (int i = 0;
+          i < lugaresDeInteresService.lugaresDeInteres.length;
+          i++) {
         final lugar = lugaresDeInteresService.lugaresDeInteres[i];
         if (lugar.coordenadas != null && lugar.coordenadas!.isNotEmpty) {
-          final icono = _getIconForLugar(lugar.tipoLugar!.nombreTipo!);
-          final color = _getColorForLugar(lugar.tipoLugar!.nombreTipo!);
           markers.add(
             Marker(
               point: LatLng(
@@ -104,8 +111,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       );
                     },
                     icon: Icon(
-                      icono,
-                      color: color,
+                      Icons.location_on_outlined,
+                      color: Colors.red,
                       size: 40.r,
                     ),
                   );
@@ -138,9 +145,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 builder: (context, mapStateProvider, child) {
                   if (mapStateProvider.focusRoute) {
                     _fitCameraToRoute(mapStateProvider.routePoints);
-                    Future.microtask(
-                      () => mapStateProvider.setRouteFocusMode(),
-                    );
+                    Future.microtask(() { 
+                      mapStateProvider.setRouteFocusMode();
+                    });
                   }
 
                   if (context.mounted &&
@@ -169,7 +176,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             context: context,
                             builder: (BuildContext context) {
                               return DetalleLugarInteres(
-                                lugarDeInteresID: lugarDeInteres.idLugarInteres!,
+                                lugarDeInteresID:
+                                    lugarDeInteres.idLugarInteres!,
                                 context: context,
                               );
                             },
@@ -348,51 +356,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   void _fitCameraToRoute(List<LatLng> routePoints) {
     final bounds = LatLngBounds.fromPoints(routePoints);
-    final cameraFit =
-        CameraFit.bounds(bounds: bounds).fit(_mapController.camera);
-    _animatedMapMove(cameraFit.center, cameraFit.zoom - 0.5);
-  }
-
-  _getIconForLugar(String tipoLugar) {
-    switch (tipoLugar) {
-      // case "Playa":
-      //   return FontAwesomeIcons.umbrellaBeach; // Icono para monumentos
-      // case "Museo":
-      //   return Icons.museum; // Icono para parques
-      // case "Parque":
-      //   return FontAwesomeIcons.treeCity;
-      // case "Plaza":
-      //   return FontAwesomeIcons.chair; // Icono para plazas
-      // case "Monumento":
-      //   return Icons.museum; // Icono para parques
-      // case "Sitio Arqueológico":
-      //   return AntDesign.history_outline; // Icono para museos
-      default:
-        return Icons.location_on_outlined; // Icono por defecto
-    }
-  }
-
-  _getColorForLugar(String tipoLugar) {
-    switch (tipoLugar) {
-      // case "Playa":
-      //   return Colors.amber;
-      // case "Museo":
-      //   return Colors.white38;
-      // case "Parque":
-      //   return Colors.green;
-      // case "Plaza":
-      //   return Colors.white;
-      // case "Monumento":
-      //   return const Color.fromARGB(132, 212, 245, 91);
-      // case "Sitio Arqueológico":
-      //   return const Color.fromARGB(255, 97, 12, 255);
-      default:
-        return Colors.red;
-    }
+    final cameraFit = CameraFit.bounds(bounds: bounds).fit(_mapController.camera);
+    _animatedMapMove(cameraFit.center, cameraFit.zoom - 0.7);
   }
 
   void _animatedMapMove(LatLng destLocation, double destZoom) {
-    debugPrint("SE HA ENTRADO A ANIMATED MAP MOVE");
     // Create some tweens. These serve to split up the transition from one location to another.
     // In our case, we want to split the transition be<tween> our current map center and the destination.
     final camera = _mapController.camera;

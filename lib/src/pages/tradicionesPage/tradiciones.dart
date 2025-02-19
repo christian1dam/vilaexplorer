@@ -25,10 +25,6 @@ class TradicionesPage extends StatefulWidget {
 
 class _TradicionesPageState extends State<TradicionesPage> {
   Future<void>? fetchTradicionesFuture;
-  String? selectedFiesta;
-  bool isSearchActive = false;
-  TextEditingController searchController = TextEditingController();
-  int selectedFilter = 0;
 
   @override
   void initState() {
@@ -38,19 +34,8 @@ class _TradicionesPageState extends State<TradicionesPage> {
             .getAllTradiciones();
   }
 
-  void _toggleSearch() {
-    setState(() {
-      isSearchActive = !isSearchActive;
-      if (!isSearchActive) {
-        searchController.clear();
-        selectedFilter = 0;
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
     final tradicionesProvider =
         Provider.of<TradicionesService>(context, listen: false);
     return BackgroundBoxDecoration(
@@ -84,15 +69,6 @@ class _TradicionesPageState extends State<TradicionesPage> {
                         Expanded(
                           child: IconButton(
                             icon: Icon(
-                              isSearchActive ? Icons.arrow_back : Icons.search,
-                              color: Colors.white,
-                            ),
-                            onPressed: _toggleSearch,
-                          ),
-                        ),
-                        Expanded(
-                          child: IconButton(
-                            icon: Icon(
                               Icons.close,
                               color: Colors.white,
                             ),
@@ -103,49 +79,6 @@ class _TradicionesPageState extends State<TradicionesPage> {
                     ),
                   ),
                 ),
-                if (!isSearchActive)
-                  Flexible(
-                    fit: FlexFit.loose,
-                    child: Container(
-                      width: size.width - 40.w,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 55, 55, 55),
-                        borderRadius: BorderRadius.all(Radius.circular(20.r)),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(child: _buildFilterButton('all', 0)),
-                          Expanded(child: _buildFilterButton('popular', 1)),
-                          Expanded(child: _buildFilterButton('nearby', 2)),
-                        ],
-                      ),
-                    ),
-                  )
-                else
-                  Flexible(
-                    fit: FlexFit.loose,
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: size.width - 40.w,
-                      child: TextField(
-                        controller: searchController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)!
-                              .translate('search_traditions'),
-                          hintStyle: const TextStyle(color: Colors.white54),
-                          fillColor: const Color.fromARGB(255, 47, 42, 42),
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.r)),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 5.h, horizontal: 10.w),
-                        ),
-                      ),
-                    ),
-                  ),
                 FutureBuilder(
                   future: fetchTradicionesFuture,
                   builder: (context, snapshot) {
@@ -174,18 +107,31 @@ class _TradicionesPageState extends State<TradicionesPage> {
                           child: Padding(
                             padding: EdgeInsets.only(top: 10.h),
                             child: SizedBox(
-                              height: widget.boxConstraints!.maxHeight * 0.76,
+                              height: widget.boxConstraints!.maxHeight * 0.9,
                               child: ListView.builder(
                                 itemCount: tradiciones.length,
                                 itemBuilder: (context, index) {
                                   final tradicion = tradiciones[index];
                                   return FiestaCard(
-                                    detalleTap: () => showModalBottomSheet(
-                                        context: context,
-                                        builder: (context) {
-                                          return DetalleFiestaTradicion(
-                                              id: tradicion.idFiestaTradicion);
-                                        }),
+                                    detalleTap: () {
+                                      Navigator.pop(context);
+                                      showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          isDismissible: true,
+                                          enableDrag: true,
+                                          constraints: BoxConstraints(
+                                            maxHeight:
+                                                MediaQuery.sizeOf(context)
+                                                        .height *
+                                                    0.70,
+                                          ),
+                                          context: context,
+                                          builder: (context) {
+                                            return DetalleFiestaTradicion(
+                                                id: tradicion
+                                                    .idFiestaTradicion);
+                                          });
+                                    },
                                     nombre: tradicion.nombre,
                                     fecha: tradicion.fecha,
                                     imagen: Image.network(
@@ -217,7 +163,7 @@ class _TradicionesPageState extends State<TradicionesPage> {
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 10.h),
                         child: SizedBox(
-                          height: widget.boxConstraints!.maxHeight * 0.76,
+                          height: widget.boxConstraints!.maxHeight * 0.9,
                           child: ListView.builder(
                             itemCount: 4,
                             itemBuilder: (context, index) {
@@ -233,27 +179,6 @@ class _TradicionesPageState extends State<TradicionesPage> {
             ),
           )
         ],
-      ),
-    );
-  }
-
-  Widget _buildFilterButton(String text, int index) {
-    return FilterButton(
-      onPressed: () => setState(
-        () {
-          selectedFilter = index;
-        },
-      ),
-      style: BoxDecoration(
-        color: selectedFilter == index
-            ? Colors.grey[700]
-            : const Color.fromARGB(255, 55, 55, 55),
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      text: Text(
-        textAlign: TextAlign.center,
-        text,
-        style: const TextStyle(color: Colors.white),
       ),
     );
   }
@@ -274,134 +199,6 @@ class FilterButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         decoration: style,
         child: text,
-      ),
-    );
-  }
-}
-
-class TradicionesLoadingEffect extends StatefulWidget {
-  final BoxConstraints? boxConstraints;
-  const TradicionesLoadingEffect({super.key, this.boxConstraints});
-
-  @override
-  State<TradicionesLoadingEffect> createState() =>
-      _TradicionesLoadingEffectState();
-}
-
-class _TradicionesLoadingEffectState extends State<TradicionesLoadingEffect> {
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-
-    return BackgroundBoxDecoration(
-      child: SizedBox(
-        height: 600.h,
-        child: Column(
-          children: [
-            Expanded(child: BarraDeslizamiento()),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 8,
-                      child: Text(
-                        AppLocalizations.of(context)!
-                            .translate('holidays_traditions'),
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 21.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 20.w),
-                    Expanded(
-                      child: Icon(
-                        Icons.search,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 4.w),
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                width: size.width - 40.w,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 55, 55, 55),
-                  borderRadius: BorderRadius.all(Radius.circular(20.r)),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: FilterButton(
-                        text: Text(
-                          "Todo",
-                          style: const TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                        style: BoxDecoration(
-                          color: Colors.grey[700],
-                          borderRadius: BorderRadius.circular(20.r),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: FilterButton(
-                        text: Text("Populares",
-                            style: const TextStyle(color: Colors.white),
-                            textAlign: TextAlign.center),
-                        style: BoxDecoration(
-                          color: Colors.grey[700],
-                          borderRadius: BorderRadius.circular(20.r),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: FilterButton(
-                        text: Text("Cercanos",
-                            style: const TextStyle(color: Colors.white),
-                            textAlign: TextAlign.center),
-                        style: BoxDecoration(
-                          color: Colors.grey[700],
-                          borderRadius: BorderRadius.circular(20.r),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 10,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.h),
-                child: SizedBox(
-                  height: widget.boxConstraints!.maxHeight * 0.76,
-                  child: ListView.builder(
-                    itemCount: 4,
-                    itemBuilder: (context, index) {
-                      return const FiestaCardShimmer();
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
