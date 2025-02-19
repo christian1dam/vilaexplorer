@@ -49,7 +49,7 @@ class _FavoritosPageState extends State<FavoritosPage> {
 
   @override
   Widget build(BuildContext context) {
-    final favoritoService = Provider.of<FavoritoService>(context, listen: false);
+    final favoritoService = Provider.of<FavoritoService>(context);
     return BackgroundBoxDecoration(
       child: CustomScrollView(
         controller: widget.scrollCOntroller,
@@ -64,13 +64,6 @@ class _FavoritosPageState extends State<FavoritosPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.search,
-                          color: Colors.white,
-                        ),
-                        onPressed: _toggleSearch,
-                      ),
                       Center(
                         child: Text(
                           AppLocalizations.of(context)!.translate('favorites'),
@@ -90,30 +83,6 @@ class _FavoritosPageState extends State<FavoritosPage> {
                     ],
                   ),
                 ),
-                if (isSearchActive)
-                  Flexible(
-                    fit: FlexFit.loose,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: TextField(
-                        controller: searchController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)!
-                              .translate('search_favorites'),
-                          hintStyle: TextStyle(color: Colors.white54),
-                          fillColor: Color.fromARGB(255, 47, 42, 42),
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.r)),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 5.h, horizontal: 10.w),
-                        ),
-                      ),
-                    ),
-                  ),
                 Divider(
                   color: Colors.white,
                   thickness: 1.h,
@@ -126,7 +95,6 @@ class _FavoritosPageState extends State<FavoritosPage> {
                     if (snapshot.connectionState == ConnectionState.done) {
                       _favoritosDelUsuario =
                           favoritoService.favoritosDelUsuario;
-
                       return Flexible(
                         fit: FlexFit.loose,
                         child: SizedBox(
@@ -146,10 +114,50 @@ class _FavoritosPageState extends State<FavoritosPage> {
                                     .whereType<LugarDeInteres>()
                                     .map((favorito) {
                                   final lugar = favorito;
-                                  return ListTile(
-                                    title: Text(
-                                      lugar.nombreLugar!,
-                                      style: TextStyle(color: Colors.white),
+                                  return Dismissible(
+                                    key:
+                                        Key(lugar.idLugarInteres.toString()),
+                                    direction: DismissDirection.endToStart,
+                                    onDismissed: (direction) async {
+                                     await favoritoService.eliminarFavorito(
+                                          favorito.idLugarInteres!,
+                                          await UserPreferences().id);
+                                    },
+                                    child: Card(
+                                      color: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                      ),
+                                      elevation: 3,
+                                      child: ListTile(
+                                        leading: FadeInImage(
+                                          placeholder:
+                                              AssetImage('assets/no-image.jpg'),
+                                          image: NetworkImage(lugar.imagen!),
+                                          width: 50,
+                                          fit: BoxFit.contain,
+                                          imageErrorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Image.asset(
+                                              "assets/no-image.jpg",
+                                              width: 50,
+                                              fit: BoxFit.cover,
+                                            );
+                                          },
+                                        ),
+                                        title: Text(
+                                          lugar.nombreLugar!,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        subtitle: Text(
+                                          lugar.descripcion!,
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        ),
+                                      ),
                                     ),
                                   );
                                 }).toList(),
@@ -166,10 +174,50 @@ class _FavoritosPageState extends State<FavoritosPage> {
                                     .whereType<Plato>()
                                     .map((favorito) {
                                   final plato = favorito;
-                                  return ListTile(
-                                    title: Text(
-                                      plato.nombre,
-                                      style: TextStyle(color: Colors.white),
+                                  return Dismissible(
+                                    key:
+                                        Key(plato.platoId.toString()),
+                                    direction: DismissDirection.endToStart,
+                                    onDismissed: (direction) async {
+                                     await favoritoService.eliminarFavorito(
+                                          favorito.platoId,
+                                          await UserPreferences().id);
+                                    },
+                                    child: Card(
+                                      color: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                      ),
+                                      elevation: 3,
+                                      child: ListTile(
+                                        leading: FadeInImage(
+                                          placeholder:
+                                              AssetImage('assets/no-image.jpg'),
+                                          image: NetworkImage(plato.imagen!),
+                                          width: 50,
+                                          fit: BoxFit.contain,
+                                          imageErrorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Image.asset(
+                                              "assets/no-image.jpg",
+                                              width: 50,
+                                              fit: BoxFit.cover,
+                                            );
+                                          },
+                                        ),
+                                        title: Text(
+                                          plato.nombre,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        subtitle: Text(
+                                          plato.descripcion,
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        ),
+                                      ),
                                     ),
                                   );
                                 }).toList(),
@@ -195,32 +243,40 @@ class _FavoritosPageState extends State<FavoritosPage> {
                                           favorito.idFiestaTradicion,
                                           await UserPreferences().id);
                                     },
-                                    child: ListTile(
-                                      leading: SizedBox(
-                                        width: 40.w,
-                                        height: 50.h,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(6.r),
-                                          child: FadeInImage(
-                                            placeholder: AssetImage(
-                                                "assets/no-image.jpg"),
-                                            image: NetworkImage(lugar.imagen),
-                                            fit: BoxFit.cover,
-                                            imageErrorBuilder:
-                                                (context, error, stackTrace) {
-                                              return Image.asset(
-                                                "assets/no-image.jpg",
-                                                width: 50,
-                                                fit: BoxFit.cover,
-                                              );
-                                            },
-                                          ),
-                                        ),
+                                    child: Card(
+                                      color: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
                                       ),
-                                      title: Text(
-                                        lugar.nombre,
-                                        style: TextStyle(color: Colors.white),
+                                      elevation: 3,
+                                      child: ListTile(
+                                        leading: FadeInImage(
+                                          placeholder:
+                                              AssetImage('assets/no-image.jpg'),
+                                          image: NetworkImage(lugar.imagen),
+                                          width: 50,
+                                          fit: BoxFit.contain,
+                                          imageErrorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Image.asset(
+                                              "assets/no-image.jpg",
+                                              width: 50,
+                                              fit: BoxFit.cover,
+                                            );
+                                          },
+                                        ),
+                                        title: Text(
+                                          lugar.nombre,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        subtitle: Text(
+                                          lugar.descripcion,
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        ),
                                       ),
                                     ),
                                   );
