@@ -214,6 +214,7 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                                   230, 255, 255, 64),
                                             ),
                                             onRatingUpdate: (rating) async {
+
                                               await puntuacionService
                                                   .gestionarPuntuacion(
                                                 idUsuario:
@@ -226,12 +227,10 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                                 context: context,
                                               );
                                               debugPrint(
-                                                  "Nueva calificación: $rating \n ${_lugarDeInteres.puntuacionMediaLugar}");
-
+                                                  "Nueva calificación: $rating \nLugar de interes.puntuacionMediaLugar: ${_lugarDeInteres.puntuacionMediaLugar}");
+                                              await Provider.of<LugarDeInteresService>(context, listen: false).fetchLugarDeInteresById(widget.lugarDeInteresID);
                                               setState(() {
-                                                _lugarDeInteres =
-                                                    lugarDeInteresService
-                                                        .lugarDeInteres;
+                                                _lugarDeInteres = lugarDeInteresService.lugarDeInteres;
                                               });
                                             },
                                           ),

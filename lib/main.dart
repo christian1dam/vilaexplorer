@@ -9,6 +9,7 @@ import 'package:vilaexplorer/service/favorito_service.dart';
 import 'package:vilaexplorer/service/gastronomia_service.dart';
 import 'package:vilaexplorer/service/lugar_interes_service.dart';
 import 'package:vilaexplorer/service/puntuacion_service.dart';
+import 'package:vilaexplorer/service/rutas_service.dart';
 import 'package:vilaexplorer/service/tipo_plato_service.dart';
 import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -65,6 +66,7 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MapStateProvider(), lazy: false),
         ChangeNotifierProvider(create: (_) => EditProfileFormProvider(), lazy: false),
         ChangeNotifierProvider(create: (_) => UserPreferences(), lazy: false),
+        ChangeNotifierProvider(create: (_) => RutasService(), lazy: false),
       ],
       child: const MyApp(),
     );

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
+import 'package:vilaexplorer/models/ruta.dart';
+import 'package:vilaexplorer/service/rutas_service.dart';
 import 'package:vilaexplorer/src/widgets/loading.dart';
 
 class RoutesPage extends StatefulWidget {
@@ -15,30 +18,24 @@ class RoutesPage extends StatefulWidget {
 }
 
 class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
-  final List<String> rutasPredefinidas = [
-    "Ruta A: Playa",
-    "Ruta B: Montañas",
-    "Ruta C: Parque natural"
-  ];
+  Future<void>? _rutasFuture;
 
-  final Set<String> rutasGuardadas = {};
-
-  void _toggleGuardarRuta(String ruta) {
-    setState(() {
-      if (rutasGuardadas.contains(ruta)) {
-        rutasGuardadas.remove(ruta);
-      } else {
-        rutasGuardadas.add(ruta);
-      }
-    });
+  @override
+  void initState() {
+    _rutasFuture = Provider.of<RutasService>(context, listen: false).fetchMisRutas();
+    super.initState();
   }
+
+  late List<Ruta> rutasPredefinidas = [];
+
+  late List<Ruta> rutasCreadasUsuario = [];
+
 
   void _showLoadingLogo() {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) =>
-          const Loading(imagePath: 'assets/images/VilaExplorer.png'),
+      builder: (context) => const Loading(imagePath: 'assets/images/VilaExplorer.png'),
     );
 
     Future.delayed(const Duration(milliseconds: 1500), () {
@@ -48,6 +45,7 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final rutasService = Provider.of<RutasService>(context, listen: false);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -69,25 +67,36 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
             labelColor: Colors.white,
             unselectedLabelColor: Colors.grey,
             tabs: [
-              Tab(text: AppLocalizations.of(context)!.translate('predefined_route')),
-              Tab(text: AppLocalizations.of(context)!.translate('saved_routes')),
+              Tab(
+                  text: AppLocalizations.of(context)!.translate('predefined_route')),
+              Tab(
+                  text:
+                      AppLocalizations.of(context)!.translate('saved_routes')),
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            RutasPredefinidasTab(
-              rutasPredefinidas: rutasPredefinidas,
-              rutasGuardadas: rutasGuardadas,
-              onToggleGuardar: _toggleGuardarRuta,
-              showLoadingLogo: _showLoadingLogo,
-            ),
-            RutasGuardadasTab(
-              rutasGuardadas: rutasGuardadas,
-              onToggleGuardar: _toggleGuardarRuta,
-              showLoadingLogo: _showLoadingLogo,
-            ),
-          ],
+        body: FutureBuilder(
+          future: _rutasFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              rutasPredefinidas = rutasService.rutasPredefinidas;
+              rutasCreadasUsuario = rutasService.rutasDelUsuario;
+              return TabBarView(
+                children: [
+                  RutasPredefinidasTab(
+                    rutasPredefinidas: rutasPredefinidas,
+                    rutasGuardadas: rutasCreadasUsuario,
+                    showLoadingLogo: _showLoadingLogo,
+                  ),
+                  RutasGuardadasTab(
+                    rutasGuardadas: rutasCreadasUsuario,
+                    showLoadingLogo: _showLoadingLogo,
+                  ),
+                ],
+              );
+            }
+            return Loading(imagePath: 'assets/images/VilaExplorer.png');
+          },
         ),
       ),
     );
@@ -95,16 +104,14 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
 }
 
 class RutasPredefinidasTab extends StatelessWidget {
-  final List<String> rutasPredefinidas;
-  final Set<String> rutasGuardadas;
-  final Function(String) onToggleGuardar;
+  final List<Ruta> rutasPredefinidas;
+  final List<Ruta> rutasGuardadas;
   final VoidCallback showLoadingLogo;
 
   const RutasPredefinidasTab({
     super.key,
     required this.rutasPredefinidas,
     required this.rutasGuardadas,
-    required this.onToggleGuardar,
     required this.showLoadingLogo,
   });
 
@@ -117,8 +124,6 @@ class RutasPredefinidasTab extends StatelessWidget {
         itemCount: rutasPredefinidas.length,
         itemBuilder: (context, index) {
           final ruta = rutasPredefinidas[index];
-          final isGuardada = rutasGuardadas.contains(ruta);
-
           return Card(
             color: const Color.fromARGB(255, 47, 42, 42),
             shape: RoundedRectangleBorder(
@@ -129,19 +134,12 @@ class RutasPredefinidasTab extends StatelessWidget {
                 showLoadingLogo();
               },
               title: Text(
-                ruta,
+                ruta.nombreRuta!,
                 style: const TextStyle(color: Colors.white),
               ),
               leading: const Icon(
                 Icons.route,
                 color: Colors.white,
-              ),
-              trailing: IconButton(
-                icon: Icon(
-                  isGuardada ? Icons.bookmark : Icons.bookmark_outline,
-                  color: isGuardada ? Colors.white : Colors.grey,
-                ),
-                onPressed: () => onToggleGuardar(ruta),
               ),
             ),
           );
@@ -152,14 +150,12 @@ class RutasPredefinidasTab extends StatelessWidget {
 }
 
 class RutasGuardadasTab extends StatelessWidget {
-  final Set<String> rutasGuardadas;
-  final Function(String) onToggleGuardar;
+  final List<Ruta> rutasGuardadas;
   final VoidCallback showLoadingLogo;
 
   const RutasGuardadasTab({
     super.key,
     required this.rutasGuardadas,
-    required this.onToggleGuardar,
     required this.showLoadingLogo,
   });
 
@@ -190,16 +186,12 @@ class RutasGuardadasTab extends StatelessWidget {
                       showLoadingLogo();
                     },
                     title: Text(
-                      ruta,
+                      ruta.nombreRuta!,
                       style: const TextStyle(color: Colors.white),
                     ),
                     leading: const Icon(
                       Icons.route,
                       color: Colors.white,
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.bookmark, color: Colors.white),
-                      onPressed: () => onToggleGuardar(ruta),
                     ),
                   ),
                 );

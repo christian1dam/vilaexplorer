@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
-import 'package:vilaexplorer/main.dart';
+import 'package:vilaexplorer/main.dart';  
 import 'package:vilaexplorer/src/pages/cuentaPage/contacto.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/editar_perfil.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/preguntas_frecuentes.dart';

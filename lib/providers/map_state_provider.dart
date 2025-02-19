@@ -87,8 +87,7 @@ class MapStateProvider extends ChangeNotifier{
 
   Future<void> getRouteTo(LatLng destination, LatLng origin) async {
     try {
-      final endpoint =
-          "/ruta/generarRuta?origenLat=${origin.latitude}&origenLng=${origin.longitude}&destinoLat=${destination.latitude}&destinoLng=${destination.longitude}";
+      final endpoint = "/ruta/generarRuta?origenLat=${origin.latitude}&origenLng=${origin.longitude}&destinoLat=${destination.latitude}&destinoLng=${destination.longitude}";
 
       final response = await _apiClient.get(endpoint);
 
@@ -97,9 +96,7 @@ class MapStateProvider extends ChangeNotifier{
       final features = data['features'] as List;
       final coordinates = features.first['geometry']['coordinates'] as List;
 
-      setRoutePoints = coordinates
-          .map<LatLng>((coord) => LatLng(coord[1], coord[0]))
-          .toList();
+      setRoutePoints = coordinates.map<LatLng>((coord) => LatLng(coord[1], coord[0])).toList();
 
       _bounds = LatLngBounds.fromPoints(_routePoints);
       notifyListeners();
