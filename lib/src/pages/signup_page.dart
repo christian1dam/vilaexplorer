@@ -24,6 +24,7 @@ class _SignUpPageState extends State<SignUpPage>
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  final usuarioSerivce = UsuarioService();
 
   @override
   void initState() {
@@ -59,16 +60,15 @@ class _SignUpPageState extends State<SignUpPage>
   }
 
   void _registerUser(BuildContext context) async {
-    final usuarioSerivce = UsuarioService();
-
     final String name = _nameController.text.trim();
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
     final String confirmPassword = _confirmPasswordController.text.trim();
 
     try {
-      if (await usuarioSerivce.signUp(
-          name, email, password, confirmPassword)) {
+      print(name);
+      final r = await usuarioSerivce.signUp(name, email, password, confirmPassword);
+      if (r) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Usuario registrado exitosamente')),
         );
@@ -139,7 +139,6 @@ class _SignUpPageState extends State<SignUpPage>
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            
                           ),
                         ),
                         TextSpan(
@@ -148,7 +147,6 @@ class _SignUpPageState extends State<SignUpPage>
                             fontSize: 24,
                             fontWeight: FontWeight.w200,
                             color: Colors.white,
-                            
                           ),
                         ),
                       ],
@@ -252,6 +250,7 @@ class _SignUpPageState extends State<SignUpPage>
                               horizontal: 30, vertical: 15),
                         ),
                         onPressed: () {
+                          print("SE HA ENTRADO");
                           _registerUser(context);
                         },
                         child: Text(
@@ -279,7 +278,7 @@ class _SignUpPageState extends State<SignUpPage>
       backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical:20.h),
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
           decoration: BoxDecoration(
             color: Colors.grey[850]?.withOpacity(0.8),
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

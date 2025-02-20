@@ -45,15 +45,15 @@ class UsuarioService {
     password != assertPassword
         ? throw InvalidPasswordException("Las contraseñas no coinciden")
         : usuario = Usuario(
-            username: nombre,
+            nombre: nombre,
             email: email,
-            password: password); //TODO -> SE DEBEN MANEJAR DESDE EL FORMULARIO
+            password: password);
 
     try {
       final response = await _apiClient.post(endpoint, body: usuario.toMap());
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         return true;
-      }
+      } 
     } catch (e) {
       debugPrint('Error al crear usuario: ${e.toString()}');
       throw Exception(e);
