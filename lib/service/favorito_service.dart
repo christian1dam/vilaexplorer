@@ -152,7 +152,7 @@ class FavoritoService extends ChangeNotifier {
     if (favoritoExistente != null && favoritoExistente is LugarDeInteres) {
       await eliminarFavorito(favoritoExistente.idLugarInteres!, idUsuario);
     } else if (favoritoExistente != null && favoritoExistente is Plato) {
-      await eliminarFavorito(favoritoExistente.platoId!, idUsuario);
+      await eliminarFavorito(favoritoExistente.platoId, idUsuario);
     } else if (favoritoExistente != null && favoritoExistente is Tradicion) {
       await eliminarFavorito(favoritoExistente.idFiestaTradicion, idUsuario);
     } else {

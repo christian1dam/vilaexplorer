@@ -197,26 +197,4 @@ class _LugarDeInteresPageState extends State<LugarDeInteresPage> {
     );
   }
 
-  Widget _buildFilterButton(String text, int index) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedFilter = index;
-        });
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-        decoration: BoxDecoration(
-          color: selectedFilter == index
-              ? Colors.grey[700]
-              : const Color.fromARGB(255, 55, 55, 55),
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(color: Colors.white),
-        ),
-      ),
-    );
-  }
 }

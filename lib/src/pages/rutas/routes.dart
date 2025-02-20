@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'package:vilaexplorer/models/ruta.dart';
+import 'package:vilaexplorer/providers/map_state_provider.dart';
 import 'package:vilaexplorer/service/rutas_service.dart';
 import 'package:vilaexplorer/src/widgets/loading.dart';
 
@@ -22,7 +24,8 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _rutasFuture = Provider.of<RutasService>(context, listen: false).fetchMisRutas();
+    _rutasFuture =
+        Provider.of<RutasService>(context, listen: false).fetchMisRutas();
     super.initState();
   }
 
@@ -30,12 +33,12 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
 
   late List<Ruta> rutasCreadasUsuario = [];
 
-
   void _showLoadingLogo() {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Loading(imagePath: 'assets/images/VilaExplorer.png'),
+      builder: (context) =>
+          const Loading(imagePath: 'assets/images/VilaExplorer.png'),
     );
 
     Future.delayed(const Duration(milliseconds: 1500), () {
@@ -68,7 +71,8 @@ class _RoutesPageState extends State<RoutesPage> with TickerProviderStateMixin {
             unselectedLabelColor: Colors.grey,
             tabs: [
               Tab(
-                  text: AppLocalizations.of(context)!.translate('predefined_route')),
+                  text: AppLocalizations.of(context)!
+                      .translate('predefined_route')),
               Tab(
                   text:
                       AppLocalizations.of(context)!.translate('saved_routes')),
@@ -125,21 +129,96 @@ class RutasPredefinidasTab extends StatelessWidget {
         itemBuilder: (context, index) {
           final ruta = rutasPredefinidas[index];
           return Card(
-            color: const Color.fromARGB(255, 47, 42, 42),
+            color: Colors.white,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(15.r),
             ),
-            child: ListTile(
-              onTap: () {
-                showLoadingLogo();
-              },
-              title: Text(
-                ruta.nombreRuta!,
-                style: const TextStyle(color: Colors.white),
-              ),
-              leading: const Icon(
-                Icons.route,
-                color: Colors.white,
+            elevation: 5,
+            shadowColor: Colors.black54,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading:
+                        const Icon(Icons.route, color: Colors.black, size: 30),
+                    title: Text(
+                      ruta.nombreRuta!,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    subtitle: Row(
+                      children: [
+                        const Icon(Icons.directions_walk,
+                            color: Colors.black54, size: 16),
+                        const SizedBox(width: 5),
+                        Text(
+                          _formatDistance(ruta.distancia!),
+                          style: const TextStyle(color: Colors.black54),
+                        ),
+                        const SizedBox(width: 15),
+                        const Icon(Icons.timer,
+                            color: Colors.black54, size: 16),
+                        const SizedBox(width: 5),
+                        Text(
+                          _formatDuration(ruta.duracion!),
+                          style: const TextStyle(color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () {
+                          final mapProvider = Provider.of<MapStateProvider>(
+                            context,
+                            listen: false,
+                          );
+                          Navigator.pop(context);
+                          final List<LatLng> latLngList =
+                              ruta.coordenadas!.map((coordenada) {
+                            return LatLng(
+                                coordenada.latitud!, coordenada.longitud!);
+                          }).toList();
+                          Future.delayed(const Duration(milliseconds: 500), () {
+                            mapProvider.setRoutePoints = latLngList;
+                          });
+                        },
+                        icon: const Icon(Icons.map, color: Colors.white),
+                        label: const Text(
+                          "Ver en el mapa",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.person, color: Colors.black54, size: 20),
+                          SizedBox(width: 5),
+                          Text(
+                            ruta.autor?.nombre ?? "Desconocido",
+                            style: const TextStyle(color: Colors.black54),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           );
@@ -176,27 +255,140 @@ class RutasGuardadasTab extends StatelessWidget {
               itemBuilder: (context, index) {
                 final ruta = rutasGuardadas.elementAt(index);
 
-                return Card(
-                  color: const Color.fromARGB(255, 47, 42, 42),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: ListTile(
-                    onTap: () {
-                      showLoadingLogo();
-                    },
-                    title: Text(
-                      ruta.nombreRuta!,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    leading: const Icon(
-                      Icons.route,
+                return Dismissible(
+                  key: ValueKey("${ruta.idRuta}-dismiss"),
+                  direction: DismissDirection.endToStart,
+                    background: Container(
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    color: Colors.red,
+                    child: const Icon(
+                      Icons.delete,
                       color: Colors.white,
+                    ),
+                    ),
+                  child: Card(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.r),
+                    ),
+                    elevation: 5,
+                    shadowColor: Colors.black54,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: const Icon(Icons.route,
+                                color: Colors.black, size: 30),
+                            title: Text(
+                              ruta.nombreRuta!,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            subtitle: Row(
+                              children: [
+                                const Icon(Icons.directions_walk,
+                                    color: Colors.black54, size: 16),
+                                const SizedBox(width: 5),
+                                Text(
+                                  _formatDistance(ruta.distancia!),
+                                  style: const TextStyle(color: Colors.black54),
+                                ),
+                                const SizedBox(width: 15),
+                                const Icon(Icons.timer,
+                                    color: Colors.black54, size: 16),
+                                const SizedBox(width: 5),
+                                Text(
+                                  _formatDuration(ruta.duracion!),
+                                  style: const TextStyle(color: Colors.black54),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blueAccent,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 10),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  final mapProvider =
+                                      Provider.of<MapStateProvider>(
+                                    context,
+                                    listen: false,
+                                  );
+                                  Navigator.pop(context);
+                                  final List<LatLng> latLngList =
+                                      ruta.coordenadas!.map((coordenada) {
+                                    return LatLng(coordenada.latitud!,
+                                        coordenada.longitud!);
+                                  }).toList();
+                                  Future.delayed(
+                                      const Duration(milliseconds: 500), () {
+                                    mapProvider.setRoutePoints = latLngList;
+                                  });
+                                },
+                                icon: const Icon(Icons.map, color: Colors.white),
+                                label: const Text(
+                                  "Ver en el mapa",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Icon(Icons.person,
+                                      color: Colors.black54, size: 20),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    ruta.autor?.nombre ?? "Desconocido",
+                                    style: const TextStyle(color: Colors.black54),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
               },
             ),
     );
+  }
+}
+
+String _formatDuration(double durationInSeconds) {
+  int totalMinutes = (durationInSeconds / 60).round();
+  int hours = totalMinutes ~/ 60;
+  int minutes = totalMinutes % 60;
+
+  if (hours > 0 && minutes > 0) {
+    return "$hours h $minutes min";
+  } else if (hours > 0) {
+    return "$hours h";
+  } else {
+    return "$minutes min";
+  }
+}
+
+String _formatDistance(double distanceInMeters) {
+  if (distanceInMeters >= 1000) {
+    return "${(distanceInMeters / 1000).toStringAsFixed(2)} km";
+  } else {
+    return "${distanceInMeters.toStringAsFixed(0)} m";
   }
 }

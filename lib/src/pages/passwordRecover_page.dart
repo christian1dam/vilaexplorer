@@ -3,8 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/l10n/app_localizations.dart';
 import 'dart:async';
 
-import 'package:vilaexplorer/main.dart'; // Importar para el temporizador
-
 class PasswordRecoverPage extends StatefulWidget {
   const PasswordRecoverPage({super.key});
 
@@ -154,29 +152,6 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
     );
   }
 
-  void _changeLanguage(BuildContext context, Locale locale) {
-    setState(() {
-      MyApp.setLocale(context, locale);
-    });
-  }
 
   // Widget para mostrar una opción de idioma con la bandera
-  Widget _buildLanguageOption(String language, String flagPath) {
-    return ListTile(
-      onTap: () {
-        Locale newLocale;
-        if (language == 'Español') {
-          newLocale = Locale('es');
-        } else if (language == 'English') {
-          newLocale = Locale('en');
-        } else {
-          newLocale = Locale('ca'); // Valenciano
-        }
-        _changeLanguage(context, newLocale);
-        Navigator.pop(context);
-      },
-      leading: Image.asset(flagPath, height: 60, width: 60),
-      title: Text(language, style: TextStyle(color: Colors.white)),
-    );
-  }
 }

@@ -15,7 +15,6 @@ import 'package:vilaexplorer/service/tradiciones_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vilaexplorer/src/pages/cuentaPage/cuenta_page.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/addPlato.dart';
-import 'package:vilaexplorer/src/pages/gastronomia/detalle_platillo.dart';
 import 'package:vilaexplorer/src/pages/gastronomia/mis_recetas.dart';
 import 'package:vilaexplorer/src/pages/homePage/home_page.dart';
 import 'package:vilaexplorer/src/pages/rutas/routes.dart';

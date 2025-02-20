@@ -77,62 +77,6 @@ class _AddPlatoState extends State<AddPlato> {
         ingredientsFilled;
   }
 
-  void _showSuccessDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible:
-          false, // Impide que el pop-up se cierre al tocar fuera de él
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AnimatedSwitcher(
-              duration:
-                  const Duration(milliseconds: 500), // Duración de la animación
-              child: Align(
-                alignment: Alignment.center,
-                child: Container(
-                  width: 350,
-                  height:
-                      350, // Aumenta el alto del contenedor para evitar overflow
-                  decoration: BoxDecoration(
-                    color: const Color.fromRGBO(32, 29, 29, 1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/images/sending.gif',
-                        width: 250,
-                        height: 250,
-                      ),
-                      const SizedBox(height: 20),
-                      Flexible(
-                        child: Text(
-                          AppLocalizations.of(context)!.translate('sending'),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-
-    // Cierra el diálogo después de 3 segundos (simula que el proceso se completó)
-    Future.delayed(const Duration(seconds: 3), () {
-      Navigator.of(context).pop(); // Cierra el diálogo después de 3 segundos
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -336,6 +280,7 @@ class _AddPlatoState extends State<AddPlato> {
                                     const SizedBox(width: 10),
                                     Expanded(
                                       child: DropdownButtonFormField<String>(
+                                        isExpanded: true,
                                         value: controllers['unit'],
                                         onChanged: (value) {
                                           setState(() {
@@ -542,8 +487,8 @@ class _AddPlatoState extends State<AddPlato> {
                             final quantity = ing['quantity']!.text;
                             final unit = ing['unit'];
                             final name = ing['name']!.text;
-                            return "$quantity-$unit-$name";
-                          }).join(';');
+                            return "$quantity $unit de $name";
+                          }).join(',');
 
                           late int tipoPlato;
 

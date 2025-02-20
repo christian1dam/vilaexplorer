@@ -43,13 +43,6 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final puntuacionService =
-        Provider.of<PuntuacionService>(context, listen: false);
-    final favoritoService = Provider.of<FavoritoService>(context, listen: true);
-    final lugarDeInteresService =
-        Provider.of<LugarDeInteresService>(context, listen: true);
-    final userPreferences = UserPreferences();
-
     return FutureBuilder(
       future: _lugarDeInteresFuture,
       builder: (context, snapshot) {
@@ -66,6 +59,11 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
             child: Text("ERROR: ${snapshot.error}"),
           );
         } else {
+          final puntuacionService = Provider.of<PuntuacionService>(context);
+          final favoritoService = Provider.of<FavoritoService>(context);
+          final lugarDeInteresService =
+              Provider.of<LugarDeInteresService>(context);
+          final userPreferences = UserPreferences();
           _lugarDeInteres = lugarDeInteresService.lugarDeInteres;
           return Stack(
             children: [
@@ -194,12 +192,12 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                         width: 4.w,
                                       ),
                                       Column(
+                                        mainAxisSize: MainAxisSize.min,
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
                                           RatingBar.builder(
                                             itemSize: 23.r,
-                                            //TODO #2 refactorizar la pagina para que solamente se consuma el lugar de interes por servicio
                                             initialRating: _lugarDeInteres
                                                 .puntuacionMediaLugar!,
                                             minRating: 1,
@@ -243,6 +241,13 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                               }
                                             },
                                           ),
+                                          SizedBox(
+                                            width: 100.w,
+                                              child: Text("Rating: ${_lugarDeInteres.puntuacionMediaLugar}",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                            textAlign: TextAlign.end,
+                                          )),
                                         ],
                                       ),
                                     ],
@@ -286,16 +291,25 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                           ),
                         ),
                         onPressed: () async {
-                          final mapProvider = Provider.of<MapStateProvider>(context, listen: false);
-                          final routeProvider = Provider.of<RutasService>(context, listen: false);
-                          final List<List<double>> coordenadas = _lugarDeInteres.coordenadas!.map((coord) => [coord.latitud!, coord.longitud!]).toList();
+                          final mapProvider = Provider.of<MapStateProvider>(
+                              context,
+                              listen: false);
+                          final routeProvider =
+                              Provider.of<RutasService>(context, listen: false);
+                          final List<List<double>> coordenadas = _lugarDeInteres
+                              .coordenadas!
+                              .map((coord) => [coord.longitud!, coord.latitud!])
+                              .toList();
                           if (mapProvider.currentLocation != null) {
                             coordenadas.insert(0, [
                               mapProvider.currentLocation!.longitude,
                               mapProvider.currentLocation!.latitude
                             ]);
                           }
-                          final bool rutaCreada = await routeProvider.createRoute(titulo: _lugarDeInteres.nombreLugar!, coordenadas: coordenadas);
+                          final bool rutaCreada =
+                              await routeProvider.createRoute(
+                                  titulo: _lugarDeInteres.nombreLugar!,
+                                  coordenadas: coordenadas);
                           if (rutaCreada) {
                             mapProvider.showRoute = true;
                             mapProvider.getRouteTo(
@@ -304,8 +318,7 @@ class _DetalleLugarInteresState extends State<DetalleLugarInteres> {
                                   _lugarDeInteres.coordenadas!.first.longitud!,
                                 ),
                                 mapProvider.currentLocation!);
-                          }
-                          else {
+                          } else {
                             throw Exception("NO SE HA CREADO LA RUTA");
                           }
                           Navigator.pop(context);

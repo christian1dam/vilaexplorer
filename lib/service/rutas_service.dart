@@ -47,13 +47,12 @@ class RutasService extends ChangeNotifier {
     int autorId = await UserPreferences().id;
 
     try {
-      final String url =
-          "/ruta/createRoute?idAutor=$autorId&titulo=${Uri.encodeComponent("Mi ubicación -> $titulo")}&predefinida=false";
+      final String url = "/ruta/createRoute?idAutor=$autorId&titulo=Mi ubicación -> $titulo&predefinida=false";
 
       final Map<String, dynamic> body = {
         "coordinates": coordenadas,
       };
-      
+
       final response = await _apiClient.postAuth(url, body: body);
       if (response.statusCode == 200) {
         print("Ruta creada exitosamente");

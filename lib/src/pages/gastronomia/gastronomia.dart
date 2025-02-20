@@ -39,14 +39,6 @@ class _GastronomiaPageState extends State<GastronomiaPage> {
         .fetchAllPlatos();
   }
 
-  void _toggleSearch() {
-    setState(() {
-      isSearchActive = !isSearchActive;
-      if (!isSearchActive) {
-        searchController.clear();
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

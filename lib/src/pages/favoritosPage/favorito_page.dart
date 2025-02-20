@@ -38,14 +38,6 @@ class _FavoritosPageState extends State<FavoritosPage> {
     return service.favoritosDelUsuario;
   }
 
-  void _toggleSearch() {
-    setState(() {
-      isSearchActive = !isSearchActive;
-      if (!isSearchActive) {
-        searchController.clear();
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +61,8 @@ class _FavoritosPageState extends State<FavoritosPage> {
                         Expanded(
                           flex: 2,
                           child: Text(
-                            AppLocalizations.of(context)!.translate('favorites'),
+                            AppLocalizations.of(context)!
+                                .translate('favorites'),
                             style: TextStyle(
                                 fontSize: 25.sp,
                                 fontWeight: FontWeight.bold,
@@ -121,14 +114,23 @@ class _FavoritosPageState extends State<FavoritosPage> {
                                     .map((favorito) {
                                   final lugar = favorito;
                                   return Dismissible(
-                                    key:
-                                        Key(lugar.idLugarInteres.toString()),
+                                    key: Key(lugar.idLugarInteres.toString()),
                                     direction: DismissDirection.endToStart,
                                     onDismissed: (direction) async {
-                                     await favoritoService.eliminarFavorito(
+                                      await favoritoService.eliminarFavorito(
                                           favorito.idLugarInteres!,
                                           await UserPreferences().id);
                                     },
+                                    background: Container(
+                                      alignment: Alignment.centerRight,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      color: Colors.red,
+                                      child: const Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                     child: Card(
                                       color: Colors.white,
                                       shape: RoundedRectangleBorder(
@@ -181,14 +183,23 @@ class _FavoritosPageState extends State<FavoritosPage> {
                                     .map((favorito) {
                                   final plato = favorito;
                                   return Dismissible(
-                                    key:
-                                        Key(plato.platoId.toString()),
+                                    key: Key(plato.platoId.toString()),
                                     direction: DismissDirection.endToStart,
                                     onDismissed: (direction) async {
-                                     await favoritoService.eliminarFavorito(
+                                      await favoritoService.eliminarFavorito(
                                           favorito.platoId,
                                           await UserPreferences().id);
                                     },
+                                    background: Container(
+                                      alignment: Alignment.centerRight,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      color: Colors.red,
+                                      child: const Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                     child: Card(
                                       color: Colors.white,
                                       shape: RoundedRectangleBorder(
@@ -243,6 +254,16 @@ class _FavoritosPageState extends State<FavoritosPage> {
                                   return Dismissible(
                                     key:
                                         Key(lugar.idFiestaTradicion.toString()),
+                                        background: Container(
+                                      alignment: Alignment.centerRight,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      color: Colors.red,
+                                      child: const Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                     direction: DismissDirection.endToStart,
                                     onDismissed: (direction) async {
                                       favoritoService.eliminarFavorito(
