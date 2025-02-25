@@ -176,7 +176,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                           },
                         ),
                         ButtonMenuCustom(
-                          width: 155.w,
+                          width: 160.w,
                           textContent:
                               AppLocalizations.of(context)!.translate('sights'),
                           svgPath: "lib/icon/monumentos.svg",
@@ -347,7 +347,7 @@ class ButtonMenuCustom extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              MySvgWidget(path: svgPath, width: 40.w, height: 40.h),
+              MySvgWidget(path: svgPath, width: 40.w, height: 35.h),
               Text(
                 textContent,
                 style: TextStyle(fontSize: textSize * 17.sp),

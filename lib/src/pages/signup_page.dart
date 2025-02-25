@@ -12,18 +12,16 @@ class SignUpPage extends StatefulWidget {
   _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage>
-    with SingleTickerProviderStateMixin {
+class _SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMixin {
   late AnimationController _rotationController;
   late Animation<double> _rotationAnimation;
   late Animation<double> _buttonAnimation;
 
-  // Controladores para los campos de texto
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
   final usuarioSerivce = UsuarioService();
 
   @override
@@ -40,13 +38,12 @@ class _SignUpPageState extends State<SignUpPage>
       curve: Curves.easeInOut,
     );
 
-    // Ahora inicializamos correctamente la animación de los botones
     _buttonAnimation = CurvedAnimation(
-      parent: _rotationController, // Usamos el mismo AnimationController
-      curve: Curves.easeInOut, // Ajusta la curva como desees
+      parent: _rotationController,
+      curve: Curves.easeInOut,
     );
 
-    _rotationController.forward(); // Inicia la animación de rotación
+    _rotationController.forward();
   }
 
   @override
