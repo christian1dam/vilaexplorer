@@ -1,7 +1,7 @@
 .vscode/
 
 #ENV
-# .env
+.env
 
 # Miscellaneous
 *.class
